@@ -1,0 +1,229 @@
+---
+const _ = null;
+---
+
+<section class="hero-clibel relative overflow-hidden">
+  <div aria-hidden="true" class="hero-bg"></div>
+  <div aria-hidden="true" class="hero-blob hero-blob--gold"></div>
+  <div aria-hidden="true" class="hero-blob hero-blob--mauve"></div>
+  <div aria-hidden="true" class="hero-grain"></div>
+
+  <div class="container-x relative">
+    <div class="hero-grid">
+      <!-- LEFT 50% -->
+      <div class="hero-col hero-col--left fade-up">
+        <span class="eyebrow-tag">
+          <span class="dot"></span>
+          Médicos certificados · COFEPRIS · Desde 1981
+        </span>
+
+        <h1 class="hero-headline">
+          <span class="hero-headline-line">Clínica</span>
+          <span class="hero-headline-line">de <em>belleza</em></span>
+          <span class="hero-headline-line text-gradient">con criterio médico.</span>
+        </h1>
+
+        <p class="hero-lede">
+          45 años en CDMX. <strong>Medicina estética avanzada</strong> y
+          tratamientos diseñados por especialistas, no por catálogo.
+        </p>
+
+        <div class="hero-trust">
+          <span class="hero-trust-label">Trabajamos con</span>
+          <div class="hero-trust-list">
+            <span>Allergan</span><span aria-hidden="true">·</span>
+            <span>Galderma</span><span aria-hidden="true">·</span>
+            <span>Merz</span><span aria-hidden="true">·</span>
+            <span>Sculptra</span><span aria-hidden="true">·</span>
+            <span>Venus</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT 50% -->
+      <div class="hero-col hero-col--right fade-up-delay-2">
+        <span class="hero-kicker">Clínica de belleza en Ciudad de México</span>
+
+        <p class="hero-paragraph">
+          En <strong>CLIBEL</strong> combinamos medicina estética avanzada,
+          tecnología láser de última generación y un equipo de especialistas
+          certificados. Ofrecemos tratamientos faciales, corporales, depilación
+          láser y terapias capilares con respaldo médico real. Cada protocolo
+          se diseña tras una <strong>valoración médica personalizada</strong>,
+          sin paquetes prearmados ni presión comercial.
+        </p>
+
+        <p class="hero-paragraph">
+          <strong>45 años</strong> en CDMX: rejuvenecimiento facial, ácido
+          hialurónico, toxina botulínica, plasma rico en plaquetas, hilos
+          tensores, radiofrecuencia corporal y peelings químicos — todo en un
+          solo lugar, con certificación COFEPRIS y marcas internacionales.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-clibel {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, var(--color-brand-100) 100%);
+    isolation: isolate;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(201,169,97,0.18), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.16), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-blob {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(110px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: .5;
+  }
+  .hero-blob--gold {
+    width: 36rem; height: 36rem;
+    top: -10rem; right: -10rem;
+    background: var(--color-brand-300);
+  }
+  .hero-blob--mauve {
+    width: 32rem; height: 32rem;
+    bottom: -12rem; left: -8rem;
+    background: var(--color-mauve-300);
+  }
+  .hero-grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(31,20,24,0.05) 1px, transparent 1px);
+    background-size: 3px 3px;
+    opacity: .35;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== Grid 50 / 50 ===== */
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem;
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    width: 100% !important;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: clamp(2rem, 4vw, 4.5rem);
+    }
+  }
+
+  .hero-col {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  /* ===== LEFT ===== */
+  .hero-headline {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 0.92;
+    color: var(--color-ink-900);
+    font-size: clamp(2.75rem, 7vw, 7rem);
+    width: 100%;
+    margin: 0.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    text-wrap: balance;
+  }
+  .hero-headline-line {
+    display: block;
+    width: 100%;
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+  }
+
+  .hero-lede {
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.7;
+    color: var(--color-ink-700);
+    margin: 0;
+    width: 100%;
+  }
+  .hero-lede strong { color: var(--color-ink-900); font-weight: 600; }
+
+  .hero-trust {
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(201, 169, 97, 0.25);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem;
+    width: 100%;
+  }
+  .hero-trust-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .hero-trust-list {
+    display: inline-flex; flex-wrap: wrap; gap: 0.55rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--color-ink-700);
+  }
+  .hero-trust-list span[aria-hidden] { color: var(--color-brand-400); }
+
+  /* ===== RIGHT ===== */
+  .hero-col--right { gap: 1.25rem; }
+  @media (min-width: 900px) {
+    .hero-col--right {
+      padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+      border-left: 1px solid rgba(201, 169, 97, 0.25);
+    }
+  }
+
+  .hero-kicker {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--color-brand-400);
+    align-self: flex-start;
+  }
+
+  .hero-paragraph {
+    font-size: clamp(0.95rem, 1vw, 1.05rem);
+    line-height: 1.75;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .hero-paragraph strong {
+    color: var(--color-ink-900);
+    font-weight: 600;
+  }
+
+  /* Mobile */
+  @media (max-width: 899px) {
+    .hero-col { gap: 1.25rem; }
+  }
+</style>

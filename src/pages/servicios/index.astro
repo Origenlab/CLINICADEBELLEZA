@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import PartnersMarquee from '../../components/PartnersMarquee.astro';
+import CTA from '../../components/CTA.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES } from '../../consts';
+
+const all = await getCollection('servicios');
+all.sort((a, b) => a.data.order - b.data.order);
+
+const grouped = Object.values(CATEGORIES).map((cat) => ({
+  ...cat,
+  items: all.filter((s) => s.data.category === cat.slug),
+}));
+---
+
+<BaseLayout
+  title="Tratamientos Estéticos en CDMX"
+  description="25+ tratamientos faciales, corporales, depilación láser y medicina estética en una sola clínica. Diagnóstico médico previo y resultados naturales."
+>
+  <!-- Header -->
+  <section class="gradient-soft relative overflow-hidden">
+    <div aria-hidden="true" class="absolute -top-32 -right-32 w-[36rem] h-[36rem] rounded-full bg-[color:var(--color-brand-300)]/40 blur-3xl pointer-events-none"></div>
+
+    <div class="container-x relative section">
+      <span class="kicker-line">Catálogo CLIBEL</span>
+      <h1 class="mt-4 h-display text-5xl sm:text-6xl lg:text-7xl max-w-4xl">
+        Todos nuestros <em>tratamientos</em><br/>
+        en un solo lugar.
+      </h1>
+      <p class="mt-6 text-lg text-[color:var(--color-ink-700)] max-w-2xl leading-relaxed">
+        Más de 25 tratamientos organizados por categoría. Cada protocolo se
+        diseña a medida después de tu valoración inicial, con tecnología de
+        marcas internacionales y productos certificados COFEPRIS.
+      </p>
+
+      <!-- Quick anchors -->
+      <div class="mt-10 flex flex-wrap gap-2">
+        {grouped.map(g => (
+          <a href={`#${g.slug}`} class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[color:var(--color-brand-200)] hover:bg-[color:var(--color-mauve-500)] hover:text-white hover:border-[color:var(--color-mauve-500)] transition text-sm">
+            <span>{g.icon}</span>
+            <span class="font-medium">{g.label}</span>
+            <span class="text-[10px] uppercase tracking-wider opacity-60">{g.items.length}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <PartnersMarquee />
+
+  <!-- Categories -->
+  {grouped.map((g) => (
+    <section id={g.slug} class="section scroll-mt-32 odd:bg-white even:bg-[color:var(--color-brand-50)]">
+      <div class="container-x">
+        <div class="grid lg:grid-cols-[1fr_auto] gap-6 items-end mb-10">
+          <div class="max-w-2xl">
+            <span class="text-[10px] uppercase tracking-[0.2em] text-[color:var(--color-brand-500)] font-semibold">{g.badgeLabel} · {g.badgeCount}</span>
+            <h2 class="mt-2 h-display text-4xl sm:text-5xl">{g.label}</h2>
+            <p class="mt-4 text-[color:var(--color-ink-500)] leading-relaxed">{g.description}</p>
+          </div>
+          <a href="/contacto" class="btn btn-outline self-start lg:self-end shrink-0">Solicitar valoración</a>
+        </div>
+
+        {g.items.length === 0 ? (
+          <p class="text-[color:var(--color-ink-500)]">Próximamente más tratamientos en esta categoría.</p>
+        ) : (
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {g.items.map((s) => (
+              <ServiceCard
+                href={`/servicios/${s.id}`}
+                title={s.data.title}
+                description={s.data.description}
+                category={s.data.category}
+                duration={s.data.duration}
+                icon={s.data.icon}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  ))}
+
+  <CTA />
+</BaseLayout>

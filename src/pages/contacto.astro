@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CONTACT, SOCIAL } from '../consts';
+const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
+---
+
+<BaseLayout
+  title="Agenda tu Valoración"
+  description="Agenda una valoración estética sin costo en CDMX. Atención por WhatsApp, teléfono o formulario. Respuesta en menos de 2 horas en horario clínica."
+>
+  <!-- Header -->
+  <section class="bg-gradient-to-br from-[color:var(--color-brand-100)] to-[color:var(--color-brand-200)]/40">
+    <div class="container-x section">
+      <div class="mx-auto max-w-3xl text-center">
+      <span class="kicker">Contacto</span>
+      <span class="divider-gold"></span>
+      <h1 class="font-display text-5xl sm:text-6xl">Hablemos de tu próximo tratamiento</h1>
+      <p class="mt-5 text-lg text-[color:var(--color-ink-700)]">
+        Escríbenos por el medio que prefieras. Te responderemos a la brevedad para agendar tu valoración.
+      </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grid contact -->
+  <section class="section">
+    <div class="container-x grid lg:grid-cols-2 gap-10">
+      <!-- Form -->
+      <div class="card p-8">
+        <h2 class="font-display text-3xl mb-2">Envíanos un mensaje</h2>
+        <p class="text-[color:var(--color-ink-500)] mb-6 text-sm">Todos los campos son obligatorios.</p>
+
+        <form action="#" method="POST" class="space-y-4">
+          <div>
+            <label for="nombre" class="block text-sm font-medium mb-1">Nombre completo</label>
+            <input id="nombre" name="nombre" required type="text"
+              class="w-full px-4 py-3 rounded-xl border border-[color:var(--color-brand-200)] bg-[color:var(--color-brand-50)] focus:border-[color:var(--color-mauve-500)] focus:bg-white outline-none transition" />
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="email" class="block text-sm font-medium mb-1">Correo electrónico</label>
+              <input id="email" name="email" required type="email"
+                class="w-full px-4 py-3 rounded-xl border border-[color:var(--color-brand-200)] bg-[color:var(--color-brand-50)] focus:border-[color:var(--color-mauve-500)] focus:bg-white outline-none transition" />
+            </div>
+            <div>
+              <label for="tel" class="block text-sm font-medium mb-1">Teléfono</label>
+              <input id="tel" name="tel" required type="tel"
+                class="w-full px-4 py-3 rounded-xl border border-[color:var(--color-brand-200)] bg-[color:var(--color-brand-50)] focus:border-[color:var(--color-mauve-500)] focus:bg-white outline-none transition" />
+            </div>
+          </div>
+          <div>
+            <label for="servicio" class="block text-sm font-medium mb-1">Tratamiento de interés</label>
+            <select id="servicio" name="servicio"
+              class="w-full px-4 py-3 rounded-xl border border-[color:var(--color-brand-200)] bg-[color:var(--color-brand-50)] focus:border-[color:var(--color-mauve-500)] focus:bg-white outline-none transition">
+              <option>Tratamientos faciales</option>
+              <option>Tratamientos corporales</option>
+              <option>Depilación láser</option>
+              <option>Medicina estética</option>
+              <option>Tratamientos capilares</option>
+              <option>Otro / no estoy segura</option>
+            </select>
+          </div>
+          <div>
+            <label for="mensaje" class="block text-sm font-medium mb-1">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" required rows="4"
+              class="w-full px-4 py-3 rounded-xl border border-[color:var(--color-brand-200)] bg-[color:var(--color-brand-50)] focus:border-[color:var(--color-mauve-500)] focus:bg-white outline-none transition"></textarea>
+          </div>
+          <label class="flex items-start gap-2 text-xs text-[color:var(--color-ink-500)]">
+            <input required type="checkbox" class="mt-1" />
+            <span>Acepto el <a href="/aviso-de-privacidad" class="text-[color:var(--color-mauve-500)] underline">Aviso de Privacidad</a> y autorizo el contacto.</span>
+          </label>
+          <button type="submit" class="btn btn-primary w-full">Enviar mensaje</button>
+        </form>
+      </div>
+
+      <!-- Info -->
+      <div class="space-y-6">
+        <div class="card p-7">
+          <h3 class="font-display text-2xl mb-4">Información directa</h3>
+          <ul class="space-y-4 text-sm">
+            <li class="flex items-start gap-3">
+              <span class="w-10 h-10 grid place-items-center rounded-full bg-[color:var(--color-brand-100)] text-[color:var(--color-mauve-500)] shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
+              </span>
+              <div>
+                <p class="text-xs uppercase tracking-wider text-[color:var(--color-ink-500)]">Teléfono</p>
+                <a href={`tel:${CONTACT.phone}`} class="font-medium text-base hover:text-[color:var(--color-mauve-500)]">{CONTACT.phoneDisplay}</a>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-10 h-10 grid place-items-center rounded-full bg-[color:var(--color-brand-100)] text-[color:var(--color-mauve-500)] shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <div>
+                <p class="text-xs uppercase tracking-wider text-[color:var(--color-ink-500)]">Email</p>
+                <a href={`mailto:${CONTACT.email}`} class="font-medium hover:text-[color:var(--color-mauve-500)]">{CONTACT.email}</a>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-10 h-10 grid place-items-center rounded-full bg-[color:var(--color-brand-100)] text-[color:var(--color-mauve-500)] shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <div>
+                <p class="text-xs uppercase tracking-wider text-[color:var(--color-ink-500)]">Dirección</p>
+                <p class="font-medium">{CONTACT.addressFull}</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-10 h-10 grid place-items-center rounded-full bg-[color:var(--color-brand-100)] text-[color:var(--color-mauve-500)] shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </span>
+              <div>
+                <p class="text-xs uppercase tracking-wider text-[color:var(--color-ink-500)]">Horario</p>
+                <p class="font-medium">{CONTACT.hours}</p>
+              </div>
+            </li>
+          </ul>
+
+          <a href={wa} target="_blank" rel="noopener" class="btn btn-primary w-full mt-6">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+            Abrir WhatsApp
+          </a>
+
+          <div class="flex gap-3 mt-4 justify-center">
+            <a href={SOCIAL.instagram} target="_blank" rel="noopener" aria-label="Instagram"
+               class="w-10 h-10 grid place-items-center rounded-full border border-[color:var(--color-brand-200)] text-[color:var(--color-mauve-500)] hover:bg-[color:var(--color-mauve-500)] hover:text-white transition">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href={SOCIAL.facebook} target="_blank" rel="noopener" aria-label="Facebook"
+               class="w-10 h-10 grid place-items-center rounded-full border border-[color:var(--color-brand-200)] text-[color:var(--color-mauve-500)] hover:bg-[color:var(--color-mauve-500)] hover:text-white transition">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.5 9.87v-6.99H8v-2.88h2.5V9.8c0-2.47 1.47-3.83 3.71-3.83 1.07 0 2.2.19 2.2.19v2.42h-1.24c-1.22 0-1.6.76-1.6 1.54v1.85h2.72l-.43 2.88h-2.29v6.99A10 10 0 0 0 22 12z"/></svg>
+            </a>
+            <a href={SOCIAL.tiktok} target="_blank" rel="noopener" aria-label="TikTok"
+               class="w-10 h-10 grid place-items-center rounded-full border border-[color:var(--color-brand-200)] text-[color:var(--color-mauve-500)] hover:bg-[color:var(--color-mauve-500)] hover:text-white transition">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.93a8.16 8.16 0 0 0 4.77 1.52V7.05a4.79 4.79 0 0 1-1.84-.36z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Map -->
+        <div class="card p-0 overflow-hidden aspect-video">
+          <iframe
+            src={CONTACT.mapsEmbed}
+            width="100%" height="100%" style="border:0"
+            allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            title="Ubicación CLIBEL"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,143 @@
+---
+import '../styles/global.css';
+import SEO from '../components/SEO.astro';
+import TopBar from '../components/TopBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import RevealScript from '../components/RevealScript.astro';
+import { SITE, CONTACT } from '../consts';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedAt?: Date;
+  canonical?: string;
+  noindex?: boolean;
+  hideHeader?: boolean;
+}
+
+const props = Astro.props;
+
+// Schema.org JSON-LD — BeautySalon + LocalBusiness optimizado para "clínica de belleza"
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': ['BeautySalon', 'MedicalBusiness', 'LocalBusiness'],
+  '@id': `${SITE.url}/#clinic`,
+  name: 'CLIBEL — Clínica de Belleza',
+  alternateName: ['CLIBEL Clínica de Belleza CDMX', 'Clínica de Belleza CLIBEL'],
+  description: SITE.description,
+  slogan: 'Clínica de belleza con respaldo médico en Ciudad de México',
+  url: SITE.url,
+  telephone: CONTACT.phone,
+  email: CONTACT.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: CONTACT.addressFull,
+    addressLocality: 'Ciudad de México',
+    addressRegion: 'CDMX',
+    postalCode: '06000',
+    addressCountry: 'MX',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 19.4326,
+    longitude: -99.1332,
+  },
+  areaServed: [
+    { '@type': 'City', name: 'Ciudad de México' },
+    { '@type': 'AdministrativeArea', name: 'CDMX' },
+    { '@type': 'AdministrativeArea', name: 'Estado de México' },
+  ],
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      opens: '10:00',
+      closes: '19:00',
+    },
+  ],
+  priceRange: '$$',
+  image: new URL(SITE.defaultImage, SITE.url).toString(),
+  logo: new URL('/favicon.svg', SITE.url).toString(),
+  foundingDate: SITE.founded,
+  knowsAbout: [
+    'clínica de belleza',
+    'medicina estética avanzada',
+    'tratamientos faciales',
+    'tratamientos corporales',
+    'depilación láser',
+    'rejuvenecimiento facial',
+    'ácido hialurónico',
+    'toxina botulínica',
+    'plasma rico en plaquetas',
+    'hilos tensores',
+    'radiofrecuencia corporal',
+    'peelings químicos',
+    'tratamientos capilares',
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Catálogo de tratamientos de la clínica de belleza CLIBEL',
+    itemListElement: [
+      { '@type': 'OfferCatalog', name: 'Tratamientos Faciales', url: `${SITE.url}/servicios#facial` },
+      { '@type': 'OfferCatalog', name: 'Tratamientos Corporales', url: `${SITE.url}/servicios#corporal` },
+      { '@type': 'OfferCatalog', name: 'Depilación Láser', url: `${SITE.url}/servicios#laser` },
+      { '@type': 'OfferCatalog', name: 'Medicina Estética Avanzada', url: `${SITE.url}/servicios#medicina-estetica` },
+      { '@type': 'OfferCatalog', name: 'Tratamientos Capilares', url: `${SITE.url}/servicios#capilar` },
+    ],
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    reviewCount: '500',
+    bestRating: '5',
+    worstRating: '1',
+  },
+  sameAs: [
+    'https://instagram.com/clibel',
+    'https://facebook.com/clibel',
+    'https://tiktok.com/@clibel',
+    'https://youtube.com/@clibel',
+  ],
+};
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#8B5A6B" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <SEO {...props} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    {!props.hideHeader && (
+      <>
+        <TopBar />
+        <Header />
+      </>
+    )}
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppFloat />
+    <RevealScript />
+  </body>
+</html>

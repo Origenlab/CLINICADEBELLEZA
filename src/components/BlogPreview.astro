@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+  .slice(0, 3);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<section class="section bg-white">
+  <div class="container-x">
+    <div class="grid lg:grid-cols-[1fr_auto] gap-8 items-end mb-14 reveal">
+      <div class="max-w-2xl">
+        <span class="kicker-line">Guía de belleza CLIBEL</span>
+        <h2 class="mt-4 text-4xl sm:text-5xl h-display">
+          Artículos y <em>guías</em><br/>de nuestras especialistas.
+        </h2>
+        <p class="mt-5 text-[color:var(--color-ink-500)] leading-relaxed">
+          Contenido educativo escrito por médicas y especialistas del equipo, no por
+          redactores externos. Sin información genérica: aplicable a la realidad de
+          las mujeres y hombres que viven en CDMX.
+        </p>
+      </div>
+      <a href="/blog" class="btn btn-outline self-start lg:self-end shrink-0">
+        Ver todos los artículos
+      </a>
+    </div>
+
+    {posts.length > 0 && (
+      <div class="grid gap-7 md:grid-cols-3">
+        {posts.map((post, i) => (
+          <a href={`/blog/${post.id}`} class="group reveal block">
+            <div class="aspect-[16/10] rounded-2xl bg-gradient-to-br from-[color:var(--color-brand-200)] via-[color:var(--color-brand-300)] to-[color:var(--color-mauve-300)] overflow-hidden relative mb-5">
+              <div class="absolute inset-0 flex items-center justify-center text-5xl opacity-30 transition-transform duration-700 group-hover:scale-110">
+                {['📝','💆‍♀️','🔆'][i] ?? '✨'}
+              </div>
+              <span class="absolute top-4 left-4 bg-white/95 backdrop-blur text-[10px] font-semibold uppercase tracking-[0.15em] text-[color:var(--color-mauve-700)] px-2.5 py-1 rounded-full">
+                {post.data.tags[0] ?? 'Belleza'}
+              </span>
+            </div>
+            <p class="text-xs uppercase tracking-[0.16em] text-[color:var(--color-mauve-500)] mb-2">
+              {fmt(post.data.publishedAt)} · {post.data.author}
+            </p>
+            <h3 class="font-display text-2xl leading-tight mb-3 group-hover:text-[color:var(--color-mauve-500)] transition-colors">
+              {post.data.title}
+            </h3>
+            <p class="text-sm text-[color:var(--color-ink-500)] leading-relaxed line-clamp-3">
+              {post.data.description}
+            </p>
+            <span class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-[color:var(--color-mauve-500)] group-hover:gap-2 transition-all">
+              Leer artículo
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</section>

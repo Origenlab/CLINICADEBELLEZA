@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+---
+
+<BaseLayout
+  title="Blog de Belleza y Medicina Estética"
+  description="Guías y artículos sobre cuidado de la piel, medicina estética, depilación láser y tratamientos faciales. Escrito por nuestros especialistas."
+>
+  <section class="bg-gradient-to-br from-[color:var(--color-brand-100)] to-[color:var(--color-brand-200)]/40">
+    <div class="container-x section">
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="kicker">Blog CLIBEL</span>
+        <span class="divider-gold"></span>
+        <h1 class="font-display text-5xl sm:text-6xl">Belleza con conocimiento</h1>
+        <p class="mt-5 text-lg text-[color:var(--color-ink-700)]">
+          Artículos, guías y tips de nuestros especialistas para que cuides tu piel todos los días.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-x">
+      {posts.length === 0 ? (
+        <p class="text-center text-[color:var(--color-ink-500)]">Pronto compartiremos contenido aquí.</p>
+      ) : (
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {posts.map((post) => (
+            <a href={`/blog/${post.id}`} class="card overflow-hidden h-full block group">
+              <div class="aspect-[16/10] bg-gradient-to-br from-[color:var(--color-brand-200)] to-[color:var(--color-mauve-300)] relative">
+                {post.data.image && (
+                  <img src={post.data.image} alt={post.data.title} class="w-full h-full object-cover" loading="lazy" />
+                )}
+              </div>
+              <div class="p-6">
+                <p class="text-xs uppercase tracking-wider text-[color:var(--color-mauve-500)]">
+                  {post.data.publishedAt.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </p>
+                <h2 class="font-display text-2xl mt-2 group-hover:text-[color:var(--color-mauve-500)] transition-colors">{post.data.title}</h2>
+                <p class="text-sm text-[color:var(--color-ink-500)] mt-2 line-clamp-3">{post.data.description}</p>
+                <div class="mt-4 flex flex-wrap gap-1.5">
+                  {post.data.tags.slice(0, 3).map((t) => (
+                    <span class="text-[10px] uppercase tracking-wider bg-[color:var(--color-brand-100)] text-[color:var(--color-mauve-700)] px-2 py-1 rounded-full">{t}</span>
+                  ))}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

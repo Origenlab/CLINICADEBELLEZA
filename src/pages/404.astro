@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Página no encontrada" description="La página que buscas no existe." noindex>
+  <section class="min-h-[70vh] flex items-center">
+    <div class="container-x py-20">
+      <div class="mx-auto max-w-xl text-center">
+        <p class="font-display text-9xl text-[color:var(--color-brand-300)]">404</p>
+        <span class="divider-gold"></span>
+        <h1 class="font-display text-4xl mb-4">Página no encontrada</h1>
+        <p class="text-[color:var(--color-ink-500)] mb-8">
+          La dirección que ingresaste no existe o ha sido movida. Te invitamos a regresar al inicio o
+          explorar nuestros tratamientos.
+        </p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a href="/" class="btn btn-primary">Volver al inicio</a>
+          <a href="/servicios" class="btn btn-outline">Ver servicios</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

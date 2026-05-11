@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTA from '../components/CTA.astro';
+
+const team = [
+  {
+    initials: 'DJ',
+    name: 'Dra. Jimena Reyes',
+    role: 'Directora médica · Medicina estética y armonización',
+    bio: 'Médica cirujana con especialidad en Medicina Estética y certificaciones internacionales por Merz Aesthetics y Allergan (MD Codes). Líder del equipo clínico desde 2014. Ponente en congresos AMWC y Congreso Mexicano de Medicina Estética.',
+    certs: ['Cédula 0000000', 'Merz Aesthetics', 'MD Codes Allergan', 'Galderma GAIN'],
+    gradient: ['#8B5A6B', '#C9A961'],
+  },
+  {
+    initials: 'AM',
+    name: 'Dr. Andrés Martínez',
+    role: 'Medicina estética avanzada · Bioestimulación',
+    bio: 'Médico estético con formación en Sculptra (Galderma) y Radiesse. Experto en bioestimulación de colágeno, hilos tensores y armonización masculina. Más de 8 años de práctica clínica.',
+    certs: ['Cédula 0000001', 'Sculptra Certified', 'Radiesse', 'Hilos PDO/PCL'],
+    gradient: ['#5C3946', '#B8923F'],
+  },
+  {
+    initials: 'PS',
+    name: 'Dra. Paola Sánchez',
+    role: 'Dermatología clínica y antiacné',
+    bio: 'Dermatóloga con subespecialidad en dermatocosmética. Especialista en manchas, melasma, rosácea, acné severo y planes de cuidado preventivo. Lidera el protocolo dermatocosmético de CLIBEL.',
+    certs: ['Cédula 0000002', 'Sociedad Mexicana de Dermatología', 'Diplomado en Dermatocosmética'],
+    gradient: ['#BC8E9C', '#C9A961'],
+  },
+  {
+    initials: 'RC',
+    name: 'Lic. Renata Cordero',
+    role: 'Cosmetología clínica · Faciales y corporales',
+    bio: 'Licenciada en Cosmetología con certificaciones en aparatología avanzada, microneedling, peelings químicos y drenaje linfático. Responsable del área de tratamientos faciales no médicos.',
+    certs: ['Microneedling certificado', 'Peelings médicos', 'Drenaje linfático'],
+    gradient: ['#D9BC9C', '#8B5A6B'],
+  },
+  {
+    initials: 'MN',
+    name: 'TSU Mónica Nava',
+    role: 'Técnica en láser · Depilación profesional',
+    bio: 'Técnica certificada en operación de plataformas láser. Especializada en depilación para todo tipo de piel y vello, con seguimiento personalizado por paciente y zona.',
+    certs: ['Operación láser certificada', 'Protocolos por fototipo'],
+    gradient: ['#C9A961', '#5C3946'],
+  },
+  {
+    initials: 'IA',
+    name: 'Lic. Isabella Acosta',
+    role: 'Coordinadora de pacientes',
+    bio: 'Tu primer punto de contacto. Coordina valoraciones, agenda, seguimiento posterior y cualquier ajuste al plan. Conoce cada protocolo y te orienta sin presión comercial.',
+    certs: ['Atención al paciente', 'Coordinación clínica'],
+    gradient: ['#8B5A6B', '#BC8E9C'],
+  },
+];
+---
+
+<BaseLayout
+  title="Médicos Especialistas"
+  description="Médicas y especialistas certificados en medicina estética y dermatología, con formación continua y experiencia clínica. Conoce a tu doctora."
+>
+  <!-- Hero -->
+  <section class="gradient-soft">
+    <div class="container-x section">
+      <div class="max-w-3xl">
+        <span class="kicker-line">Equipo CLIBEL</span>
+        <h1 class="mt-4 h-display text-5xl sm:text-6xl lg:text-7xl">
+          Profesionales que <em>realmente</em><br/>
+          conocen tu piel.
+        </h1>
+        <p class="mt-6 text-lg text-[color:var(--color-ink-700)] leading-relaxed max-w-2xl">
+          Cada miembro de nuestro equipo cuenta con cédula vigente, certificaciones de
+          laboratorios líderes y formación continua. La estética seria empieza por
+          saber quién está detrás del procedimiento.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <div class="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
+        {team.map(m => (
+          <article class="card overflow-hidden reveal">
+            <div class="aspect-[4/5] relative overflow-hidden"
+                 style={`background: linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]});`}>
+              <div class="absolute inset-0 grid place-items-center">
+                <span class="font-display text-8xl font-bold text-white/95">{m.initials}</span>
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/60 to-transparent">
+                <p class="text-[10px] uppercase tracking-[0.2em] text-white/80">CLIBEL · Equipo médico</p>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="font-display text-2xl leading-tight">{m.name}</h3>
+              <p class="text-xs uppercase tracking-[0.16em] text-[color:var(--color-mauve-500)] mt-1.5 mb-4">{m.role}</p>
+              <p class="text-sm text-[color:var(--color-ink-500)] leading-relaxed mb-5">{m.bio}</p>
+              <div class="pt-4 border-t border-[color:var(--color-brand-200)]">
+                <p class="text-[10px] uppercase tracking-[0.16em] text-[color:var(--color-ink-500)] mb-2">Certificaciones</p>
+                <div class="flex flex-wrap gap-1.5">
+                  {m.certs.map(c => (
+                    <span class="text-[10px] bg-[color:var(--color-brand-100)] text-[color:var(--color-mauve-700)] px-2 py-1 rounded-full">{c}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA
+    title="¿Quieres conocer al equipo personalmente?"
+    subtitle="Agenda una valoración inicial sin compromiso y descubre cómo trabajamos. Conocerás a la doctora que estaría a cargo de tu plan."
+  />
+</BaseLayout>

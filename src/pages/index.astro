@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import HeroButtons from '../components/HeroButtons.astro';
+import CatalogShowcase from '../components/CatalogShowcase.astro';
+import PartnersMarquee from '../components/PartnersMarquee.astro';
+import WhyClibel from '../components/WhyClibel.astro';
+import Process from '../components/Process.astro';
+import SectorsAudience from '../components/SectorsAudience.astro';
+import Testimonials from '../components/Testimonials.astro';
+import BlogPreview from '../components/BlogPreview.astro';
+import FAQContact from '../components/FAQContact.astro';
+import CTA from '../components/CTA.astro';
+import { SITE } from '../consts';
+---
+
+<BaseLayout
+  title={SITE.name}
+  description="45 años atendiendo en CDMX. Medicina estética, depilación láser, faciales y corporales con respaldo médico. Agenda tu valoración sin costo."
+>
+  <Hero />
+  <HeroButtons />
+  <CatalogShowcase />
+  <PartnersMarquee />
+  <WhyClibel />
+  <Process />
+  <SectorsAudience />
+  <Testimonials />
+  <BlogPreview />
+  <FAQContact />
+
+  <!-- Bloque editorial de cierre -->
+  <section class="seo-block">
+    <div class="container-x">
+      <div class="seo-block-inner">
+        <span class="kicker-line">CLIBEL · CDMX</span>
+        <h2 class="seo-block-h2">
+          Una <em>clínica de belleza</em><br/>distinta a las demás.
+        </h2>
+
+        <div class="seo-block-grid">
+          <div>
+            <p>
+              <strong>CLIBEL nació en 1981</strong>. Desde entonces atendemos en CDMX
+              con la misma idea: la belleza se construye con criterio médico, no
+              con paquetes prearmados. Especialistas certificados, tecnología
+              avalada por COFEPRIS y protocolos clínicos documentados — sin
+              presión comercial, sin lenguaje vacío.
+            </p>
+            <p>
+              Aquí encuentras
+              <a href="/servicios#facial">tratamientos faciales</a> (limpieza
+              profunda, rejuvenecimiento, peelings químicos, antiacné),
+              <a href="/servicios#corporal">tratamientos corporales</a>
+              (radiofrecuencia, reducción localizada, drenaje linfático),
+              <a href="/servicios#laser">depilación láser</a> profesional para
+              todas las zonas, y
+              <a href="/servicios#medicina-estetica">medicina estética avanzada</a>
+              con ácido hialurónico, toxina botulínica, plasma rico en plaquetas
+              e hilos tensores.
+            </p>
+          </div>
+          <div>
+            <p>
+              Trabajamos con las marcas que usan los grandes centros del mundo
+              —Allergan, Galderma, Merz, Sculptra, Venus— y documentamos cada
+              procedimiento en tu expediente personal. 45 años, +5,000
+              pacientes, 4.9/5 en Google con +500 reseñas: la consecuencia de
+              hacer las cosas con calma.
+            </p>
+            <p>
+              Si estás buscando una <strong>clínica de belleza</strong> en CDMX
+              con <a href="/equipo">médicos especialistas</a>,
+              <a href="/tecnologia">tecnología certificada</a> y
+              <a href="/nosotros">trayectoria real</a>, agenda tu valoración
+              sin costo. Te respondemos en menos de 2 horas en horario clínica.
+            </p>
+            <a href="/contacto" class="btn btn-primary mt-4">Agendar valoración gratuita</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>
+
+<style>
+  .seo-block {
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, var(--color-brand-100) 100%);
+  }
+  .seo-block-inner { max-width: 100%; }
+  .seo-block-h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2rem, 3.6vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-ink-900);
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+  .seo-block-h2 em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+  }
+  .seo-block-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  @media (min-width: 900px) {
+    .seo-block-grid { grid-template-columns: 1fr 1fr; gap: clamp(2rem, 4vw, 4rem); }
+  }
+  .seo-block p {
+    font-size: clamp(0.95rem, 1vw, 1.05rem);
+    line-height: 1.75;
+    color: var(--color-ink-700);
+    margin-bottom: 1.25rem;
+  }
+  .seo-block strong { color: var(--color-ink-900); font-weight: 600; }
+  .seo-block a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-color: rgba(139, 90, 107, 0.3);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.3s ease;
+  }
+  .seo-block a:hover { text-decoration-color: var(--color-mauve-500); }
+  .seo-block .mt-4 { margin-top: 1rem; display: inline-flex; }
+</style>

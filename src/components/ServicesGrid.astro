@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import ServiceCard from './ServiceCard.astro';
+
+interface Props {
+  category?: 'facial' | 'corporal' | 'laser' | 'medicina-estetica' | 'capilar';
+  featuredOnly?: boolean;
+  limit?: number;
+}
+
+const { category, featuredOnly = false, limit } = Astro.props;
+
+let servicios = await getCollection('servicios');
+
+if (category) servicios = servicios.filter((s) => s.data.category === category);
+if (featuredOnly) servicios = servicios.filter((s) => s.data.featured);
+
+servicios.sort((a, b) => a.data.order - b.data.order);
+if (limit) servicios = servicios.slice(0, limit);
+---
+
+<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+  {
+    servicios.map((s) => (
+      <ServiceCard
+        href={`/servicios/${s.id}`}
+        title={s.data.title}
+        description={s.data.description}
+        category={s.data.category}
+        duration={s.data.duration}
+        icon={s.data.icon}
+      />
+    ))
+  }
+</div>

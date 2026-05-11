@@ -1,0 +1,40 @@
+---
+import { CATEGORIES } from '../consts';
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  category: keyof typeof CATEGORIES;
+  duration?: string;
+  icon?: string;
+}
+
+const { href, title, description, category, duration, icon } = Astro.props;
+const cat = CATEGORIES[category];
+---
+
+<a href={href} class="card group block h-full">
+  <div class="relative aspect-[16/10] bg-gradient-to-br from-[color:var(--color-brand-200)] via-[color:var(--color-brand-300)] to-[color:var(--color-mauve-300)] flex items-center justify-center text-6xl">
+    <span class="grayscale-0 transition-transform duration-500 group-hover:scale-110">{icon ?? '✨'}</span>
+    <span class="absolute top-4 left-4 text-[10px] font-semibold uppercase tracking-[0.18em] bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[color:var(--color-mauve-700)]">
+      {cat.label}
+    </span>
+  </div>
+  <div class="p-6">
+    <h3 class="text-xl font-display mb-2 text-[color:var(--color-ink-900)] group-hover:text-[color:var(--color-mauve-500)] transition-colors">{title}</h3>
+    <p class="text-sm text-[color:var(--color-ink-500)] line-clamp-3 leading-relaxed">{description}</p>
+    <div class="mt-4 flex items-center justify-between text-xs">
+      {duration && (
+        <span class="text-[color:var(--color-ink-500)] flex items-center gap-1">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          {duration}
+        </span>
+      )}
+      <span class="text-[color:var(--color-mauve-500)] font-medium group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+        Ver detalle
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </div>
+  </div>
+</a>

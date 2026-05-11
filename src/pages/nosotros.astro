@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTA from '../components/CTA.astro';
+import { SITE } from '../consts';
+
+const pillars = [
+  { icon: '🎯', title: 'Diagnóstico profesional', text: 'Cada tratamiento parte de una valoración detallada para entender tu piel, antecedentes y objetivos.' },
+  { icon: '🧪', title: 'Tecnología avalada', text: 'Equipos láser, radiofrecuencia y plasma con respaldo internacional y certificación COFEPRIS.' },
+  { icon: '👩‍⚕️', title: 'Equipo médico-experto', text: 'Especialistas en estética y dermatología con formación continua y experiencia clínica.' },
+  { icon: '🤍', title: 'Trato cálido', text: 'Atención humana, sin presión comercial. Te explicamos todo y respetamos tus tiempos y decisiones.' },
+];
+---
+
+<BaseLayout
+  title="Sobre CLIBEL — 45 Años de Belleza Médica"
+  description="CLIBEL nació en 1981. 45 años combinando medicina, tecnología certificada y trato humano. Conoce el equipo y la filosofía detrás de cada tratamiento."
+>
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-[color:var(--color-brand-100)] to-[color:var(--color-brand-200)]/40">
+    <div class="container-x section">
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="kicker">Sobre CLIBEL</span>
+        <span class="divider-gold"></span>
+        <h1 class="font-display text-5xl sm:text-6xl">Belleza con sentido, ciencia y cuidado</h1>
+        <p class="mt-6 text-lg text-[color:var(--color-ink-700)] leading-relaxed">
+          Somos una clínica de belleza referente en Ciudad de México, dedicada a realzar la belleza
+          natural a través de tratamientos seguros, modernos y diseñados para cada persona.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Story -->
+  <section class="section">
+    <div class="container-narrow prose-clibel">
+      <h2>Nuestra historia</h2>
+      <p>
+        CLIBEL nació con la convicción de que la estética debe combinar profesionalismo médico,
+        tecnología confiable y una experiencia humana que inspire confianza. Después de más de
+        45 años en el sector, nos hemos consolidado como una de las clínicas de belleza más completas
+        de la capital, ofreciendo soluciones avanzadas para mejorar la apariencia facial, rejuvenecer
+        la piel, moldear el cuerpo y fortalecer el cuidado capilar.
+      </p>
+      <p>
+        Cada procedimiento es realizado por especialistas altamente capacitados que trabajan con
+        equipos de última generación, garantizando resultados visibles, naturales y duraderos.
+      </p>
+
+      <h2>Nuestra filosofía</h2>
+      <p>
+        Creemos en la belleza que conserva tu identidad. Trabajamos para que cada paciente salga de
+        nuestra clínica más segura de sí misma, con piel saludable y resultados que potencian
+        —nunca reemplazan— sus rasgos y estilo personal.
+      </p>
+    </div>
+  </section>
+
+  <!-- Pillars -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="kicker">Pilares</span>
+        <span class="divider-gold"></span>
+        <h2 class="font-display text-4xl">Lo que nos distingue</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {
+          pillars.map((p) => (
+            <div class="card p-7 h-full text-center">
+              <div class="text-4xl mb-3">{p.icon}</div>
+              <h3 class="font-display text-xl mb-2">{p.title}</h3>
+              <p class="text-sm text-[color:var(--color-ink-500)] leading-relaxed">{p.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTA
+    title="Conoce nuestra clínica"
+    subtitle="Te invitamos a una valoración inicial sin compromiso. Estamos en Ciudad de México y agendamos por WhatsApp o teléfono."
+  />
+</BaseLayout>

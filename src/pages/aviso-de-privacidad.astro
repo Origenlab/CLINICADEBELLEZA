@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, CONTACT } from '../consts';
+---
+
+<BaseLayout title="Aviso de Privacidad" description="Aviso de Privacidad de CLIBEL conforme a la Ley Federal de Protección de Datos Personales en Posesión de Particulares." noindex>
+  <section class="container-narrow section">
+    <span class="kicker">Legal</span>
+    <span class="divider-gold"></span>
+    <h1 class="font-display text-5xl mb-8">Aviso de Privacidad</h1>
+
+    <div class="prose-clibel">
+      <p>
+        En <strong>{SITE.name}</strong>, en cumplimiento a la Ley Federal de Protección de Datos
+        Personales en Posesión de los Particulares (LFPDPPP), su Reglamento y los Lineamientos del
+        Aviso de Privacidad, ponemos a su disposición el presente Aviso de Privacidad.
+      </p>
+
+      <h2>Responsable</h2>
+      <p>
+        {SITE.name}, con domicilio en {CONTACT.addressFull}, es responsable del tratamiento de sus
+        datos personales.
+      </p>
+
+      <h2>Datos que recabamos</h2>
+      <p>
+        Para las finalidades señaladas en el presente Aviso, podemos recabar datos de identificación
+        y contacto (nombre, correo electrónico, teléfono), datos clínicos relevantes para el
+        tratamiento estético y datos relacionados con su historial de servicios.
+      </p>
+
+      <h2>Finalidades</h2>
+      <p>Sus datos serán utilizados para las siguientes finalidades primarias:</p>
+      <ul>
+        <li>Brindar atención, valoración y tratamientos estéticos.</li>
+        <li>Programar y recordar citas.</li>
+        <li>Llevar el expediente clínico y de seguimiento.</li>
+        <li>Facturación y cobranza.</li>
+      </ul>
+      <p>Y, de forma secundaria —si usted lo autoriza— para envío de promociones e información comercial.</p>
+
+      <h2>Derechos ARCO</h2>
+      <p>
+        Usted tiene derecho a Acceder, Rectificar, Cancelar u Oponerse al tratamiento de sus datos
+        personales. Para ejercer estos derechos puede enviar su solicitud a <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.
+      </p>
+
+      <h2>Cambios al Aviso</h2>
+      <p>
+        Cualquier modificación a este Aviso será comunicada a través de nuestro sitio web
+        <a href={SITE.url}>{SITE.url}</a>.
+      </p>
+
+      <p class="text-sm text-[color:var(--color-ink-500)] mt-12">
+        Última actualización: {new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })}.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

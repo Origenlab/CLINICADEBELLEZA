@@ -1,0 +1,37 @@
+---
+import { SECTORS } from '../consts';
+---
+
+<section class="section bg-white">
+  <div class="container-x">
+    <div class="grid lg:grid-cols-[1fr_auto] gap-8 items-end mb-14 reveal">
+      <div class="max-w-2xl">
+        <span class="kicker-line">A quién atendemos</span>
+        <h2 class="mt-4 text-4xl sm:text-5xl h-display">
+          Atendemos cada <em>momento</em><br/>de tu vida estética.
+        </h2>
+        <p class="mt-5 text-[color:var(--color-ink-500)] leading-relaxed">
+          Tu piel y tu cuerpo cambian con los años, los hábitos y las etapas de vida.
+          Por eso diseñamos protocolos específicos para mujeres, hombres y momentos
+          especiales. Sin lenguaje genérico.
+        </p>
+      </div>
+      <a href="/contacto" class="btn btn-outline self-start lg:self-end shrink-0">
+        Habla con una especialista
+      </a>
+    </div>
+
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {SECTORS.map((s) => (
+        <article class="reveal group border border-[color:var(--color-brand-200)] hover:border-[color:var(--color-mauve-500)] rounded-2xl p-6 transition-all hover:shadow-lg hover:shadow-[color:var(--color-mauve-500)]/10 bg-[color:var(--color-brand-50)]">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="font-display text-2xl text-[color:var(--color-brand-500)]">{s.n}</span>
+            <span class="h-px flex-1 bg-[color:var(--color-brand-200)] group-hover:bg-[color:var(--color-mauve-500)]/40 transition-colors"></span>
+          </div>
+          <h3 class="font-display text-lg leading-tight mb-2 group-hover:text-[color:var(--color-mauve-500)] transition-colors">{s.title}</h3>
+          <p class="text-sm text-[color:var(--color-ink-500)] leading-relaxed">{s.text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

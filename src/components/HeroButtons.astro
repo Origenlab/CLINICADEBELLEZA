@@ -1,0 +1,122 @@
+---
+import { CATEGORIES } from '../consts';
+const cats = Object.values(CATEGORIES);
+---
+
+<section class="hero-nav-section" aria-label="Servicios principales">
+  <div class="container-x">
+    <nav class="hero-nav">
+      {cats.map((cat, i) => (
+        <>
+          <a href={`/servicios#${cat.slug}`} class="hero-nav-link">
+            {cat.label}
+          </a>
+          {i < cats.length && <span class="hero-nav-sep" aria-hidden="true"></span>}
+        </>
+      ))}
+      <a href="/contacto" class="hero-nav-link hero-nav-link--cta">
+        Agendar valoración
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </nav>
+  </div>
+</section>
+
+<style>
+  .hero-nav-section {
+    background: var(--color-brand-50);
+    border-block: 1px solid rgba(201, 169, 97, 0.2);
+    padding-block: 1.25rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 1.6rem;
+    width: 100%;
+  }
+  @media (min-width: 1024px) {
+    .hero-nav {
+      flex-wrap: nowrap;
+      gap: 0;
+    }
+  }
+
+  .hero-nav-link {
+    position: relative;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-700);
+    padding: 0.35rem 0;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  @media (min-width: 1024px) {
+    .hero-nav-link {
+      padding: 0.4rem 1.5rem;
+    }
+  }
+  .hero-nav-link::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    transition: all 0.35s cubic-bezier(.2,.8,.2,1);
+    transform: translateX(-50%);
+  }
+  .hero-nav-link:hover {
+    color: var(--color-mauve-700);
+  }
+  .hero-nav-link:hover::after {
+    width: 70%;
+  }
+
+  .hero-nav-sep {
+    width: 1px;
+    height: 14px;
+    background: rgba(201, 169, 97, 0.4);
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .hero-nav-sep { display: inline-block; }
+  }
+
+  .hero-nav-link--cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--color-mauve-700);
+    font-weight: 600;
+    margin-left: 0;
+  }
+  @media (min-width: 1024px) {
+    .hero-nav-link--cta {
+      margin-left: 0.5rem;
+    }
+  }
+  .hero-nav-link--cta::after {
+    background: var(--color-mauve-700);
+  }
+  .hero-nav-link--cta:hover {
+    color: var(--color-ink-900);
+  }
+  .hero-nav-link--cta svg {
+    transition: transform 0.35s ease;
+  }
+  .hero-nav-link--cta:hover svg {
+    transform: translateX(3px);
+  }
+</style>

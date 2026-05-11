@@ -1,0 +1,31 @@
+---
+import { PARTNERS } from '../consts';
+const items = [...PARTNERS, ...PARTNERS]; // duplicated for seamless loop
+---
+
+<section class="bg-[color:var(--color-brand-100)] border-y border-[color:var(--color-brand-200)] py-10 overflow-hidden">
+  <div class="container-x mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <p class="text-xs uppercase tracking-[0.22em] text-[color:var(--color-ink-500)] font-semibold">
+      Tecnología y productos de marcas reconocidas a nivel mundial
+    </p>
+    <p class="text-xs text-[color:var(--color-ink-500)]">
+      Distribuidores autorizados · Trazabilidad de lote · Documentación al paciente
+    </p>
+  </div>
+
+  <div class="relative">
+    <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[color:var(--color-brand-100)] to-transparent z-10 pointer-events-none"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[color:var(--color-brand-100)] to-transparent z-10 pointer-events-none"></div>
+
+    <div class="marquee">
+      {items.map((name) => (
+        <div class="shrink-0 px-10 py-4 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[color:var(--color-brand-400)]"></span>
+          <span class="font-display text-2xl lg:text-3xl text-[color:var(--color-ink-700)] tracking-tight whitespace-nowrap">
+            {name}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

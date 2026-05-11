@@ -1,0 +1,105 @@
+---
+const testimonials = [
+  {
+    name: 'María Fernanda',
+    initials: 'MF',
+    treatment: 'Limpieza facial profunda · 6 sesiones',
+    quote:
+      'La atención fue impecable y mi piel quedó radiante desde la primera sesión. El equipo te explica cada paso, sin presionarte a comprar paquetes. Llevo más de un año regresando.',
+    rating: 5,
+  },
+  {
+    name: 'Andrea G.',
+    initials: 'AG',
+    treatment: 'Depilación láser · plan completo',
+    quote:
+      'Después de varias sesiones noté resultados clarísimos. Tecnología seria, sin dolor y un trato muy profesional. Me sentí cómoda en todo momento. 100% recomendado.',
+    rating: 5,
+  },
+  {
+    name: 'Sofía R.',
+    initials: 'SR',
+    treatment: 'Ácido hialurónico labios + pómulos',
+    quote:
+      'Buscaba un resultado natural y CLIBEL lo logró. La doctora escucha y propone justo lo que necesitas. Mis amigas notan que me veo descansada, no "diferente". Esa es la magia.',
+    rating: 5,
+  },
+  {
+    name: 'Patricia L.',
+    initials: 'PL',
+    treatment: 'Radiofrecuencia corporal posparto',
+    quote:
+      'Llegué después de mi segundo embarazo con poca esperanza. El plan de 10 sesiones fue brutal, mi piel se reafirmó y me siento más segura. Atención humana, sin juicios.',
+    rating: 5,
+  },
+  {
+    name: 'Carlos M.',
+    initials: 'CM',
+    treatment: 'Brotox + tratamiento capilar',
+    quote:
+      'Como hombre buscaba un lugar serio. La doctora me explicó exactamente qué iba a pasar, sin sobrevenderme nada. Resultados muy naturales. Aquí me quedo.',
+    rating: 5,
+  },
+  {
+    name: 'Renata V.',
+    initials: 'RV',
+    treatment: 'Peelings químicos · melasma',
+    quote:
+      'Llevaba años con manchas que ninguna crema mejoraba. Tras 4 peelings, mi piel se ve uniforme. Lo mejor: el seguimiento posterior y los ajustes al plan original.',
+    rating: 5,
+  },
+];
+
+const avatars = ['#C9A961', '#8B5A6B', '#5C3946', '#D9BC9C', '#BC8E9C', '#B8923F'];
+---
+
+<section class="section bg-[color:var(--color-brand-50)]">
+  <div class="container-x">
+    <div class="grid lg:grid-cols-[1fr_auto] gap-8 items-end mb-14 reveal">
+      <div class="max-w-2xl">
+        <span class="kicker-line">Pacientes que confían en CLIBEL</span>
+        <h2 class="mt-4 text-4xl sm:text-5xl h-display">
+          Lo que dicen <em>quienes</em><br/>ya nos eligieron.
+        </h2>
+        <p class="mt-5 text-[color:var(--color-ink-500)] leading-relaxed">
+          Más de 5,000 pacientes atendidas. Calificación 4.9/5 en Google con más de 500
+          reseñas verificadas. Aquí algunas experiencias reales contadas por sus protagonistas.
+        </p>
+      </div>
+      <div class="flex flex-col items-start lg:items-end gap-2">
+        <div class="flex gap-0.5">
+          {[1,2,3,4,5].map(() => (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#C9A961"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg>
+          ))}
+        </div>
+        <p class="font-display text-3xl text-[color:var(--color-ink-900)]">4.9 / 5.0</p>
+        <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-ink-500)]">Google Reviews · 500+ opiniones</p>
+      </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {testimonials.map((t, i) => (
+        <article class="card p-7 h-full flex flex-col reveal">
+          <div class="flex gap-0.5 mb-4">
+            {Array.from({ length: t.rating }).map(() => (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#C9A961"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg>
+            ))}
+          </div>
+          <p class="text-[color:var(--color-ink-700)] leading-relaxed flex-1 italic">
+            "{t.quote}"
+          </p>
+          <div class="mt-6 pt-5 border-t border-[color:var(--color-brand-200)] flex items-center gap-3">
+            <span class="w-11 h-11 grid place-items-center rounded-full text-white font-display font-bold text-sm shadow-md"
+                  style={`background: linear-gradient(135deg, ${avatars[i]}, ${avatars[(i+1) % avatars.length]});`}>
+              {t.initials}
+            </span>
+            <div>
+              <p class="font-display text-lg leading-tight">{t.name}</p>
+              <p class="text-[10px] uppercase tracking-[0.14em] text-[color:var(--color-mauve-500)] mt-1">{t.treatment}</p>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

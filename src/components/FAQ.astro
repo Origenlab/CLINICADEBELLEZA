@@ -1,0 +1,59 @@
+---
+interface FAQItem { q: string; a: string; }
+
+interface Props {
+  items?: FAQItem[];
+  title?: string;
+}
+
+const defaultItems: FAQItem[] = [
+  {
+    q: '¿Cómo agendo mi primera cita?',
+    a: 'Puedes contactarnos por WhatsApp, llamada telefónica o el formulario de la página de contacto. Una asesora te guiará para reservar una valoración personalizada.',
+  },
+  {
+    q: '¿La primera valoración tiene costo?',
+    a: 'En CLIBEL la valoración inicial te permite conocer el diagnóstico y plan de tratamiento. Consulta promociones vigentes con nuestro equipo, suelen ser sin costo o con descuento.',
+  },
+  {
+    q: '¿Los procedimientos son seguros?',
+    a: 'Sí. Trabajamos con personal médico certificado, productos avalados por COFEPRIS y tecnología clínica de última generación. Cada protocolo se adapta a tu tipo de piel y objetivos.',
+  },
+  {
+    q: '¿En cuántas sesiones veré resultados?',
+    a: 'Depende del tratamiento. Algunos servicios muestran cambios desde la primera sesión (limpieza facial, ácido hialurónico). Otros, como depilación láser o radiofrecuencia, requieren un protocolo de varias sesiones para resultados óptimos.',
+  },
+  {
+    q: '¿Aceptan diferentes formas de pago?',
+    a: 'Sí. Aceptamos efectivo, tarjetas de crédito/débito y transferencias. Consulta nuestros paquetes de sesiones con precio preferencial.',
+  },
+];
+
+const { items = defaultItems, title = 'Preguntas frecuentes' } = Astro.props;
+---
+
+<section class="section">
+  <div class="container-narrow">
+    <div class="text-center mb-12">
+      <span class="kicker">FAQ</span>
+      <span class="divider-gold"></span>
+      <h2 class="text-4xl font-display">{title}</h2>
+    </div>
+
+    <div class="space-y-3">
+      {
+        items.map((item, i) => (
+          <details class="group card p-0 overflow-hidden" open={i === 0}>
+            <summary class="cursor-pointer list-none p-6 flex items-center justify-between gap-4">
+              <span class="font-display text-lg text-[color:var(--color-ink-900)]">{item.q}</span>
+              <span class="shrink-0 w-8 h-8 grid place-items-center rounded-full bg-[color:var(--color-brand-100)] text-[color:var(--color-mauve-500)] transition-transform group-open:rotate-45">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-[color:var(--color-ink-700)] leading-relaxed">{item.a}</div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

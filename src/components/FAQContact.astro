@@ -1,0 +1,100 @@
+---
+import { FAQ_ITEMS, CONTACT, CATEGORIES } from '../consts';
+const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
+const cats = Object.values(CATEGORIES);
+---
+
+<section class="section bg-[color:var(--color-brand-50)]" id="faq">
+  <div class="container-x">
+    <div class="max-w-3xl mb-14 reveal">
+      <span class="kicker-line">FAQ y reserva</span>
+      <h2 class="mt-4 text-4xl sm:text-5xl h-display">
+        Preguntas frecuentes y <em>reserva</em><br/>de tu valoración.
+      </h2>
+      <p class="mt-5 text-[color:var(--color-ink-500)] leading-relaxed">
+        Resolvemos las dudas más comunes sobre nuestros tratamientos.
+        ¿No encuentras lo que buscas? Escríbenos por WhatsApp y te atendemos el mismo día.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-start">
+      <!-- FAQ -->
+      <div class="space-y-3 reveal">
+        <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--color-brand-500)] font-semibold mb-4">
+          Lo que más nos preguntan
+        </p>
+        {FAQ_ITEMS.map((item, i) => (
+          <details class="group bg-white rounded-2xl overflow-hidden border border-[color:var(--color-brand-200)]" open={i === 0}>
+            <summary class="cursor-pointer list-none p-5 flex items-center justify-between gap-4">
+              <span class="font-display text-base text-[color:var(--color-ink-900)] leading-tight pr-4">{item.q}</span>
+              <span class="shrink-0 w-8 h-8 grid place-items-center rounded-full bg-[color:var(--color-brand-100)] text-[color:var(--color-mauve-500)] transition-transform group-open:rotate-45">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </span>
+            </summary>
+            <div class="px-5 pb-5 text-sm text-[color:var(--color-ink-700)] leading-relaxed">{item.a}</div>
+          </details>
+        ))}
+      </div>
+
+      <!-- Form -->
+      <aside class="card p-7 lg:sticky lg:top-28 reveal">
+        <span class="kicker text-[color:var(--color-mauve-500)]">Valoración gratuita</span>
+        <h3 class="font-display text-2xl mt-2 mb-2">Solicita tu cita</h3>
+        <p class="text-xs text-[color:var(--color-ink-500)] mb-5">Respuesta en menos de 2 horas · Sin compromiso</p>
+
+        <form action="#" method="POST" class="space-y-3">
+          <div>
+            <label for="nombre-faq" class="block text-xs font-medium mb-1 text-[color:var(--color-ink-700)]">Nombre completo *</label>
+            <input id="nombre-faq" name="nombre" required type="text"
+              class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[color:var(--color-brand-200)] bg-[color:var(--color-brand-50)] focus:border-[color:var(--color-mauve-500)] focus:bg-white outline-none transition" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="tel-faq" class="block text-xs font-medium mb-1 text-[color:var(--color-ink-700)]">Teléfono *</label>
+              <input id="tel-faq" name="tel" required type="tel"
+                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[color:var(--color-brand-200)] bg-[color:var(--color-brand-50)] focus:border-[color:var(--color-mauve-500)] focus:bg-white outline-none transition" />
+            </div>
+            <div>
+              <label for="email-faq" class="block text-xs font-medium mb-1 text-[color:var(--color-ink-700)]">Email *</label>
+              <input id="email-faq" name="email" required type="email"
+                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[color:var(--color-brand-200)] bg-[color:var(--color-brand-50)] focus:border-[color:var(--color-mauve-500)] focus:bg-white outline-none transition" />
+            </div>
+          </div>
+          <div>
+            <label for="cat-faq" class="block text-xs font-medium mb-1 text-[color:var(--color-ink-700)]">¿Qué te interesa? *</label>
+            <select id="cat-faq" name="categoria"
+              class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[color:var(--color-brand-200)] bg-[color:var(--color-brand-50)] focus:border-[color:var(--color-mauve-500)] focus:bg-white outline-none transition">
+              <option value="">Selecciona una categoría</option>
+              {cats.map(c => <option value={c.slug}>{c.label}</option>)}
+              <option value="otro">Otro / no estoy segura</option>
+            </select>
+          </div>
+          <div>
+            <label for="msg-faq" class="block text-xs font-medium mb-1 text-[color:var(--color-ink-700)]">Cuéntanos más (opcional)</label>
+            <textarea id="msg-faq" name="mensaje" rows="3"
+              class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[color:var(--color-brand-200)] bg-[color:var(--color-brand-50)] focus:border-[color:var(--color-mauve-500)] focus:bg-white outline-none transition"></textarea>
+          </div>
+
+          <label class="flex items-start gap-2 text-[11px] text-[color:var(--color-ink-500)]">
+            <input required type="checkbox" class="mt-0.5" />
+            <span>Acepto el <a href="/aviso-de-privacidad" class="text-[color:var(--color-mauve-500)] underline">Aviso de Privacidad</a> y autorizo el contacto.</span>
+          </label>
+
+          <a href={wa} target="_blank" rel="noopener" class="btn btn-primary w-full">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+            Enviar por WhatsApp
+          </a>
+          <p class="text-[10px] text-center text-[color:var(--color-ink-500)] uppercase tracking-[0.14em]">
+            Respuesta en &lt; 2h · COFEPRIS · Sin compromiso
+          </p>
+        </form>
+
+        <div class="mt-6 pt-5 border-t border-[color:var(--color-brand-200)] text-xs text-[color:var(--color-ink-500)] space-y-1.5">
+          <p>¿Prefieres llamarnos?</p>
+          <a href={`tel:${CONTACT.phone}`} class="font-display text-xl text-[color:var(--color-ink-900)]">{CONTACT.phoneDisplay}</a>
+          <p>{CONTACT.hours}</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
