@@ -1,168 +1,104 @@
 ---
 import { CATEGORIES } from '../consts';
+import SectionHeader from './SectionHeader.astro';
 const cats = Object.values(CATEGORIES);
+
+// Paleta visual por categoría — placeholder hasta tener fotos reales
+const placeholderStyles: Record<string, { from: string; to: string; tone: string }> = {
+  facial:              { from: '#F2EBDF', to: '#BC8E9C', tone: 'rgba(92,57,70,0.85)' },
+  corporal:            { from: '#E8D5C4', to: '#C9A961', tone: 'rgba(74,53,64,0.85)' },
+  laser:               { from: '#D9BC9C', to: '#5C3946', tone: 'rgba(31,20,24,0.9)' },
+  'medicina-estetica': { from: '#BC8E9C', to: '#5C3946', tone: 'rgba(31,20,24,0.92)' },
+  capilar:             { from: '#F2EBDF', to: '#8B5A6B', tone: 'rgba(92,57,70,0.85)' },
+};
 ---
 
 <section class="section bg-white" id="catalogo">
   <div class="container-x">
-    <!-- Header 2 columnas -->
-    <div class="catalog-header">
-      <div class="catalog-header-left">
-        <span class="kicker-line">Catálogo</span>
-        <h2 class="catalog-h2">
-          Todo lo que hacemos en <em>una sola clínica</em>.
-        </h2>
-        <a href="/servicios" class="btn btn-outline catalog-cta">
-          Ver catálogo completo
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-      </div>
-
-      <div class="catalog-header-right">
-        <p class="catalog-paragraph">
-          Cubrimos las cinco áreas críticas del cuidado estético en una sola
-          sede: tratamientos faciales, corporales, depilación láser, medicina
-          estética avanzada y terapias capilares. Cada protocolo se diseña a
-          medida después de tu valoración clínica, con tecnología certificada
-          COFEPRIS y especialistas con formación internacional.
-        </p>
-        <p class="catalog-paragraph">
-          Operamos con marcas de referencia mundial —Allergan, Galderma, Merz,
-          Sculptra y Venus— y documentamos cada procedimiento en tu expediente
-          personal. Más de <strong>25 tratamientos</strong> avalados por
-          protocolos clínicos, opciones para mujeres y hombres, y resultados
-          naturales con respaldo médico real.
-        </p>
-      </div>
-    </div>
+    <SectionHeader
+      kicker="Catálogo"
+      title="Todo lo que hacemos en <em>una sola clínica</em>."
+      paragraphs={[
+        'Cubrimos las cinco áreas críticas del cuidado estético en una sola sede: tratamientos faciales, corporales, depilación láser, medicina estética avanzada y terapias capilares. Cada protocolo se diseña a medida después de tu valoración clínica, con tecnología certificada COFEPRIS y especialistas con formación internacional.',
+        'Operamos con marcas de referencia mundial —Allergan, Galderma, Merz, Sculptra y Venus— y documentamos cada procedimiento en tu expediente personal. Más de <strong>25 tratamientos</strong> avalados por protocolos clínicos, opciones para mujeres y hombres, y resultados naturales con respaldo médico real.',
+      ]}
+      cta={{ label: 'Ver catálogo completo', href: '/servicios', variant: 'outline' }}
+    />
 
     <!-- Grid de cards -->
     <div class="catalog-grid">
-      {cats.map((cat) => (
-        <article class="catalog-card reveal">
-          <!-- Header decorativo -->
-          <div class="catalog-card-head">
-            <div class="catalog-card-icon" aria-hidden="true">
-              <span>{cat.icon}</span>
+      {cats.map((cat, i) => {
+        const style = placeholderStyles[cat.slug] ?? placeholderStyles.facial;
+        const num = String(i + 1).padStart(2, '0');
+        return (
+          <article class="catalog-card reveal">
+            <!-- Image placeholder -->
+            <div
+              class="catalog-card-media"
+              style={`background: linear-gradient(135deg, ${style.from} 0%, ${style.to} 100%);`}
+              aria-label={`${cat.label} — imagen pendiente`}
+            >
+              <div class="catalog-card-pattern" aria-hidden="true"></div>
+              <div class="catalog-card-overlay" style={`background: linear-gradient(180deg, transparent 0%, ${style.tone} 100%);`} aria-hidden="true"></div>
+
+              <span class="catalog-card-num" aria-hidden="true">{num}</span>
+
+              <div class="catalog-card-meta">
+                <span class="catalog-card-short">{cat.short}</span>
+                <span class="catalog-card-badge">{cat.badgeLabel}</span>
+              </div>
+
+              <span class="catalog-card-count">{cat.badgeCount}</span>
             </div>
-            <div class="catalog-card-badges">
-              <span class="catalog-card-badge catalog-card-badge--label">{cat.badgeLabel}</span>
-              <span class="catalog-card-badge catalog-card-badge--count">{cat.badgeCount}</span>
+
+            <!-- Body -->
+            <div class="catalog-card-body">
+              <header class="catalog-card-intro">
+                <h3 class="catalog-card-title">{cat.label}</h3>
+                <p class="catalog-card-desc">{cat.description}</p>
+              </header>
+
+              <div class="catalog-card-items">
+                {cat.items.slice(0, 4).map((item) => (
+                  <a href={item.href} class="catalog-item-btn">
+                    <span>{item.label}</span>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                  </a>
+                ))}
+              </div>
+
+              <a href={`/servicios#${cat.slug}`} class="catalog-card-cta">
+                <span>Ver tratamientos</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
             </div>
-          </div>
-
-          <!-- Título + descripción -->
-          <div class="catalog-card-intro">
-            <h3 class="catalog-card-title">{cat.label}</h3>
-            <p class="catalog-card-desc">{cat.description}</p>
-          </div>
-
-          <span class="catalog-card-divider" aria-hidden="true"></span>
-
-          <!-- Items como botones -->
-          <div class="catalog-card-items">
-            <span class="catalog-card-items-label">Tratamientos incluidos</span>
-            <div class="catalog-card-items-grid">
-              {cat.items.slice(0, 4).map((item) => (
-                <a href={item.href} class="catalog-item-btn">
-                  <span class="catalog-item-dot" aria-hidden="true"></span>
-                  <span class="catalog-item-label">{item.label}</span>
-                  <svg class="catalog-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polyline points="9 18 15 12 9 6"/>
-                  </svg>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <!-- CTA -->
-          <a href={`/servicios#${cat.slug}`} class="catalog-card-cta">
-            <span>Ver tratamientos</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="5" y1="12" x2="19" y2="12"/>
-              <polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </a>
-        </article>
-      ))}
+          </article>
+        );
+      })}
     </div>
   </div>
 </section>
 
 <style>
-  /* ========== Header ========== */
-  .catalog-header {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    margin-bottom: clamp(2.5rem, 4vw, 4rem);
-    align-items: start;
-  }
-  @media (min-width: 900px) {
-    .catalog-header {
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(2rem, 4vw, 4.5rem);
-    }
-  }
-  .catalog-header-left {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: flex-start;
-  }
-  @media (min-width: 900px) {
-    .catalog-header-left { padding-right: clamp(0px, 2vw, 2rem); }
-  }
-  .catalog-h2 {
-    font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.028em;
-    line-height: 0.98;
-    color: var(--color-ink-900);
-    font-size: clamp(2.25rem, 4.5vw, 4.25rem);
-    margin: 0;
-  }
-  .catalog-h2 em {
-    font-style: italic;
-    color: var(--color-mauve-500);
-    font-weight: 400;
-  }
-  .catalog-cta { margin-top: 0.5rem; }
-  .catalog-header-right {
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-    padding-left: 0;
-    border-left: none;
-  }
-  @media (min-width: 900px) {
-    .catalog-header-right {
-      padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
-      border-left: 1px solid rgba(201, 169, 97, 0.25);
-    }
-  }
-  .catalog-paragraph {
-    font-size: clamp(0.95rem, 1vw, 1.05rem);
-    line-height: 1.75;
-    color: var(--color-ink-700);
-    margin: 0;
-  }
-  .catalog-paragraph strong { color: var(--color-ink-900); font-weight: 600; }
-
   /* ========== Grid ========== */
   .catalog-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
   @media (min-width: 680px) {
     .catalog-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (min-width: 1100px) {
-    .catalog-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .catalog-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
   }
   @media (min-width: 1600px) {
-    .catalog-grid { grid-template-columns: repeat(5, 1fr); }
+    .catalog-grid { grid-template-columns: repeat(5, 1fr); gap: 1.5rem; }
   }
 
   /* ========== Card ========== */
@@ -170,182 +106,156 @@ const cats = Object.values(CATEGORIES);
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: clamp(1.5rem, 2vw, 2rem);
     background: white;
-    border-radius: 24px;
-    border: 1px solid rgba(232, 213, 196, 0.6);
+    border-radius: 18px;
+    border: 1px solid rgba(232, 213, 196, 0.55);
     box-shadow:
       0 1px 2px rgba(31, 20, 24, 0.03),
-      0 12px 32px -18px rgba(31, 20, 24, 0.12);
+      0 14px 32px -20px rgba(31, 20, 24, 0.14);
     transition: all 0.5s cubic-bezier(.2,.8,.2,1);
     overflow: hidden;
-    isolation: isolate;
-  }
-  .catalog-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(80% 50% at 100% 0%, rgba(201, 169, 97, 0.06), transparent 70%),
-      radial-gradient(60% 40% at 0% 100%, rgba(139, 90, 107, 0.05), transparent 70%);
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.5s ease;
   }
   .catalog-card:hover {
     transform: translateY(-6px);
-    border-color: rgba(201, 169, 97, 0.5);
+    border-color: rgba(201, 169, 97, 0.55);
     box-shadow:
       0 4px 8px rgba(31, 20, 24, 0.05),
-      0 32px 56px -20px rgba(92, 57, 70, 0.22);
+      0 36px 60px -24px rgba(92, 57, 70, 0.28);
   }
-  .catalog-card:hover::before { opacity: 1; }
 
-  /* ========== Card head ========== */
-  .catalog-card-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1.4rem;
+  /* ========== Media (image placeholder) ========== */
+  .catalog-card-media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
   }
-  .catalog-card-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 18px;
-    display: grid;
-    place-items: center;
-    background:
-      linear-gradient(135deg, var(--color-brand-400) 0%, var(--color-mauve-500) 100%);
-    box-shadow:
-      0 1px 2px rgba(31, 20, 24, 0.06),
-      0 12px 24px -10px rgba(139, 90, 107, 0.35),
-      inset 0 1px 0 rgba(255,255,255,0.25);
-    flex-shrink: 0;
-    transition: transform 0.6s cubic-bezier(.2,.8,.2,1);
+  .catalog-card-pattern {
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(45deg, transparent 0 28px, rgba(255,255,255,0.06) 28px 29px),
+      radial-gradient(60% 50% at 30% 30%, rgba(255,255,255,0.18), transparent 60%);
+    mix-blend-mode: overlay;
   }
-  .catalog-card-icon span {
-    font-size: 1.8rem;
+  .catalog-card-overlay {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .catalog-card-num {
+    position: absolute;
+    top: 1rem; left: 1.2rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.04em;
     line-height: 1;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
   }
-  .catalog-card:hover .catalog-card-icon {
-    transform: rotate(-6deg) scale(1.08);
-  }
-
-  .catalog-card-badges {
+  .catalog-card-meta {
+    position: absolute;
+    bottom: 1.1rem;
+    left: 1.2rem;
+    right: 1.2rem;
     display: flex;
-    flex-direction: column;
     align-items: flex-end;
-    gap: 0.35rem;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .catalog-card-short {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 2.6vw, 2.6rem);
+    font-weight: 500;
+    color: white;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.18);
   }
   .catalog-card-badge {
     display: inline-flex;
-    align-items: center;
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     font-weight: 600;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    padding: 0.35rem 0.7rem;
+    color: white;
+    padding: 0.32rem 0.65rem;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.3);
     border-radius: 999px;
     white-space: nowrap;
+    margin-bottom: 0.4rem;
   }
-  .catalog-card-badge--label {
-    background: rgba(201, 169, 97, 0.12);
-    color: var(--color-mauve-700);
-    border: 1px solid rgba(201, 169, 97, 0.25);
-  }
-  .catalog-card-badge--count {
-    background: var(--color-ink-900);
-    color: var(--color-brand-200);
-    letter-spacing: 0.1em;
+  .catalog-card-count {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-900);
+    padding: 0.35rem 0.7rem;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    border-radius: 999px;
   }
 
-  /* ========== Card intro ========== */
-  .catalog-card-intro {
-    margin-bottom: 1.3rem;
+  /* ========== Body ========== */
+  .catalog-card-body {
+    padding: 1.25rem 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    flex: 1;
   }
+
+  .catalog-card-intro { margin: 0; }
   .catalog-card-title {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(1.4rem, 1.5vw, 1.7rem);
+    font-size: clamp(1.25rem, 1.4vw, 1.5rem);
     line-height: 1.15;
     letter-spacing: -0.018em;
     color: var(--color-ink-900);
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.3rem;
   }
   .catalog-card-desc {
-    font-size: 0.88rem;
-    line-height: 1.55;
+    font-size: 0.82rem;
+    line-height: 1.45;
     color: var(--color-ink-500);
     margin: 0;
   }
 
-  .catalog-card-divider {
-    display: block;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(201, 169, 97, 0.4) 50%,
-      transparent 100%
-    );
-    margin-bottom: 1.4rem;
-  }
-
-  /* ========== Items grid (botones) ========== */
+  /* ========== Items botones ========== */
   .catalog-card-items {
-    margin-bottom: 1.5rem;
-    flex: 1;
-  }
-  .catalog-card-items-label {
-    display: block;
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--color-mauve-500);
-    margin-bottom: 0.75rem;
-  }
-  .catalog-card-items-grid {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.35rem;
+    flex: 1;
   }
   .catalog-item-btn {
-    position: relative;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 0.65rem;
-    padding: 0.7rem 0.95rem;
-    background: rgba(250, 247, 242, 0.7);
-    border: 1px solid rgba(232, 213, 196, 0.55);
-    border-radius: 12px;
-    font-size: 0.82rem;
-    color: var(--color-ink-800);
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    background: rgba(250, 247, 242, 0.5);
+    border: 1px solid rgba(232, 213, 196, 0.5);
+    border-radius: 8px;
+    font-size: 0.78rem;
     font-weight: 500;
-    line-height: 1.3;
-    transition: all 0.3s cubic-bezier(.2,.8,.2,1);
+    color: var(--color-ink-800);
+    line-height: 1.25;
+    transition: all 0.25s cubic-bezier(.2,.8,.2,1);
     text-decoration: none;
-    cursor: pointer;
   }
-  .catalog-item-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--color-brand-400);
-    flex-shrink: 0;
-    transition: all 0.3s ease;
-  }
-  .catalog-item-label {
+  .catalog-item-btn span {
     flex: 1;
     text-align: left;
   }
-  .catalog-item-arrow {
-    color: var(--color-mauve-500);
-    opacity: 0;
-    transform: translateX(-4px);
-    transition: all 0.3s cubic-bezier(.2,.8,.2,1);
+  .catalog-item-btn svg {
+    color: var(--color-brand-500);
+    opacity: 0.55;
+    transition: all 0.25s ease;
     flex-shrink: 0;
   }
   .catalog-item-btn:hover {
@@ -353,62 +263,50 @@ const cats = Object.values(CATEGORIES);
     border-color: var(--color-mauve-500);
     color: var(--color-ink-900);
     transform: translateX(2px);
-    box-shadow: 0 8px 18px -10px rgba(92, 57, 70, 0.25);
   }
-  .catalog-item-btn:hover .catalog-item-dot {
-    background: var(--color-mauve-500);
-    transform: scale(1.4);
-  }
-  .catalog-item-btn:hover .catalog-item-arrow {
+  .catalog-item-btn:hover svg {
+    color: var(--color-mauve-500);
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(2px);
   }
 
-  /* ========== CTA principal del card ========== */
+  /* ========== CTA del card ========== */
   .catalog-card-cta {
     position: relative;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 0.55rem;
-    width: 100%;
-    padding: 0.9rem 1.25rem;
-    background:
-      linear-gradient(135deg, var(--color-ink-900) 0%, var(--color-mauve-700) 100%);
+    padding: 0.8rem 1rem;
+    background: var(--color-ink-900);
     color: var(--color-brand-50);
     font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 0.88rem;
-    letter-spacing: 0.04em;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    border-radius: 12px;
+    border-radius: 10px;
     text-decoration: none;
-    transition: all 0.4s cubic-bezier(.2,.8,.2,1);
+    transition: all 0.35s cubic-bezier(.2,.8,.2,1);
     overflow: hidden;
     isolation: isolate;
-    box-shadow:
-      0 1px 2px rgba(31, 20, 24, 0.08),
-      0 12px 28px -14px rgba(31, 20, 24, 0.4);
+    margin-top: 0.25rem;
   }
   .catalog-card-cta::before {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(135deg, var(--color-brand-400) 0%, var(--color-mauve-500) 100%);
+    background: linear-gradient(135deg, var(--color-mauve-700) 0%, var(--color-brand-500) 100%);
     opacity: 0;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.35s ease;
     z-index: -1;
   }
   .catalog-card-cta svg {
-    transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1);
   }
   .catalog-card-cta:hover {
     color: white;
-    transform: translateY(-2px);
-    box-shadow:
-      0 4px 8px rgba(31, 20, 24, 0.08),
-      0 20px 40px -16px rgba(139, 90, 107, 0.55);
+    box-shadow: 0 16px 32px -14px rgba(139, 90, 107, 0.5);
   }
   .catalog-card-cta:hover::before { opacity: 1; }
   .catalog-card-cta:hover svg { transform: translateX(4px); }

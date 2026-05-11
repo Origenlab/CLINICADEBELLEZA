@@ -10,7 +10,7 @@ const _ = null;
 
   <div class="container-x relative">
     <div class="hero-grid">
-      <!-- LEFT 50% -->
+      <!-- LEFT 50% — brand statement -->
       <div class="hero-col hero-col--left fade-up">
         <span class="eyebrow-tag">
           <span class="dot"></span>
@@ -18,8 +18,7 @@ const _ = null;
         </span>
 
         <h1 class="hero-headline">
-          <span class="hero-headline-line">Clínica</span>
-          <span class="hero-headline-line">de <em>belleza</em></span>
+          <span class="hero-headline-line">Clínica de <em>belleza</em></span>
           <span class="hero-headline-line text-gradient">con criterio médico.</span>
         </h1>
 
@@ -132,21 +131,25 @@ const _ = null;
     flex-direction: column;
     gap: 1.75rem;
   }
+  .hero-col--left {
+    container-type: inline-size;
+    container-name: heroleft;
+  }
 
   /* ===== LEFT ===== */
   .hero-headline {
     font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.035em;
-    line-height: 0.92;
+    font-weight: 450;
+    letter-spacing: -0.022em;
+    line-height: 1.02;
     color: var(--color-ink-900);
-    font-size: clamp(2.75rem, 7vw, 7rem);
+    font-size: clamp(2.5rem, 10.5cqi, 6.5rem);
+    font-variation-settings: "opsz" 144, "SOFT" 50;
     width: 100%;
-    margin: 0.5rem 0 0;
+    margin: 0.25rem 0 0;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    text-wrap: balance;
+    gap: 0.05em;
   }
   .hero-headline-line {
     display: block;
@@ -156,11 +159,17 @@ const _ = null;
     font-style: italic;
     color: var(--color-mauve-500);
     font-weight: 400;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+  }
+  @media (max-width: 899px) {
+    .hero-headline {
+      font-size: clamp(2.5rem, 9.5vw, 4.5rem);
+    }
   }
 
   .hero-lede {
-    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
-    line-height: 1.7;
+    font-size: clamp(1rem, 1.1vw, 1.18rem);
+    line-height: 1.65;
     color: var(--color-ink-700);
     margin: 0;
     width: 100%;
@@ -212,7 +221,7 @@ const _ = null;
   }
 
   .hero-paragraph {
-    font-size: clamp(0.95rem, 1vw, 1.05rem);
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
     line-height: 1.75;
     color: var(--color-ink-700);
     margin: 0;

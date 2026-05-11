@@ -1,21 +1,21 @@
 ---
 import { FAQ_ITEMS, CONTACT, CATEGORIES } from '../consts';
+import SectionHeader from './SectionHeader.astro';
 const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
 const cats = Object.values(CATEGORIES);
 ---
 
 <section class="section bg-[color:var(--color-brand-50)]" id="faq">
   <div class="container-x">
-    <div class="max-w-3xl mb-14 reveal">
-      <span class="kicker-line">FAQ y reserva</span>
-      <h2 class="mt-4 text-4xl sm:text-5xl h-display">
-        Preguntas frecuentes y <em>reserva</em><br/>de tu valoración.
-      </h2>
-      <p class="mt-5 text-[color:var(--color-ink-500)] leading-relaxed">
-        Resolvemos las dudas más comunes sobre nuestros tratamientos.
-        ¿No encuentras lo que buscas? Escríbenos por WhatsApp y te atendemos el mismo día.
-      </p>
-    </div>
+    <SectionHeader
+      kicker="FAQ y reserva"
+      title="Preguntas frecuentes y <em>reserva</em> de tu valoración."
+      paragraphs={[
+        'Resolvemos las dudas más comunes sobre nuestros tratamientos: tiempos, precios, recuperación y seguridad clínica. Si no encuentras lo que buscas, escríbenos por WhatsApp y te atendemos el mismo día.',
+        'La valoración inicial es <strong>gratuita y sin compromiso</strong>. Tras la consulta recibes tu plan personalizado por escrito y decides tú con la información completa en mano.',
+      ]}
+      cta={{ label: 'Agendar valoración', href: '/contacto', variant: 'primary' }}
+    />
 
     <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-start">
       <!-- FAQ -->

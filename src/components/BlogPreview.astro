@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import SectionHeader from './SectionHeader.astro';
 
 const posts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
@@ -12,22 +13,15 @@ const fmt = (d: Date) =>
 
 <section class="section bg-white">
   <div class="container-x">
-    <div class="grid lg:grid-cols-[1fr_auto] gap-8 items-end mb-14 reveal">
-      <div class="max-w-2xl">
-        <span class="kicker-line">Guía de belleza CLIBEL</span>
-        <h2 class="mt-4 text-4xl sm:text-5xl h-display">
-          Artículos y <em>guías</em><br/>de nuestras especialistas.
-        </h2>
-        <p class="mt-5 text-[color:var(--color-ink-500)] leading-relaxed">
-          Contenido educativo escrito por médicas y especialistas del equipo, no por
-          redactores externos. Sin información genérica: aplicable a la realidad de
-          las mujeres y hombres que viven en CDMX.
-        </p>
-      </div>
-      <a href="/blog" class="btn btn-outline self-start lg:self-end shrink-0">
-        Ver todos los artículos
-      </a>
-    </div>
+    <SectionHeader
+      kicker="Guía de belleza CLIBEL"
+      title="Artículos y <em>guías</em> de nuestras especialistas."
+      paragraphs={[
+        'Contenido educativo escrito por médicas y especialistas del equipo, no por redactores externos. Sin información genérica: aplicable a la realidad de las mujeres y hombres que viven en CDMX.',
+        'Cada artículo se revisa antes de publicarse, cita fuentes y se actualiza cuando aparece nueva evidencia clínica. El blog es parte del expediente educativo que ofrecemos a cada paciente.',
+      ]}
+      cta={{ label: 'Ver todos los artículos', href: '/blog', variant: 'outline' }}
+    />
 
     {posts.length > 0 && (
       <div class="grid gap-7 md:grid-cols-3">

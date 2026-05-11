@@ -1,4 +1,6 @@
 ---
+import SectionHeader from './SectionHeader.astro';
+
 const testimonials = [
   {
     name: 'María Fernanda',
@@ -55,27 +57,15 @@ const avatars = ['#C9A961', '#8B5A6B', '#5C3946', '#D9BC9C', '#BC8E9C', '#B8923F
 
 <section class="section bg-[color:var(--color-brand-50)]">
   <div class="container-x">
-    <div class="grid lg:grid-cols-[1fr_auto] gap-8 items-end mb-14 reveal">
-      <div class="max-w-2xl">
-        <span class="kicker-line">Pacientes que confían en CLIBEL</span>
-        <h2 class="mt-4 text-4xl sm:text-5xl h-display">
-          Lo que dicen <em>quienes</em><br/>ya nos eligieron.
-        </h2>
-        <p class="mt-5 text-[color:var(--color-ink-500)] leading-relaxed">
-          Más de 5,000 pacientes atendidas. Calificación 4.9/5 en Google con más de 500
-          reseñas verificadas. Aquí algunas experiencias reales contadas por sus protagonistas.
-        </p>
-      </div>
-      <div class="flex flex-col items-start lg:items-end gap-2">
-        <div class="flex gap-0.5">
-          {[1,2,3,4,5].map(() => (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="#C9A961"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg>
-          ))}
-        </div>
-        <p class="font-display text-3xl text-[color:var(--color-ink-900)]">4.9 / 5.0</p>
-        <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-ink-500)]">Google Reviews · 500+ opiniones</p>
-      </div>
-    </div>
+    <SectionHeader
+      kicker="Pacientes que confían en CLIBEL"
+      title="Lo que dicen <em>quienes</em> ya nos eligieron."
+      paragraphs={[
+        'Más de <strong>5,000 pacientes atendidas</strong>. Calificación 4.9/5 en Google con más de 500 reseñas verificadas. Aquí algunas experiencias reales contadas por sus protagonistas.',
+        'Sin reseñas pagadas, sin testimoniales actuados. Cada cita queda registrada y cada paciente decide si quiere compartir su experiencia públicamente.',
+      ]}
+      cta={{ label: 'Ver reseñas en Google', href: 'https://www.google.com/search?q=clibel+clinica+de+belleza+cdmx', variant: 'outline' }}
+    />
 
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {testimonials.map((t, i) => (

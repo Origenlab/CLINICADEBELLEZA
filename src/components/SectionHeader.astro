@@ -1,0 +1,156 @@
+---
+interface Props {
+  kicker: string;
+  /** H2 con HTML permitido (em, span, br) */
+  title: string;
+  /** 1 o 2 párrafos */
+  paragraphs?: string[];
+  cta?: {
+    label: string;
+    href: string;
+    variant?: 'outline' | 'gold' | 'primary' | 'dark';
+  };
+  /** dark = sobre fondo oscuro */
+  variant?: 'light' | 'dark';
+  /** Espaciado inferior */
+  marginBottom?: 'sm' | 'md' | 'lg';
+}
+
+const {
+  kicker,
+  title,
+  paragraphs = [],
+  cta,
+  variant = 'light',
+  marginBottom = 'lg',
+} = Astro.props;
+
+const ctaClass = `btn btn-${cta?.variant ?? 'outline'}`;
+---
+
+<header class:list={['section-header', `section-header--${variant}`, `section-header--mb-${marginBottom}`]}>
+  <div class="section-header-left reveal">
+    <span class="kicker-line section-header-kicker">{kicker}</span>
+    <h2 class="section-header-h2" set:html={title} />
+    {cta && (
+      <a href={cta.href} class:list={[ctaClass, 'section-header-cta']}>
+        {cta.label}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    )}
+  </div>
+
+  {paragraphs.length > 0 && (
+    <div class="section-header-right reveal">
+      {paragraphs.map((p) => (
+        <p class="section-header-paragraph" set:html={p} />
+      ))}
+    </div>
+  )}
+</header>
+
+<style>
+  .section-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+    width: 100%;
+  }
+  @media (min-width: 900px) {
+    .section-header {
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 4vw, 4.5rem);
+    }
+  }
+
+  .section-header--mb-sm { margin-bottom: clamp(2rem, 3vw, 3rem); }
+  .section-header--mb-md { margin-bottom: clamp(2.5rem, 4vw, 4rem); }
+  .section-header--mb-lg { margin-bottom: clamp(3rem, 5vw, 5rem); }
+
+  .section-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+  @media (min-width: 900px) {
+    .section-header-left { padding-right: clamp(0px, 2vw, 2rem); }
+  }
+
+  .section-header-kicker {
+    /* hereda del .kicker-line global */
+  }
+
+  .section-header-h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.028em;
+    line-height: 0.98;
+    color: var(--color-ink-900);
+    font-size: clamp(2.25rem, 4.5vw, 4.25rem);
+    margin: 0;
+  }
+  .section-header-h2 :global(em) {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+  }
+
+  .section-header-cta {
+    margin-top: 0.5rem;
+  }
+
+  .section-header-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding-left: 0;
+    border-left: none;
+  }
+  @media (min-width: 900px) {
+    .section-header-right {
+      padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+      border-left: 1px solid rgba(201, 169, 97, 0.25);
+    }
+  }
+
+  .section-header-paragraph {
+    font-size: clamp(0.95rem, 1vw, 1.05rem);
+    line-height: 1.75;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .section-header-paragraph :global(strong) {
+    color: var(--color-ink-900);
+    font-weight: 600;
+  }
+
+  /* === Variant dark === */
+  .section-header--dark .section-header-h2 {
+    color: white;
+  }
+  .section-header--dark .section-header-h2 :global(em) {
+    color: var(--color-brand-400);
+  }
+  .section-header--dark .section-header-kicker {
+    color: var(--color-brand-400) !important;
+  }
+  .section-header--dark .section-header-kicker::before {
+    background: linear-gradient(90deg, var(--color-brand-400), white) !important;
+  }
+  .section-header--dark .section-header-paragraph {
+    color: rgba(242, 235, 223, 0.82);
+  }
+  .section-header--dark .section-header-paragraph :global(strong) {
+    color: white;
+  }
+  @media (min-width: 900px) {
+    .section-header--dark .section-header-right {
+      border-left-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+</style>
