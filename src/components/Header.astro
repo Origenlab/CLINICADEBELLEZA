@@ -1,5 +1,5 @@
 ---
-import { NAV, SITE, CONTACT, CATEGORIES } from '../consts';
+import { NAV, SITE, CONTACT, CATEGORIES, catHref } from '../consts';
 
 const path = Astro.url.pathname;
 const isActive = (href: string) =>
@@ -8,77 +8,70 @@ const isActive = (href: string) =>
 const cats = Object.values(CATEGORIES);
 ---
 
-<header class="sticky top-0 z-40 bg-[color:var(--color-brand-50)]/90 backdrop-blur-md border-b border-[color:var(--color-brand-200)]/60">
-  <div class="container-x flex items-center justify-between h-20">
+<header class="hdr">
+  <div class="container-x hdr-inner">
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-3 shrink-0" aria-label={SITE.name}>
-      <span
-        class="grid place-items-center w-12 h-12 rounded-full text-white font-display text-2xl font-bold bg-gradient-to-br from-[color:var(--color-brand-400)] to-[color:var(--color-mauve-500)] shadow-lg shadow-[color:var(--color-mauve-500)]/20"
-        >C</span>
-      <div class="hidden sm:flex flex-col leading-tight">
-        <span class="font-display text-2xl tracking-wide text-[color:var(--color-ink-900)]">{SITE.name}</span>
-        <span class="text-[10px] uppercase tracking-[0.18em] text-[color:var(--color-mauve-500)] font-medium">Clínica de Belleza</span>
-      </div>
+    <a href="/" class="hdr-logo" aria-label={SITE.name}>
+      <span class="hdr-logo-mark" aria-hidden="true">C</span>
+      <span class="hdr-logo-text">
+        <span class="hdr-logo-name">{SITE.name}</span>
+        <span class="hdr-logo-sub">Clínica de Belleza</span>
+      </span>
     </a>
 
     <!-- Desktop nav -->
-    <nav class="hidden lg:flex items-center gap-7" aria-label="Navegación principal">
-      <a href="/" class:list={['text-sm font-medium tracking-wide transition-colors', isActive('/') ? 'text-[color:var(--color-mauve-500)]' : 'text-[color:var(--color-ink-700)] hover:text-[color:var(--color-mauve-500)]']}>Inicio</a>
+    <nav class="hdr-nav" aria-label="Navegación principal">
+      <a href="/" class:list={['hdr-link', isActive('/') && 'is-active']}>Inicio</a>
 
       <!-- Mega menu Servicios -->
-      <div class="relative group" tabindex="0">
-        <button
-          class:list={['inline-flex items-center gap-1 text-sm font-medium tracking-wide transition-colors', isActive('/servicios') ? 'text-[color:var(--color-mauve-500)]' : 'text-[color:var(--color-ink-700)] hover:text-[color:var(--color-mauve-500)]']}
+      <div class="hdr-mega" tabindex="0">
+        <a
+          href="/servicios"
+          class:list={['hdr-link hdr-link-caret', isActive('/servicios') && 'is-active']}
           aria-haspopup="true"
+          aria-expanded="false"
         >
           Servicios
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="transition-transform group-hover:rotate-180"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </a>
 
-        <div class="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-[860px] opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-50">
-          <div class="card-glass shadow-2xl rounded-2xl p-7 border border-[color:var(--color-brand-200)]">
-            <div class="grid grid-cols-3 gap-7">
-              <div class="col-span-2 grid grid-cols-2 gap-x-6 gap-y-5">
-                {cats.map((cat) => (
-                  <div>
-                    <a href={`/servicios#${cat.slug}`} class="group/cat flex items-center gap-2 mb-2.5">
-                      <span class="text-xl">{cat.icon}</span>
-                      <span class="font-display text-base text-[color:var(--color-ink-900)] group-hover/cat:text-[color:var(--color-mauve-500)] transition-colors">{cat.label}</span>
-                    </a>
-                    <ul class="space-y-1.5 pl-7">
-                      {cat.items.slice(0, 4).map((item) => (
-                        <li>
-                          <a href={item.href} class="text-xs text-[color:var(--color-ink-500)] hover:text-[color:var(--color-mauve-500)] transition-colors">
-                            {item.label}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-
-              <!-- Featured card -->
-              <div class="rounded-xl bg-gradient-to-br from-[color:var(--color-mauve-700)] via-[color:var(--color-mauve-500)] to-[color:var(--color-brand-500)] p-5 text-white flex flex-col justify-between min-h-[220px]">
-                <div>
-                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-80">Diagnóstico</span>
-                  <h3 class="font-display text-lg mt-1 leading-tight">Valoración facial digital</h3>
-                  <p class="text-xs opacity-90 mt-2 leading-relaxed">Análisis de piel asistido + plan personalizado en 30 min.</p>
+        <div class="hdr-mega-panel" role="menu">
+          <div class="hdr-mega-grid">
+            <!-- Columnas de categorías -->
+            <div class="hdr-mega-cats">
+              {cats.map((cat, i) => (
+                <div class="hdr-mega-cat">
+                  <a href={catHref(cat.slug)} class="hdr-mega-cat-head">
+                    <span class="hdr-mega-cat-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="hdr-mega-cat-name">
+                      <span>{cat.label}</span>
+                      <small>{cat.badgeCount}</small>
+                    </span>
+                  </a>
+                  <ul class="hdr-mega-cat-items">
+                    {cat.items.slice(0, 4).map((item) => (
+                      <li>
+                        <a href={item.href}>{item.label}</a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <a href="/contacto" class="text-xs font-medium underline underline-offset-4 mt-4 inline-flex items-center gap-1">
-                  Reservar sin costo
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                </a>
-              </div>
+              ))}
             </div>
 
-            <div class="mt-6 pt-5 border-t border-[color:var(--color-brand-200)] flex items-center justify-between">
-              <p class="text-xs text-[color:var(--color-ink-500)]">25+ tratamientos · Médicos certificados · Productos COFEPRIS</p>
-              <a href="/servicios" class="text-xs text-[color:var(--color-mauve-500)] font-medium inline-flex items-center gap-1 hover:gap-2 transition-all">
-                Ver catálogo completo
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-              </a>
-            </div>
+          </div>
+
+          <!-- Footer del mega -->
+          <div class="hdr-mega-foot">
+            <p>
+              <strong>25+</strong> tratamientos · Médicos certificados · COFEPRIS
+            </p>
+            <a href="/servicios" class="hdr-mega-foot-link">
+              Ver catálogo completo
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
           </div>
         </div>
       </div>
@@ -86,71 +79,901 @@ const cats = Object.values(CATEGORIES);
       {NAV.filter(n => !['Inicio', 'Servicios'].includes(n.label)).map((item) => (
         <a
           href={item.href}
-          class:list={['text-sm font-medium tracking-wide transition-colors', isActive(item.href) ? 'text-[color:var(--color-mauve-500)]' : 'text-[color:var(--color-ink-700)] hover:text-[color:var(--color-mauve-500)]']}
+          class:list={['hdr-link', isActive(item.href) && 'is-active']}
         >
           {item.label}
         </a>
       ))}
     </nav>
 
-    <div class="flex items-center gap-3">
-      <a href={`tel:${CONTACT.phone}`} class="hidden xl:inline-flex btn btn-outline text-sm py-2 px-4">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
-        {CONTACT.phoneDisplay}
+    <div class="hdr-actions">
+      <a href={`tel:${CONTACT.phone}`} class="hdr-phone" aria-label={`Llamar al ${CONTACT.phoneDisplay}`}>
+        <span class="hdr-phone-label">Llámanos</span>
+        <span class="hdr-phone-num">{CONTACT.phoneDisplay}</span>
       </a>
-      <a href="/contacto" class="hidden md:inline-flex btn btn-primary text-sm py-2 px-5">Agendar cita</a>
+      <a href="/contacto" class="hdr-cta">
+        Agendar cita
+      </a>
 
       <button
         id="navToggle"
-        class="lg:hidden grid place-items-center w-10 h-10 rounded-full hover:bg-[color:var(--color-brand-200)]/60 transition"
+        type="button"
+        class="hdr-toggle"
         aria-label="Abrir menú" aria-controls="mobileNav" aria-expanded="false"
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <span class="hdr-toggle-bar" aria-hidden="true"></span>
+        <span class="hdr-toggle-bar" aria-hidden="true"></span>
+        <span class="hdr-toggle-bar" aria-hidden="true"></span>
       </button>
     </div>
   </div>
-
-  <!-- Mobile nav -->
-  <div id="mobileNav" class="lg:hidden hidden border-t border-[color:var(--color-brand-200)]/60 bg-[color:var(--color-brand-50)] max-h-[80vh] overflow-y-auto">
-    <nav class="container-x py-4 flex flex-col gap-1" aria-label="Navegación móvil">
-      <a href="/" class="py-3 px-3 rounded-lg text-base font-medium hover:bg-[color:var(--color-brand-200)]/40">Inicio</a>
-
-      <details class="group">
-        <summary class="py-3 px-3 rounded-lg text-base font-medium cursor-pointer flex items-center justify-between hover:bg-[color:var(--color-brand-200)]/40">
-          <span>Servicios</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="transition-transform group-open:rotate-180"><polyline points="6 9 12 15 18 9"/></svg>
-        </summary>
-        <div class="pl-3 py-2 space-y-3">
-          {cats.map((cat) => (
-            <div>
-              <a href={`/servicios#${cat.slug}`} class="font-display text-base text-[color:var(--color-mauve-700)]">{cat.icon} {cat.label}</a>
-              <ul class="pl-7 mt-1 space-y-1">
-                {cat.items.slice(0, 4).map((item) => (
-                  <li><a href={item.href} class="text-sm text-[color:var(--color-ink-500)]">{item.label}</a></li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </details>
-
-      {NAV.filter(n => !['Inicio', 'Servicios'].includes(n.label)).map((item) => (
-        <a href={item.href} class="py-3 px-3 rounded-lg text-base font-medium hover:bg-[color:var(--color-brand-200)]/40">
-          {item.label}
-        </a>
-      ))}
-      <a href="/contacto" class="btn btn-primary mt-4">Agendar cita</a>
-    </nav>
-  </div>
 </header>
 
-<script is:inline>
-  const t = document.getElementById('navToggle');
-  const m = document.getElementById('mobileNav');
-  if (t && m) {
-    t.addEventListener('click', () => {
-      const open = m.classList.toggle('hidden') === false;
-      t.setAttribute('aria-expanded', String(open));
-    });
+<!-- ================= Mobile nav (fuera del <header> para escapar al containing block del backdrop-filter) ================= -->
+<div id="mobileNav" class="m-nav" aria-hidden="true">
+  <div class="m-nav-scrim" id="mNavScrim" aria-hidden="true"></div>
+
+  <aside class="m-nav-drawer" aria-label="Navegación móvil">
+    <header class="m-nav-head">
+        <a href="/" class="m-nav-logo">
+          <span class="hdr-logo-mark" aria-hidden="true">C</span>
+          <span class="m-nav-logo-text">
+            <span class="hdr-logo-name">{SITE.name}</span>
+            <span class="hdr-logo-sub">Clínica de Belleza</span>
+          </span>
+        </a>
+        <button id="navClose" type="button" class="m-nav-close" aria-label="Cerrar menú">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </header>
+
+      <nav class="m-nav-body">
+        <a href="/" class:list={['m-nav-link', isActive('/') && 'is-active']}>
+          <span>Inicio</span>
+        </a>
+
+        <details class="m-nav-acc" open={isActive('/servicios')}>
+          <summary class="m-nav-link m-nav-link-acc">
+            <span>Servicios</span>
+            <span class="m-nav-link-meta">
+              <span class="m-nav-badge">25+</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="m-nav-chev" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </summary>
+
+          <div class="m-nav-sub">
+            <a href="/servicios" class="m-nav-sub-all">
+              <span>Todos los tratamientos</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+
+            {cats.map((cat, i) => (
+              <div class="m-nav-cat">
+                <a href={catHref(cat.slug)} class="m-nav-cat-head">
+                  <span class="m-nav-cat-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="m-nav-cat-text">
+                    <span class="m-nav-cat-name">{cat.label}</span>
+                    <span class="m-nav-cat-count">{cat.badgeCount}</span>
+                  </span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+                <ul class="m-nav-cat-items">
+                  {cat.items.slice(0, 3).map((item) => (
+                    <li><a href={item.href}>{item.label}</a></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </details>
+
+        {NAV.filter(n => !['Inicio', 'Servicios'].includes(n.label)).map((item) => (
+          <a
+            href={item.href}
+            class:list={['m-nav-link', isActive(item.href) && 'is-active']}
+          >
+            <span>{item.label}</span>
+          </a>
+        ))}
+      </nav>
+
+  </aside>
+</div>
+
+<style>
+  /* ============= HEADER (desktop) ============= */
+  .hdr {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.18);
+    box-shadow: 0 1px 0 rgba(201, 169, 97, 0.06), 0 6px 24px -16px rgba(31, 20, 24, 0.18);
   }
+
+  .hdr-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 76px;
+    gap: 1.5rem;
+  }
+
+  /* === Logo === */
+  .hdr-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: inherit;
+  }
+  .hdr-logo-mark {
+    display: grid;
+    place-items: center;
+    width: 46px; height: 46px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--color-brand-400), var(--color-mauve-500));
+    color: white;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow:
+      0 6px 18px -6px rgba(139, 90, 107, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+  .hdr-logo-text {
+    display: none;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  @media (min-width: 480px) {
+    .hdr-logo-text { display: flex; }
+  }
+  .hdr-logo-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.45rem;
+    letter-spacing: -0.005em;
+    color: var(--color-ink-900);
+  }
+  .hdr-logo-sub {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    margin-top: 1px;
+  }
+
+  /* === Nav links === */
+  .hdr-nav {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  @media (min-width: 1024px) {
+    .hdr-nav { display: flex; }
+  }
+
+  .hdr-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--color-ink-700);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: color 0.25s ease, background 0.25s ease;
+    white-space: nowrap;
+  }
+  .hdr-link:hover {
+    color: var(--color-mauve-700);
+    background: rgba(232, 213, 196, 0.4);
+  }
+  .hdr-link.is-active {
+    color: var(--color-mauve-700);
+    background: rgba(201, 169, 97, 0.15);
+  }
+  .hdr-link.is-active::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -3px;
+    width: 22px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    border-radius: 2px;
+    transform: translateX(-50%);
+  }
+  .hdr-link-caret svg {
+    transition: transform 0.3s ease;
+  }
+  .hdr-mega:hover .hdr-link-caret svg,
+  .hdr-mega:focus-within .hdr-link-caret svg {
+    transform: rotate(180deg);
+  }
+
+  /* === Mega menu === */
+  .hdr-mega {
+    position: relative;
+  }
+  /* Hit area extendida: hace que el bounding-box del trigger se extienda
+     hacia abajo cubriendo el gap, para que :hover no se pierda al cruzar
+     entre el link y el panel */
+  .hdr-mega::after {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    right: -1rem;
+    top: 100%;
+    height: 1.25rem;
+    background: transparent;
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  .hdr-mega-panel {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 0.55rem);
+    transform: translateX(-50%) translateY(-6px);
+    width: min(900px, calc(100vw - 3rem));
+    background: white;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    box-shadow:
+      0 1px 2px rgba(31, 20, 24, 0.04),
+      0 24px 64px -20px rgba(31, 20, 24, 0.28),
+      0 8px 18px -12px rgba(92, 57, 70, 0.22);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    /* !important para vencer el kill-switch global de transitions */
+    transition:
+      opacity 0.22s ease,
+      transform 0.3s cubic-bezier(.2,.8,.2,1),
+      visibility 0s linear 0.35s !important;
+    overflow: hidden;
+    z-index: 60;
+  }
+  /* Bridge ampliado: cubre el espacio entre trigger y panel para que el
+     mouse pueda transitar sin perder hover */
+  .hdr-mega-panel::before {
+    content: '';
+    position: absolute;
+    top: -1.25rem;
+    left: -1rem;
+    right: -1rem;
+    height: 1.5rem;
+    background: transparent;
+    pointer-events: auto;
+  }
+  .hdr-mega:hover .hdr-mega-panel,
+  .hdr-mega:focus-within .hdr-mega-panel,
+  .hdr-mega-panel:hover {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateX(-50%) translateY(0) !important;
+    transition:
+      opacity 0.22s ease,
+      transform 0.3s cubic-bezier(.2,.8,.2,1),
+      visibility 0s linear 0s !important;
+  }
+
+  .hdr-mega-grid {
+    padding: 1.75rem;
+  }
+  .hdr-mega-cats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem 2.25rem;
+  }
+  @media (max-width: 900px) {
+    .hdr-mega-cats { grid-template-columns: repeat(2, 1fr); }
+  }
+  .hdr-mega-cat {
+    min-width: 0;
+  }
+  .hdr-mega-cat-head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding-bottom: 0.55rem;
+    margin-bottom: 0.55rem;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.25);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.25s ease;
+  }
+  .hdr-mega-cat-head:hover {
+    border-color: var(--color-mauve-500);
+  }
+  .hdr-mega-cat-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    padding-top: 2px;
+    flex-shrink: 0;
+    transition: color 0.25s ease;
+  }
+  .hdr-mega-cat-head:hover .hdr-mega-cat-num {
+    color: var(--color-mauve-500);
+  }
+  .hdr-mega-cat-name {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+    min-width: 0;
+    flex: 1;
+  }
+  .hdr-mega-cat-name span {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.98rem;
+    color: var(--color-ink-900);
+    letter-spacing: -0.01em;
+  }
+  .hdr-mega-cat-head:hover .hdr-mega-cat-name span {
+    color: var(--color-mauve-700);
+  }
+  .hdr-mega-cat-name small {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-top: 2px;
+  }
+
+  .hdr-mega-cat-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .hdr-mega-cat-items a {
+    display: block;
+    padding: 0.32rem 0;
+    padding-left: 2.85rem;
+    margin-left: -2.85rem;
+    font-size: 0.78rem;
+    color: var(--color-ink-500);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .hdr-mega-cat-items a::before {
+    content: '';
+    position: absolute;
+    left: 2.5rem;
+    top: 50%;
+    width: 4px;
+    height: 1px;
+    background: var(--color-brand-400);
+    opacity: 0;
+    transition: all 0.2s ease;
+  }
+  .hdr-mega-cat-items a:hover {
+    color: var(--color-mauve-700);
+    background: rgba(232, 213, 196, 0.25);
+    padding-left: 3.1rem;
+  }
+  .hdr-mega-cat-items a:hover::before {
+    opacity: 1;
+    width: 12px;
+  }
+
+  /* === Mega foot === */
+  .hdr-mega-foot {
+    border-top: 1px solid rgba(201, 169, 97, 0.22);
+    background: var(--color-brand-50);
+    padding: 0.85rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .hdr-mega-foot p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--color-ink-500);
+  }
+  .hdr-mega-foot p strong {
+    color: var(--color-mauve-700);
+    font-weight: 700;
+  }
+  .hdr-mega-foot-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-mauve-500);
+    text-decoration: none;
+    transition: color 0.2s ease, gap 0.25s ease;
+  }
+  .hdr-mega-foot-link:hover {
+    color: var(--color-mauve-700);
+    gap: 0.55rem;
+  }
+
+  /* === Actions === */
+  .hdr-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+  }
+  .hdr-phone {
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.1;
+    padding: 0.35rem 0.85rem;
+    border-left: 1px solid rgba(201, 169, 97, 0.35);
+    text-decoration: none;
+    transition: color 0.25s ease;
+  }
+  @media (min-width: 1180px) {
+    .hdr-phone { display: inline-flex; }
+  }
+  .hdr-phone-label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .hdr-phone-num {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--color-ink-900);
+    letter-spacing: -0.005em;
+    margin-top: 2px;
+    transition: color 0.25s ease;
+  }
+  .hdr-phone:hover .hdr-phone-num { color: var(--color-mauve-700); }
+
+  .hdr-cta {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.62rem 1.15rem;
+    background: var(--color-ink-900);
+    color: var(--color-brand-50);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1);
+    box-shadow: 0 4px 14px -6px rgba(31, 20, 24, 0.35);
+  }
+  @media (min-width: 640px) {
+    .hdr-cta { display: inline-flex; }
+  }
+  .hdr-cta:hover {
+    background: var(--color-mauve-500);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px -6px rgba(139, 90, 107, 0.55);
+  }
+
+  .hdr-toggle {
+    display: grid;
+    place-items: center;
+    width: 42px; height: 42px;
+    background: transparent;
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    border-radius: 999px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.25s ease;
+  }
+  @media (min-width: 1024px) {
+    .hdr-toggle { display: none; }
+  }
+  .hdr-toggle:hover {
+    background: rgba(232, 213, 196, 0.5);
+    border-color: var(--color-mauve-500);
+  }
+  .hdr-toggle-bar {
+    position: absolute;
+    left: 11px;
+    width: 20px;
+    height: 2px;
+    background: var(--color-ink-800);
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1);
+  }
+  .hdr-toggle-bar:nth-child(1) { top: 14px; }
+  .hdr-toggle-bar:nth-child(2) { top: 20px; width: 14px; }
+  .hdr-toggle-bar:nth-child(3) { top: 26px; }
+  .hdr-toggle[aria-expanded="true"] .hdr-toggle-bar:nth-child(1) {
+    top: 20px;
+    transform: rotate(45deg);
+  }
+  .hdr-toggle[aria-expanded="true"] .hdr-toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .hdr-toggle[aria-expanded="true"] .hdr-toggle-bar:nth-child(3) {
+    top: 20px;
+    transform: rotate(-45deg);
+  }
+
+  /* ============= MOBILE NAV ============= */
+  .m-nav {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    display: block !important;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .m-nav.is-open {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .m-nav-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(31, 20, 24, 0.6);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.32s ease !important;
+  }
+  .m-nav.is-open .m-nav-scrim { opacity: 1; }
+
+  .m-nav-drawer {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: min(420px, 92vw);
+    max-width: 100%;
+    background: var(--color-brand-50);
+    box-shadow: -24px 0 60px -20px rgba(31, 20, 24, 0.35);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(.2,.8,.2,1) !important;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    overflow: hidden;
+  }
+  .m-nav.is-open .m-nav-drawer { transform: translateX(0) !important; }
+
+  /* Scroll lock body cuando drawer abierto */
+  :global(body.m-nav-locked) {
+    overflow: hidden !important;
+  }
+
+  /* Mobile drawer header */
+  .m-nav-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+    background: white;
+  }
+  .m-nav-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .m-nav-logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .m-nav-logo-text .hdr-logo-name {
+    font-size: 1.2rem;
+  }
+  .m-nav-close {
+    display: grid;
+    place-items: center;
+    width: 40px; height: 40px;
+    background: transparent;
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    border-radius: 999px;
+    color: var(--color-ink-800);
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .m-nav-close:hover {
+    background: var(--color-ink-900);
+    color: white;
+    border-color: var(--color-ink-900);
+  }
+
+  /* Body scroll */
+  .m-nav-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Link rows */
+  .m-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.95rem 1rem;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.18);
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-ink-800);
+    text-decoration: none;
+    transition: all 0.25s ease;
+    min-height: 52px;
+  }
+  .m-nav-link:hover,
+  .m-nav-link:active {
+    background: var(--color-brand-100);
+    border-color: var(--color-mauve-500);
+    color: var(--color-mauve-700);
+  }
+  .m-nav-link.is-active {
+    background: rgba(201, 169, 97, 0.16);
+    border-color: var(--color-mauve-500);
+    color: var(--color-mauve-700);
+  }
+  .m-nav-link svg { color: var(--color-mauve-500); flex-shrink: 0; opacity: 0.7; }
+  .m-nav-link-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  .m-nav-badge {
+    display: inline-grid;
+    place-items: center;
+    min-width: 28px;
+    height: 22px;
+    padding: 0 0.45rem;
+    border-radius: 999px;
+    background: var(--color-mauve-500);
+    color: white;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  /* Accordion */
+  .m-nav-acc summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  .m-nav-acc summary::-webkit-details-marker { display: none; }
+  .m-nav-link-acc .m-nav-chev {
+    transition: transform 0.3s ease;
+  }
+  .m-nav-acc[open] .m-nav-chev { transform: rotate(180deg); }
+  .m-nav-acc[open] .m-nav-link-acc {
+    background: var(--color-brand-100);
+    border-color: var(--color-mauve-500);
+    color: var(--color-mauve-700);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .m-nav-sub {
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.18);
+    border-top: 0;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+    padding: 0.75rem;
+    margin-top: -1px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .m-nav-sub-all {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem 0.8rem;
+    background: white;
+    color: var(--color-ink-800);
+    border: 1px solid rgba(201, 169, 97, 0.22);
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .m-nav-sub-all:hover {
+    background: var(--color-brand-50);
+    border-color: var(--color-mauve-500);
+    color: var(--color-mauve-700);
+  }
+  .m-nav-sub-all svg {
+    color: var(--color-mauve-500);
+    opacity: 0.7;
+  }
+
+  .m-nav-cat {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .m-nav-cat-head {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 0.8rem;
+    background: var(--color-brand-50);
+    border: 1px solid rgba(201, 169, 97, 0.2);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+  }
+  .m-nav-cat-head:hover {
+    background: var(--color-brand-100);
+    border-color: var(--color-mauve-500);
+  }
+  .m-nav-cat-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    width: 30px;
+    flex-shrink: 0;
+    text-align: left;
+  }
+  .m-nav-cat-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+    min-width: 0;
+  }
+  .m-nav-cat-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--color-ink-900);
+  }
+  .m-nav-cat-count {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    margin-top: 1px;
+  }
+  .m-nav-cat-head svg {
+    color: var(--color-mauve-500);
+    opacity: 0.65;
+    flex-shrink: 0;
+  }
+  .m-nav-cat-items {
+    list-style: none;
+    padding: 0.25rem 0 0.15rem 3rem;
+    margin: 0;
+  }
+  .m-nav-cat-items a {
+    display: block;
+    padding: 0.42rem 0.5rem;
+    font-size: 0.82rem;
+    color: var(--color-ink-700);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+  .m-nav-cat-items a:hover {
+    color: var(--color-mauve-700);
+    background: rgba(232, 213, 196, 0.3);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .m-nav-drawer,
+    .m-nav-scrim,
+    .hdr-mega-panel { transition: none !important; }
+  }
+</style>
+
+<script is:inline>
+  (function initMobileNav() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMobileNav);
+      return;
+    }
+
+    const toggle = document.getElementById('navToggle');
+    const closeBtn = document.getElementById('navClose');
+    const scrim = document.getElementById('mNavScrim');
+    const mNav = document.getElementById('mobileNav');
+
+    if (!toggle || !mNav) return;
+    if (toggle.dataset.bound === '1') return; // anti doble-bind
+    toggle.dataset.bound = '1';
+
+    const isOpen = () => mNav.classList.contains('is-open');
+
+    const openMenu = () => {
+      mNav.classList.add('is-open');
+      mNav.setAttribute('aria-hidden', 'false');
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('m-nav-locked');
+    };
+
+    const closeMenu = () => {
+      mNav.classList.remove('is-open');
+      mNav.setAttribute('aria-hidden', 'true');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('m-nav-locked');
+    };
+
+    const handleToggleClick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (isOpen()) closeMenu(); else openMenu();
+    };
+
+    toggle.addEventListener('click', handleToggleClick);
+    toggle.addEventListener('touchend', handleToggleClick, { passive: false });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeMenu();
+      });
+    }
+
+    if (scrim) {
+      scrim.addEventListener('click', closeMenu);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen()) closeMenu();
+    });
+
+    // Cerrar al clickar links internos (no detalles/summary)
+    mNav.querySelectorAll('a[href]').forEach((a) => {
+      a.addEventListener('click', () => closeMenu());
+    });
+
+    // Si pasa a desktop, cerrar
+    const mql = window.matchMedia('(min-width: 1024px)');
+    const handleMQ = (e) => { if (e.matches) closeMenu(); };
+    if (mql.addEventListener) mql.addEventListener('change', handleMQ);
+    else if (mql.addListener) mql.addListener(handleMQ);
+  })();
 </script>

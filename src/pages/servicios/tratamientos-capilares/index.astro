@@ -1,0 +1,1637 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ServiceCard from '../../../components/ServiceCard.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import HeroNavBar from '../../../components/HeroNavBar.astro';
+import RelatedCategories from '../../../components/RelatedCategories.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES, SITE, CONTACT, catHref } from '../../../consts';
+
+const cat = CATEGORIES.capilar;
+
+const all = await getCollection('servicios');
+const items = all
+  .filter((s) => s.data.category === 'capilar')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, me gustaría agendar diagnóstico tricológico capilar en CLIBEL.')}`;
+
+// ============ SCHEMAS SEO ============
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITE.url },
+    { '@type': 'ListItem', position: 2, name: 'Servicios', item: `${SITE.url}/servicios` },
+    { '@type': 'ListItem', position: 3, name: 'Tratamientos Capilares', item: `${SITE.url}/servicios/tratamientos-capilares` },
+  ],
+};
+const catalogSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalSpecialty',
+  name: 'Tratamientos Capilares — CLIBEL',
+  description: 'Tricología clínica, PRP capilar, mesoterapia y diagnóstico tricoscópico para caída y debilitamiento del cabello en CDMX.',
+  url: `${SITE.url}/servicios/tratamientos-capilares`,
+  provider: { '@id': `${SITE.url}/#clinic` },
+  relevantSpecialty: ['Dermatology', 'Trichology'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Catálogo de tratamientos capilares CLIBEL',
+    itemListElement: items.map((s) => ({
+      '@type': 'MedicalProcedure',
+      name: s.data.title,
+      description: s.data.description,
+      url: `${SITE.url}/servicios/${s.id}`,
+    })),
+  },
+};
+
+// ============ DIAGNÓSTICO TRICOLÓGICO (NUEVO) ============
+const diagnosis = [
+  {
+    n: '01',
+    title: 'Tricoscopia digital',
+    text: 'CLIBEL examina cuero cabelludo con dermatoscopio de aumento 20x–100x para evaluar densidad folicular, miniaturización, inflamación perifolicular y patrones específicos de cada tipo de alopecia.',
+  },
+  {
+    n: '02',
+    title: 'Historia clínica completa',
+    text: 'Antecedentes hormonales, familiares, eventos detonantes (parto, cirugía, estrés), medicamentos y suplementos. CLIBEL identifica causa probable antes de proponer tratamiento.',
+  },
+  {
+    n: '03',
+    title: 'Estudios complementarios',
+    text: 'Cuando aplica, CLIBEL solicita perfil hormonal, ferritina, vitamina D, B12 y zinc. La caída de cabello suele tener causa metabólica subyacente que tratamientos tópicos no resuelven.',
+  },
+  {
+    n: '04',
+    title: 'Plan documentado por escrito',
+    text: 'Diagnóstico, pronóstico realista, plan de sesiones, productos domiciliarios y revisión cada 3 meses con fototricograma comparativo. CLIBEL entrega todo por escrito antes de empezar.',
+  },
+];
+
+// ============ MAPA DE TIPOS DE ALOPECIA (NUEVO) ============
+const alopeciaTypes = [
+  {
+    code: '01',
+    name: 'Androgenética',
+    aka: 'Patrón masculino / femenino',
+    cause: 'Sensibilidad folicular a la dihidrotestosterona (DHT). Componente genético + hormonal.',
+    treatment: 'PRP capilar, mesoterapia, antiandrógenos tópicos, minoxidil supervisado',
+  },
+  {
+    code: '02',
+    name: 'Telógena difusa',
+    aka: 'Caída por estrés / posparto / fiebre',
+    cause: 'Sincronización masiva de folículos hacia fase telógena tras evento estresor (parto, cirugía, dieta restrictiva, COVID).',
+    treatment: 'Mesoterapia, suplementación dirigida, manejo de causa raíz',
+  },
+  {
+    code: '03',
+    name: 'Areata',
+    aka: 'Placas circulares de pérdida',
+    cause: 'Autoinmune. Linfocitos atacan folículos en fase anágena. Puede ser por estrés o predisposición.',
+    treatment: 'CLIBEL deriva a tricólogo médico especialista; PRP como coadyuvante',
+  },
+  {
+    code: '04',
+    name: 'Por tracción',
+    aka: 'Peinados tensos crónicos',
+    cause: 'Trenzas, coletas tirantes, extensiones permanentes. Lesión folicular mecánica progresiva.',
+    treatment: 'Cambio de hábito + PRP + bioestimulación cuando aún hay folículos viables',
+  },
+  {
+    code: '05',
+    name: 'Seborreica',
+    aka: 'Caída con caspa y picor',
+    cause: 'Dermatitis seborreica del cuero cabelludo, inflamación crónica que debilita el folículo.',
+    treatment: 'Tratamiento antifúngico tópico + antiinflamatorio + bioactivos regenerativos',
+  },
+  {
+    code: '06',
+    name: 'Carencial',
+    aka: 'Déficit nutricional',
+    cause: 'Anemia ferropénica, déficit de vitamina D, B12 o zinc. Cabello se cae antes de tiempo.',
+    treatment: 'CLIBEL coordina con tu médico para corregir déficit + bioestimulación tópica',
+  },
+];
+
+// ============ ANATOMÍA FOLICULAR (NUEVO) ============
+const cycle = [
+  {
+    phase: 'Anágena',
+    duration: '2–6 años',
+    coverage: '85–90%',
+    text: 'Fase de crecimiento activo. El folículo está conectado a la papila dérmica, alimentado por vasos sanguíneos. PRP y mesoterapia actúan aquí estimulando producción.',
+  },
+  {
+    phase: 'Catágena',
+    duration: '2–3 semanas',
+    coverage: '1–3%',
+    text: 'Fase de transición. El folículo se desprende de la papila y empieza a involucionar. Brevísima, casi siempre asintomática.',
+  },
+  {
+    phase: 'Telógena',
+    duration: '2–4 meses',
+    coverage: '10–15%',
+    text: 'Fase de reposo. Al final el pelo cae y un nuevo folículo entra en anágena. Si la proporción telógena/anágena se invierte, hay caída anormal.',
+  },
+];
+
+// ============ CASOS CLÍNICOS / PLANES (NUEVO) ============
+const cases = [
+  {
+    name: 'Plan caída temprana',
+    duration: '4 sesiones · 3 meses',
+    profile: 'Mujeres 25–40 años con caída reciente',
+    combo: ['Mesoterapia capilar mensual', 'Bioactivos domiciliarios', 'Análisis hormonal y nutricional'],
+    target: 'Atacar la caída antes de que avance. CLIBEL prioriza identificar causa metabólica/hormonal y revertirla con apoyo regenerativo tópico.',
+    accent: 'gold',
+  },
+  {
+    name: 'Plan posparto',
+    duration: '6 sesiones · 6 meses',
+    profile: 'Mamás 2–8 meses posparto',
+    combo: ['Mesoterapia bioactivos', 'PRP a partir del 3er mes', 'Suplementación segura en lactancia'],
+    target: 'Acompañar el efluvio telógeno posparto con seguridad clínica. CLIBEL trabaja respetando lactancia con activos compatibles.',
+    accent: 'rose',
+  },
+  {
+    name: 'Plan androgenética',
+    duration: '8 sesiones · 8 meses',
+    profile: 'Hombres y mujeres con patrón hereditario',
+    combo: ['PRP capilar mensual', 'Mesoterapia con antiandrógenos', 'Minoxidil supervisado domiciliario'],
+    target: 'Frenar miniaturización folicular y rescatar folículos viables. CLIBEL define pronóstico realista por tricoscopia antes de empezar.',
+    accent: 'mauve',
+  },
+  {
+    name: 'Plan mantenimiento',
+    duration: 'Mensual indefinido',
+    profile: 'Pacientes con caída controlada',
+    combo: ['1 sesión mensual rotativa', 'Revisión tricoscópica trimestral', 'Ajuste de domiciliario según evidencia'],
+    target: 'Sostener el resultado a largo plazo. CLIBEL convierte el tratamiento intensivo en rutina ligera con seguimiento clínico documentado.',
+    accent: 'gold',
+  },
+];
+
+// ============ TIMELINE DE RESULTADOS (NUEVO — específico capilar) ============
+const timeline = [
+  {
+    when: 'Mes 01',
+    label: 'Caída se estabiliza',
+    text: 'CLIBEL evalúa primera respuesta tricoscópica. Es normal que sigas viendo cabello caer — los folículos en telógena ya programados continúan ciclo. La caída anormal se reduce.',
+  },
+  {
+    when: 'Mes 03',
+    label: 'Crece pelo nuevo visible',
+    text: 'Aparecen pelos cortos y finos en línea de implantación. Fototricograma comparativo en CLIBEL documenta densidad. Es el primer punto donde decides si el plan funciona.',
+  },
+  {
+    when: 'Mes 06',
+    label: 'Densidad consolidada',
+    text: 'Cabello nuevo alcanza grosor normal. Densidad clínicamente medible. CLIBEL evalúa si pasar a fase de mantenimiento o continuar plan intensivo según respuesta.',
+  },
+  {
+    when: 'Mes 12',
+    label: 'Resultado a largo plazo',
+    text: 'Cabello recuperado integrado a tu rutina. Mantenimiento con 1 sesión mensual. CLIBEL recomienda fototricograma anual para comparativa de largo plazo.',
+  },
+];
+
+// ============ HÁBITOS — NUEVO ============
+const habits = {
+  sabotage: [
+    'Lavados con agua muy caliente diariamente',
+    'Secadora a temperatura máxima sin protector térmico',
+    'Coletas, trenzas y rodetes tensos crónicos',
+    'Tintes con amoniaco cada 4 semanas o menos',
+    'Dietas restrictivas sin acompañamiento nutricional',
+    'Suplementos virales sin diagnóstico (biotina en megadosis, etc.)',
+  ],
+  helpful: [
+    'Lavado con agua tibia, secar palmadeando (no frotar)',
+    'Masaje craneal con yemas 5 min al día para activar circulación',
+    'Protección solar capilar en exposición prolongada',
+    'Tintes sin amoniaco espaciados 6+ semanas',
+    'Dieta equilibrada con proteína, hierro y omega-3',
+    'Suplementación solo según diagnóstico clínico, no por moda',
+  ],
+};
+
+// ============ FAQs específicas capilares ============
+const faqs = [
+  { q: '¿Cuándo empezaré a ver resultados con el tratamiento capilar?', a: 'En CLIBEL la caída se estabiliza alrededor del mes 1–2. Crecimiento nuevo visible aparece entre el mes 3–4. Densidad consolidada se aprecia hacia el mes 6. El cabello tiene tiempos biológicos largos que ningún tratamiento puede acortar — quien promete resultados en 30 días miente.' },
+  { q: '¿El PRP capilar duele?', a: 'CLIBEL aplica anestesia tópica en cuero cabelludo 20 min antes. La sensación durante la aplicación es de pequeños piquetes tolerables, similares a vacuna. Después la zona puede quedar sensible algunas horas, sin dolor real. Es ambulatorio total.' },
+  { q: '¿Sirve para alopecia avanzada o calvicie consolidada?', a: 'CLIBEL es honesta: si el folículo ya está atrofiado (zona brillante sin folículos visibles en tricoscopia), ningún tratamiento médico lo revive. Sí podemos densificar zonas con folículos miniaturizados aún viables. Para calvicie consolidada lo único es trasplante quirúrgico — CLIBEL te lo dice antes.' },
+  { q: '¿El tratamiento sirve igual en hombres y mujeres?', a: 'Los principios biológicos son los mismos pero los planes difieren. CLIBEL personaliza dosis, sustancias y frecuencia según género, edad, perfil hormonal y patrón específico. Patrón masculino se concentra en coronilla y entradas; femenino se difunde por toda la corona.' },
+  { q: '¿Puedo combinar tratamiento en CLIBEL con minoxidil que ya uso?', a: 'Sí, en muchos casos potencia el efecto. CLIBEL revisa tu protocolo actual, evalúa si la formulación es la correcta para tu caso, y ajusta concentración si hace falta. Trabajamos compatible con dermatólogos externos sin conflicto.' },
+  { q: '¿Hay efectos secundarios?', a: 'CLIBEL informa todos: sensibilidad transitoria post-sesión, mínimo enrojecimiento, posible aumento momentáneo de caída en primeras 2 semanas (efecto de sincronización), reacciones locales raras. Sin efectos sistémicos relevantes — son tratamientos locales.' },
+];
+---
+
+<BaseLayout
+  title={`Tratamientos Capilares en CDMX | CLIBEL`}
+  description={`Tratamientos capilares en CLIBEL: tricología clínica, PRP capilar y mesoterapia para caída del cabello, alopecia androgenética y debilitamiento. Diagnóstico tricoscópico avanzado en CDMX.`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(catalogSchema)} />
+
+  <!-- ============================ BREADCRUMB ============================ -->
+  <Breadcrumb
+    kicker="Categoría 05 · Capilares"
+    items={[
+      { label: 'Servicios', href: '/servicios' },
+      { label: 'Tratamientos Capilares' },
+    ]}
+  />
+
+  <!-- ============================ HERO ============================ -->
+  <section class="cat-hero">
+    <div aria-hidden="true" class="cat-hero-bg"></div>
+    <div aria-hidden="true" class="cat-hero-blob cat-hero-blob-1"></div>
+    <div aria-hidden="true" class="cat-hero-blob cat-hero-blob-2"></div>
+    <div aria-hidden="true" class="cat-hero-grain"></div>
+
+    <div class="container-x relative">
+      <div class="cat-hero-grid">
+        <div class="cat-hero-col cat-hero-col--left fade-up">
+          <span class="eyebrow-tag">
+            <span class="dot" aria-hidden="true"></span>
+            Categoría 05 · {cat.badgeLabel} · Tricología clínica
+          </span>
+
+          <h1 class="cat-hero-headline">
+            <span class="cat-hero-headline-line">Tratamientos</span>
+            <span class="cat-hero-headline-line"><em>capilares</em> en CDMX.</span>
+          </h1>
+
+          <p class="cat-hero-lede">
+            Diagnóstico tricoscópico antes de cualquier plan. CLIBEL trata
+            la <strong>caída del cabello con criterio médico</strong> — no con
+            fórmulas mágicas ni promesas en 30 días. Resultados reales en
+            tiempos biológicos honestos.
+          </p>
+
+          <div class="cat-hero-trust">
+            <span class="cat-hero-trust-label">Tecnología clínica</span>
+            <div class="cat-hero-trust-list">
+              <span>Dermatoscopia digital</span><span aria-hidden="true">·</span>
+              <span>PRP autólogo</span><span aria-hidden="true">·</span>
+              <span>Mesoterapia</span><span aria-hidden="true">·</span>
+              <span>Fototricograma</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cat-hero-col cat-hero-col--right fade-up-delay-2">
+          <span class="cat-hero-kicker">Qué hace CLIBEL en capilar</span>
+
+          <p class="cat-hero-paragraph">
+            <strong>CLIBEL</strong> es una clínica de belleza con respaldo
+            médico especializada en tricología clínica en Ciudad de México.
+            A diferencia de spas que venden "ampolletas milagrosas", en CLIBEL
+            cada plan capilar parte de <strong>diagnóstico tricoscópico</strong>
+            por dermatoscopio digital y análisis hormonal-nutricional cuando
+            aplica. Identificamos el tipo de alopecia antes de proponer
+            tratamiento — porque caída androgenética, telógena, areata y
+            por tracción requieren protocolos distintos.
+          </p>
+
+          <p class="cat-hero-paragraph">
+            En esta categoría <strong>CLIBEL</strong> reúne sus protocolos
+            capilares regenerativos: <strong>PRP capilar autólogo</strong>,
+            <strong>mesoterapia con bioactivos</strong>, <strong>tricología
+            clínica diagnóstica</strong> y tratamientos integrales para
+            caída del cabello. CLIBEL documenta cada sesión con tricoscopia
+            comparativa y fototricograma trimestral — para que veas tu
+            evolución con evidencia objetiva, no con tu memoria subjetiva.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ NAV TOP ============================ -->
+  <HeroNavBar
+    label="Otras categorías"
+    ariaLabel="Otras categorías de tratamientos CLIBEL"
+    variant="cream"
+    links={[
+      { label: 'Faciales',         href: catHref('facial') },
+      { label: 'Corporales',       href: catHref('corporal') },
+      { label: 'Depilación láser', href: catHref('laser') },
+      { label: 'Medicina estética',href: catHref('medicina-estetica') },
+    ]}
+    cta={{ label: 'Volver al catálogo', href: '/servicios' }}
+  />
+
+  <!-- ============================ CATÁLOGO ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker={`Catálogo · ${items.length} ${items.length === 1 ? 'protocolo base' : 'protocolos'}`}
+        title="Tratamientos capilares en <em>CLIBEL</em>."
+        paragraphs={[
+          '<strong>CLIBEL</strong> aborda la salud capilar como problema clínico real, no como problema cosmético. Cada plan capilar parte de tricoscopia, historia clínica completa y, cuando aplica, análisis hormonal-nutricional. CLIBEL nunca aplica PRP o mesoterapia sin antes identificar tipo y causa de la alopecia.',
+          'El tratamiento base se adapta según diagnóstico. <strong>CLIBEL</strong> documenta densidad folicular inicial con tricoscopia digital y compara con fototricograma trimestral — para que la evidencia hable, no la sensación.',
+        ]}
+        cta={{ label: 'Solicitar diagnóstico tricológico', href: '/contacto', variant: 'primary' }}
+      />
+
+      <div class="cat-grid">
+        {items.map((s) => (
+          <ServiceCard
+            href={`/servicios/${s.id}`}
+            title={s.data.title}
+            description={s.data.description}
+            category={s.data.category}
+            duration={s.data.duration}
+            sessions={s.data.sessions}
+            icon={s.data.icon}
+            featured={s.data.featured}
+            benefits={s.data.benefits}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ DIAGNÓSTICO TRICOLÓGICO (NUEVO) ============================ -->
+  <section class="section svc-diag">
+    <div aria-hidden="true" class="svc-diag-bg"></div>
+
+    <div class="container-x relative">
+      <SectionHeader
+        kicker="Diagnóstico tricológico"
+        title="4 pasos antes de tocar tu <em>cuero cabelludo</em>."
+        variant="dark"
+        paragraphs={[
+          'La diferencia entre <strong>CLIBEL</strong> y una clínica capilar promedio empieza ANTES del tratamiento. Aplicar PRP o mesoterapia sin diagnóstico es como recetar antibiótico sin saber qué bacteria. CLIBEL no improvisa: primero diagnostica, después trata.',
+          'Este proceso de 4 pasos diagnósticos es <strong>obligatorio</strong> en CLIBEL para cualquier plan capilar. Si una clínica te ofrece "sesión de PRP" sin pasar por esto, sal corriendo — el resultado será mediocre y posiblemente contraindicado.',
+        ]}
+      />
+
+      <ol class="diag-list">
+        {diagnosis.map((d) => (
+          <li class="diag-item reveal">
+            <span class="diag-num" aria-hidden="true">{d.n}</span>
+            <div class="diag-body">
+              <h3 class="diag-title">{d.title}</h3>
+              <p class="diag-text">{d.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ MAPA DE TIPOS DE ALOPECIA (NUEVO) ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Mapa de tipos de alopecia"
+        title="Cada tipo de caída tiene su <em>tratamiento correcto</em>."
+        paragraphs={[
+          'No toda caída de cabello es igual. <strong>CLIBEL</strong> identifica seis tipos clínicos principales que llegan a consulta — cada uno con causa, patrón tricoscópico y tratamiento diferenciado. Aplicar PRP a alopecia areata no funciona; aplicarlo a alopecia androgenética sí.',
+          'En <strong>CLIBEL</strong> clasificamos el tipo antes del primer tratamiento. Esta tabla orienta, pero el diagnóstico definitivo solo se obtiene en valoración clínica con dermatoscopio y, si aplica, estudios complementarios.',
+        ]}
+      />
+
+      <div class="alopecia-grid">
+        {alopeciaTypes.map((a) => (
+          <article class="alop reveal">
+            <header class="alop-head">
+              <span class="alop-code" aria-hidden="true">{a.code}</span>
+              <div class="alop-head-text">
+                <span class="alop-kicker">Alopecia</span>
+                <h3 class="alop-name">{a.name}</h3>
+                <span class="alop-aka">{a.aka}</span>
+              </div>
+            </header>
+
+            <div class="alop-body">
+              <div class="alop-row">
+                <span class="alop-row-label">Causa</span>
+                <p class="alop-row-text">{a.cause}</p>
+              </div>
+              <div class="alop-row alop-row--treat">
+                <span class="alop-row-label">Tratamiento CLIBEL</span>
+                <p class="alop-row-text">{a.treatment}</p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ ANATOMÍA / CICLO FOLICULAR (NUEVO) ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Anatomía del folículo · 3 fases"
+        title="Por qué <em>CLIBEL</em> espera 3 meses entre evaluaciones."
+        paragraphs={[
+          'El cabello no responde a tratamientos en días. <strong>CLIBEL</strong> trabaja en sincronía con el ciclo biológico folicular: anágena (crecimiento, 2–6 años), catágena (transición, 2–3 semanas), telógena (reposo, 2–4 meses). Esta es la razón científica por la que el cambio tarda meses, no semanas.',
+          'En cualquier momento, ~85% de tus folículos está en anágena y ~10–15% en telógena. Cuando esa proporción se altera, hay caída anormal. <strong>CLIBEL</strong> mide esta proporción con tricoscopia y la compara cada 3 meses para evaluar progreso real.',
+        ]}
+      />
+
+      <div class="cycle-grid">
+        {cycle.map((c, i) => (
+          <article class="cycle reveal">
+            <div class="cycle-pct">
+              <span class="cycle-pct-value">{c.coverage}</span>
+              <span class="cycle-pct-label">del cabello</span>
+            </div>
+            <div class="cycle-body">
+              <span class="cycle-num" aria-hidden="true">Fase 0{i + 1}</span>
+              <h3 class="cycle-phase">{c.phase}</h3>
+              <span class="cycle-dur">{c.duration}</span>
+              <p class="cycle-text">{c.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CASOS CLÍNICOS / PLANES (NUEVO) ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Planes por objetivo"
+        title="Casos clínicos que aborda <em>CLIBEL</em>."
+        paragraphs={[
+          '<strong>CLIBEL</strong> diseña planes capilares según el caso clínico específico: caída temprana en mujeres jóvenes, efluvio posparto, alopecia androgenética hereditaria, mantenimiento de resultado consolidado. Cada plan combina técnicas, frecuencia y seguimiento ajustado al perfil.',
+          'Estos planes son <strong>orientativos</strong>. CLIBEL siempre personaliza tras diagnóstico tricoscópico real — si tu caso no encaja en ninguno, diseñamos uno a medida con base en evidencia clínica.',
+        ]}
+      />
+
+      <div class="cases-grid">
+        {cases.map((c, i) => (
+          <article class={`case case--${c.accent} reveal`}>
+            <header class="case-head">
+              <span class="case-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <span class="case-kicker">Plan capilar</span>
+                <h3 class="case-name">{c.name}</h3>
+                <span class="case-duration">{c.duration}</span>
+              </div>
+            </header>
+
+            <div class="case-profile">
+              <span class="case-profile-label">Perfil</span>
+              <span class="case-profile-value">{c.profile}</span>
+            </div>
+
+            <div class="case-combo">
+              <span class="case-combo-label">Incluye</span>
+              <ul>
+                {c.combo.map((proc) => (
+                  <li>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    {proc}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <p class="case-target">{c.target}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ TIMELINE DE RESULTADOS ============================ -->
+  <section class="section svc-timeline">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Resultados realistas en tiempos biológicos"
+        title="Cuándo verás cambios con <em>CLIBEL</em>."
+        paragraphs={[
+          'El cabello tiene tiempos biológicos largos: un folículo tarda 2–6 años en completar su ciclo. <strong>CLIBEL</strong> documenta evolución con tricoscopia comparativa y fototricograma cada 3 meses. Esta línea de tiempo refleja la respuesta promedio en pacientes con plan completo.',
+          '<strong>CLIBEL</strong> NO promete crecimiento en 30 días — biológicamente imposible. Cualquier clínica que lo prometa está mintiendo o vendiendo cosmética coloreante. Aquí está la verdad clínica.',
+        ]}
+      />
+
+      <ol class="tl-list">
+        {timeline.map((t) => (
+          <li class="tl-step reveal">
+            <div class="tl-step-mark">
+              <span class="tl-step-when">{t.when}</span>
+              <span class="tl-step-dot" aria-hidden="true"></span>
+            </div>
+            <div class="tl-step-body">
+              <h3 class="tl-step-label">{t.label}</h3>
+              <p class="tl-step-text">{t.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ HÁBITOS — sí / no (NUEVO) ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Hábitos que importan"
+        title="Sabotear el plan vs <em>potenciar</em> el plan."
+        paragraphs={[
+          'Ningún tratamiento capilar en <strong>CLIBEL</strong> rinde si los hábitos saboteadores siguen activos. La caída tiene componentes ambientales y de cuidado que el paciente controla. Eliminar saboteadores potencia cualquier protocolo 30–40%.',
+          'CLIBEL entrega esta lista por escrito en la valoración inicial. No es opcional — es parte del plan clínico integral. Sin cambio de hábitos, el resultado se queda corto.',
+        ]}
+      />
+
+      <div class="habits-grid">
+        <article class="habits-col habits-col--no reveal">
+          <header class="habits-head">
+            <span class="habits-tag habits-tag--no">No hacer</span>
+            <h3 class="habits-title">Saboteadores capilares</h3>
+          </header>
+          <ul class="habits-list">
+            {habits.sabotage.map((h, i) => (
+              <li>
+                <span class="habits-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span>{h}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+
+        <article class="habits-col habits-col--yes reveal">
+          <header class="habits-head">
+            <span class="habits-tag habits-tag--yes">Sí hacer</span>
+            <h3 class="habits-title">Hábitos pro-cabello</h3>
+          </header>
+          <ul class="habits-list">
+            {habits.helpful.map((h, i) => (
+              <li>
+                <span class="habits-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span>{h}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FAQ + FORM ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Preguntas frecuentes y contacto"
+        title="Resuelve dudas o pide <em>diagnóstico tricológico</em>."
+        paragraphs={[
+          'Las preguntas más recurrentes en consulta capilar de <strong>CLIBEL</strong>, resueltas con criterio clínico real. A la derecha puedes enviar tu información — el mensaje llega al WhatsApp clínico de CLIBEL pre-armado con tu caso.',
+          'En <strong>CLIBEL</strong> la primera consulta incluye <strong>diagnóstico tricoscópico</strong> con dermatoscopio digital y plan personalizado por escrito. Sin costo, sin compromiso, sin venta forzada.',
+        ]}
+      />
+
+      <div class="faq-grid">
+        <div class="faq-col">
+          <span class="faq-col-label">Lo que más nos preguntan</span>
+          <div class="faq-list">
+            {faqs.map((f, i) => (
+              <details class="faq" open={i === 0}>
+                <summary class="faq-sum">
+                  <span class="faq-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="faq-q">{f.q}</span>
+                  <span class="faq-plus" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </span>
+                </summary>
+                <div class="faq-a">{f.a}</div>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        <aside class="faq-form-wrap">
+          <form id="capWaForm" class="faq-form" novalidate>
+            <span class="faq-form-kicker">Diagnóstico tricológico sin costo</span>
+            <h3 class="faq-form-title">Agenda por <em>WhatsApp</em></h3>
+            <p class="faq-form-sub">
+              Llena el formulario y abre tu mensaje pre-armado en WhatsApp.
+              Respuesta de <strong>CLIBEL</strong> en menos de 2 horas en horario clínica.
+            </p>
+
+            <div class="faq-form-row">
+              <label for="cap-nombre">Nombre completo <span aria-hidden="true">*</span></label>
+              <input id="cap-nombre" name="nombre" type="text" required autocomplete="name" />
+            </div>
+
+            <div class="faq-form-grid-2">
+              <div class="faq-form-row">
+                <label for="cap-tel">Teléfono <span aria-hidden="true">*</span></label>
+                <input id="cap-tel" name="telefono" type="tel" required autocomplete="tel" placeholder="55 1234 5678" />
+              </div>
+              <div class="faq-form-row">
+                <label for="cap-email">Email</label>
+                <input id="cap-email" name="email" type="email" autocomplete="email" />
+              </div>
+            </div>
+
+            <div class="faq-form-grid-2">
+              <div class="faq-form-row">
+                <label for="cap-tipo">Tipo de caída que percibes</label>
+                <select id="cap-tipo" name="tipo">
+                  <option value="">Selecciona (opcional)</option>
+                  <option value="Caída reciente difusa (toda la cabeza)">Caída reciente difusa</option>
+                  <option value="Pérdida en línea / coronilla">Pérdida en línea o coronilla</option>
+                  <option value="Placas circulares">Placas circulares</option>
+                  <option value="Posparto / efluvio">Posparto / efluvio</option>
+                  <option value="Cabello frágil / quebradizo">Cabello frágil / quebradizo</option>
+                  <option value="No estoy segura — quiero diagnóstico">No estoy segura — quiero diagnóstico</option>
+                </select>
+              </div>
+              <div class="faq-form-row">
+                <label for="cap-tiempo">Tiempo del problema</label>
+                <select id="cap-tiempo" name="tiempo">
+                  <option value="">Selecciona (opcional)</option>
+                  <option value="Menos de 3 meses">Menos de 3 meses</option>
+                  <option value="3–6 meses">3–6 meses</option>
+                  <option value="6–12 meses">6–12 meses</option>
+                  <option value="Más de 1 año">Más de 1 año</option>
+                  <option value="Hace varios años">Hace varios años</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="faq-form-row">
+              <label for="cap-msg">Cuéntanos contexto (opcional)</label>
+              <textarea id="cap-msg" name="mensaje" rows="3" placeholder="Ej: tomo medicamento X, tuve parto reciente, hay antecedentes familiares, etc."></textarea>
+            </div>
+
+            <label class="faq-form-check">
+              <input type="checkbox" name="privacidad" required />
+              <span>Acepto el <a href="/aviso-de-privacidad">Aviso de Privacidad</a> y autorizo el contacto por WhatsApp.</span>
+            </label>
+
+            <button type="submit" class="faq-form-submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+              Enviar por WhatsApp
+            </button>
+
+            <p class="faq-form-foot">
+              Respuesta &lt; 2h · Diagnóstico tricoscópico sin costo
+            </p>
+          </form>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
+    (function () {
+      const form = document.getElementById('capWaForm');
+      if (!form) return;
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const d = new FormData(form);
+        const g = (k) => (d.get(k) || '').toString().trim();
+        const nombre = g('nombre'), tel = g('telefono'), email = g('email');
+        const tipo = g('tipo'), tiempo = g('tiempo'), msg = g('mensaje');
+        const acepto = form.querySelector('[name="privacidad"]').checked;
+        if (!nombre || !tel || !acepto) { form.classList.add('is-invalid'); return; }
+        form.classList.remove('is-invalid');
+        const lines = [
+          'Hola CLIBEL, vengo desde la página de Tratamientos Capilares.',
+          '',
+          'Nombre: ' + nombre,
+          'Teléfono: ' + tel,
+        ];
+        if (email)  lines.push('Email: ' + email);
+        if (tipo)   lines.push('Tipo de caída: ' + tipo);
+        if (tiempo) lines.push('Tiempo del problema: ' + tiempo);
+        if (msg)    lines.push('', 'Contexto: ' + msg);
+        window.open(waBase + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
+      });
+    })();
+  </script>
+
+  <!-- ============================ RELATED L3 ============================ -->
+  <RelatedCategories current="capilar" variant="cream" />
+
+  <!-- ============================ NAV PRE-FOOTER ============================ -->
+  <HeroNavBar
+    label="Protocolos capilares"
+    ariaLabel="Protocolos capilares CLIBEL"
+    variant="dark"
+    links={items.map((s) => ({ label: s.data.title, href: `/servicios/${s.id}` }))}
+    cta={{ label: 'Reserva diagnóstico tricológico', href: '/contacto' }}
+  />
+</BaseLayout>
+
+<style>
+  /* ============= HERO (homologado) ============= */
+  .cat-hero {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, var(--color-brand-100) 100%);
+    isolation: isolate;
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(201,169,97,0.18), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.16), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .cat-hero-blob { position: absolute; border-radius: 999px; filter: blur(110px); pointer-events: none; z-index: 0; opacity: 0.5; }
+  .cat-hero-blob-1 { width: 36rem; height: 36rem; top: -10rem; right: -10rem; background: var(--color-brand-300); }
+  .cat-hero-blob-2 { width: 32rem; height: 32rem; bottom: -12rem; left: -8rem; background: var(--color-mauve-300); }
+  .cat-hero-grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(31,20,24,0.05) 1px, transparent 1px);
+    background-size: 3px 3px;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .cat-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem;
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    width: 100% !important;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .cat-hero-grid { grid-template-columns: 1fr 1fr !important; gap: clamp(2rem, 4vw, 4.5rem); }
+  }
+  .cat-hero-col {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .cat-hero-col--left { container-type: inline-size; container-name: catheroleft; }
+  .cat-hero-headline {
+    font-family: var(--font-display);
+    font-weight: 450;
+    letter-spacing: -0.022em;
+    line-height: 1.02;
+    color: var(--color-ink-900);
+    font-size: clamp(2.5rem, 10.5cqi, 6.5rem);
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    width: 100%;
+    margin: 0.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05em;
+  }
+  .cat-hero-headline-line { display: block; width: 100%; }
+  .cat-hero-headline em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+  }
+  @media (max-width: 899px) { .cat-hero-headline { font-size: clamp(2.5rem, 9.5vw, 4.5rem); } }
+  .cat-hero-lede {
+    font-size: clamp(1rem, 1.1vw, 1.18rem);
+    line-height: 1.65;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .cat-hero-lede strong { color: var(--color-ink-900); font-weight: 600; }
+  .cat-hero-trust {
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(201, 169, 97, 0.25);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem;
+  }
+  .cat-hero-trust-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .cat-hero-trust-list {
+    display: inline-flex; flex-wrap: wrap; gap: 0.55rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--color-ink-700);
+  }
+  .cat-hero-trust-list span[aria-hidden] { color: var(--color-brand-400); }
+  .cat-hero-col--right { gap: 1.25rem; }
+  @media (min-width: 900px) {
+    .cat-hero-col--right {
+      padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+      border-left: 1px solid rgba(201, 169, 97, 0.25);
+    }
+  }
+  .cat-hero-kicker {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--color-brand-400);
+    align-self: flex-start;
+  }
+  .cat-hero-paragraph {
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.75;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .cat-hero-paragraph strong { color: var(--color-ink-900); font-weight: 600; }
+  @media (max-width: 899px) { .cat-hero-col { gap: 1.25rem; } }
+
+  /* ============= Catálogo grid ============= */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 640px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .cat-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+
+  /* ============= NEW: Diagnóstico tricológico (dark) ============= */
+  .svc-diag {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .svc-diag-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 100% 0%, rgba(201,169,97,0.08), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.1), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .diag-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 768px) { .diag-list { grid-template-columns: repeat(2, 1fr); } }
+  .diag-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    padding: clamp(1.5rem, 2.5vw, 2.25rem) clamp(0.5rem, 1.5vw, 1.5rem);
+    border-top: 1px solid rgba(201, 169, 97, 0.22);
+    align-items: start;
+  }
+  @media (min-width: 768px) {
+    .diag-item:nth-child(odd)  { padding-right: clamp(1rem, 2vw, 2rem); border-right: 1px solid rgba(201, 169, 97, 0.18); }
+    .diag-item:nth-child(even) { padding-left:  clamp(1rem, 2vw, 2rem); }
+    .diag-item:nth-child(1), .diag-item:nth-child(2) { border-top: 0; padding-top: 0; }
+  }
+  .diag-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+    min-width: 2.5rem;
+  }
+  .diag-body { display: flex; flex-direction: column; gap: 0.5rem; max-width: 56ch; }
+  .diag-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.25rem, 1.8vw, 1.55rem);
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .diag-text {
+    font-size: clamp(0.92rem, 1vw, 1.02rem);
+    line-height: 1.65;
+    color: rgba(242, 235, 223, 0.78);
+    margin: 0;
+  }
+
+  /* ============= NEW: Mapa tipos alopecia ============= */
+  .alopecia-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 768px) { .alopecia-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } }
+  @media (min-width: 1200px) { .alopecia-grid { grid-template-columns: repeat(3, 1fr); } }
+  .alop {
+    position: relative;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.28);
+    border-radius: 1.1rem;
+    padding: clamp(1.4rem, 1.8vw, 1.7rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    transition: all 0.45s cubic-bezier(.2,.8,.2,1) !important;
+    overflow: hidden;
+  }
+  .alop::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-500));
+    transition: width 0.4s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  .alop:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139, 90, 107, 0.45);
+    box-shadow: 0 28px 48px -22px rgba(31, 20, 24, 0.2);
+  }
+  .alop:hover::before { width: 6px; }
+  .alop-head { display: flex; align-items: flex-start; gap: 1rem; }
+  .alop-code {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2rem, 2.8vw, 2.5rem);
+    color: var(--color-mauve-500);
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+  .alop-head-text { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+  .alop-kicker {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    opacity: 0.85;
+  }
+  .alop-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.3rem, 1.6vw, 1.55rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+  }
+  .alop-aka {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--color-ink-500);
+  }
+  .alop-body { display: flex; flex-direction: column; gap: 0.85rem; }
+  .alop-row { display: flex; flex-direction: column; gap: 0.25rem; }
+  .alop-row-label {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .alop-row--treat .alop-row-label { color: var(--color-mauve-500); }
+  .alop-row-text {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+  }
+  .alop-row--treat .alop-row-text {
+    padding: 0.65rem 0.85rem;
+    background: var(--color-brand-50);
+    border-left: 3px solid var(--color-mauve-500);
+    border-radius: 0 0.5rem 0.5rem 0;
+    color: var(--color-ink-800);
+    font-weight: 500;
+  }
+
+  /* ============= NEW: Ciclo capilar ============= */
+  .cycle-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) { .cycle-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; } }
+  .cycle {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    padding: 1.4rem;
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-brand-100) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.1rem;
+    align-items: center;
+    transition: all 0.4s ease !important;
+  }
+  .cycle:hover {
+    border-color: var(--color-mauve-500);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -22px rgba(31, 20, 24, 0.18);
+  }
+  .cycle-pct {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.95rem 0.85rem;
+    background: var(--color-ink-900);
+    color: white;
+    border-radius: 0.85rem;
+    min-width: 82px;
+  }
+  .cycle-pct-value {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--color-brand-400);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .cycle-pct-label {
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(242,235,223,0.65);
+    margin-top: 0.4rem;
+  }
+  .cycle-body { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+  .cycle-num {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .cycle-phase {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+  .cycle-dur {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--color-mauve-500);
+  }
+  .cycle-text {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+    margin: 0.25rem 0 0;
+  }
+
+  /* ============= NEW: Cases ============= */
+  .cases-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 768px) { .cases-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } }
+  .case {
+    position: relative;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.28);
+    border-radius: 1.25rem;
+    padding: clamp(1.5rem, 2vw, 1.85rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1), box-shadow 0.5s ease, border-color 0.4s ease !important;
+  }
+  .case::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--accent-color, var(--color-brand-400));
+    transition: height 0.4s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  .case:hover {
+    transform: translateY(-6px);
+    border-color: rgba(139, 90, 107, 0.45);
+    box-shadow: 0 32px 56px -22px rgba(31,20,24,0.22);
+  }
+  .case:hover::before { height: 6px; }
+  .case--gold  { --accent-color: var(--color-brand-500); }
+  .case--mauve { --accent-color: var(--color-mauve-500); }
+  .case--rose  { --accent-color: var(--color-mauve-300); }
+  .case-head { display: flex; align-items: flex-start; gap: 1rem; }
+  .case-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    color: var(--accent-color, var(--color-brand-500));
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+  .case-kicker {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    opacity: 0.85;
+    margin-bottom: 0.2rem;
+  }
+  .case-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 1.8vw, 1.7rem);
+    color: var(--color-ink-900);
+    margin: 0 0 0.2rem;
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+  }
+  .case-duration {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--color-ink-500);
+  }
+  .case-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--color-brand-50);
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    border-radius: 0.6rem;
+  }
+  .case-profile-label {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .case-profile-value {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--color-ink-800);
+    letter-spacing: -0.005em;
+  }
+  .case-combo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-block: 0.85rem;
+    border-block: 1px dashed rgba(201, 169, 97, 0.3);
+  }
+  .case-combo-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .case-combo ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .case-combo li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--color-ink-700);
+  }
+  .case-combo li svg {
+    flex-shrink: 0;
+    margin-top: 0.18rem;
+    color: var(--accent-color, var(--color-mauve-500));
+  }
+  .case-target {
+    margin: 0;
+    padding: 0.85rem 0.95rem;
+    background: var(--color-brand-50);
+    border-left: 3px solid var(--accent-color, var(--color-brand-400));
+    border-radius: 0 0.55rem 0.55rem 0;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+    font-style: italic;
+  }
+
+  /* ============= Timeline ============= */
+  .svc-timeline { background: white; }
+  .tl-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .tl-step {
+    display: grid;
+    grid-template-columns: clamp(110px, 18vw, 200px) 1fr;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    padding-block: clamp(1.5rem, 2.5vw, 2.25rem);
+    border-top: 1px solid rgba(201, 169, 97, 0.22);
+    align-items: start;
+  }
+  .tl-step:first-child { border-top: 0; padding-top: 0; }
+  .tl-step-mark {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    align-items: flex-start;
+  }
+  .tl-step-when {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.65rem, 2.5vw, 2.25rem);
+    color: var(--color-mauve-500);
+    line-height: 1;
+    letter-spacing: -0.018em;
+  }
+  .tl-step-dot {
+    width: 10px; height: 10px;
+    border-radius: 999px;
+    background: var(--color-brand-400);
+    box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.18), 0 0 0 8px rgba(201, 169, 97, 0.07);
+  }
+  .tl-step-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    max-width: 60ch;
+  }
+  .tl-step-label {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.25rem, 1.8vw, 1.65rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .tl-step-text {
+    font-size: clamp(0.92rem, 1vw, 1.02rem);
+    line-height: 1.7;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .tl-step { grid-template-columns: 1fr; gap: 0.75rem; }
+    .tl-step-mark { flex-direction: row; align-items: center; gap: 1rem; }
+  }
+
+  /* ============= NEW: Hábitos sí / no ============= */
+  .habits-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 900px) {
+    .habits-grid { grid-template-columns: 1fr 1fr; gap: 1.75rem; }
+  }
+  .habits-col {
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    border-radius: 1.25rem;
+    padding: clamp(1.5rem, 2vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all 0.4s ease !important;
+  }
+  .habits-col--no  { border-top: 4px solid #c62b3e; }
+  .habits-col--yes { border-top: 4px solid #2e7d32; }
+  .habits-col:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 28px 48px -22px rgba(31, 20, 24, 0.18);
+  }
+  .habits-head { display: flex; align-items: baseline; gap: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px dashed rgba(201, 169, 97, 0.3); }
+  .habits-tag {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+  }
+  .habits-tag--no {
+    background: rgba(198, 43, 62, 0.1);
+    color: #c62b3e;
+    border: 1px solid rgba(198, 43, 62, 0.3);
+  }
+  .habits-tag--yes {
+    background: rgba(46, 125, 50, 0.1);
+    color: #2e7d32;
+    border: 1px solid rgba(46, 125, 50, 0.3);
+  }
+  .habits-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.3rem, 1.7vw, 1.65rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .habits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .habits-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding-block: 0.55rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.18);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-ink-700);
+  }
+  .habits-list li:first-child { border-top: 0; padding-top: 0; }
+  .habits-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.92rem;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    min-width: 24px;
+  }
+  .habits-col--no  .habits-num { color: #c62b3e; opacity: 0.85; }
+  .habits-col--yes .habits-num { color: #2e7d32; opacity: 0.85; }
+
+  /* ============= FAQ + Form (mismo patrón) ============= */
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 3vw, 2.75rem);
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .faq-grid { grid-template-columns: 1.15fr 0.85fr; gap: clamp(2.5rem, 4vw, 3.5rem); }
+  }
+  .faq-col-label {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-bottom: 1.1rem;
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .faq {
+    background: var(--color-brand-50);
+    border: 1px solid rgba(201, 169, 97, 0.22);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: border-color 0.3s ease, background 0.3s ease !important;
+  }
+  .faq[open] { background: white; border-color: var(--color-mauve-500); }
+  .faq-sum {
+    list-style: none;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+  }
+  .faq-sum::-webkit-details-marker { display: none; }
+  .faq-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    opacity: 0.8;
+    min-width: 24px;
+  }
+  .faq-q {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1rem, 1.1vw, 1.12rem);
+    color: var(--color-ink-900);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .faq-plus {
+    width: 32px; height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--color-brand-100);
+    color: var(--color-mauve-500);
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1), background 0.3s ease, color 0.3s ease !important;
+  }
+  .faq[open] .faq-plus {
+    transform: rotate(45deg);
+    background: var(--color-mauve-500);
+    color: white;
+  }
+  .faq-a {
+    padding: 0 1.25rem 1.25rem clamp(3.5rem, 6vw, 4rem);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--color-ink-700);
+  }
+  .faq-form-wrap { position: relative; }
+  @media (min-width: 1024px) { .faq-form-wrap { position: sticky; top: clamp(6rem, 10vh, 7.5rem); } }
+  .faq-form {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-brand-50) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.25rem;
+    padding: clamp(1.5rem, 2vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    box-shadow:
+      0 1px 2px rgba(31, 20, 24, 0.03),
+      0 24px 56px -28px rgba(31, 20, 24, 0.18);
+  }
+  .faq-form-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .faq-form-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.45rem, 2vw, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink-900);
+    margin: 0;
+  }
+  .faq-form-title em { font-style: italic; color: var(--color-mauve-500); font-weight: 400; }
+  .faq-form-sub {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-ink-500);
+    margin: 0 0 0.5rem;
+  }
+  .faq-form-sub strong { color: var(--color-ink-900); font-weight: 600; }
+  .faq-form-row { display: flex; flex-direction: column; gap: 0.32rem; }
+  .faq-form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  @media (min-width: 520px) { .faq-form-grid-2 { grid-template-columns: 1fr 1fr; } }
+  .faq-form-row label {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-ink-700);
+    letter-spacing: 0.02em;
+  }
+  .faq-form-row label span[aria-hidden] { color: var(--color-mauve-500); margin-left: 2px; }
+  .faq-form input,
+  .faq-form select,
+  .faq-form textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    color: var(--color-ink-900);
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    border-radius: 0.65rem;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+    appearance: none;
+    line-height: 1.4;
+  }
+  .faq-form select {
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--color-mauve-500) 50%),
+      linear-gradient(135deg, var(--color-mauve-500) 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 13px) calc(50% - 2px);
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2rem;
+    cursor: pointer;
+  }
+  .faq-form textarea { resize: vertical; min-height: 80px; }
+  .faq-form input:focus,
+  .faq-form select:focus,
+  .faq-form textarea:focus {
+    border-color: var(--color-mauve-500);
+    box-shadow: 0 0 0 3px rgba(139, 90, 107, 0.12);
+    background: var(--color-brand-50);
+  }
+  .faq-form.is-invalid input:required:invalid { border-color: #c62b3e; }
+  .faq-form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--color-ink-500);
+    cursor: pointer;
+  }
+  .faq-form-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    accent-color: var(--color-mauve-500);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .faq-form-check a { color: var(--color-mauve-500); text-decoration: underline; text-underline-offset: 2px; }
+  .faq-form-check a:hover { color: var(--color-mauve-700); }
+  .faq-form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.95rem 1.25rem;
+    margin-top: 0.5rem;
+    background: #25D366;
+    color: white;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow:
+      0 10px 24px -10px rgba(37, 211, 102, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+  }
+  .faq-form-submit:hover {
+    background: #1FB855;
+    transform: translateY(-2px);
+    box-shadow:
+      0 16px 32px -10px rgba(37, 211, 102, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  .faq-form-foot {
+    margin: 0;
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-500);
+    opacity: 0.85;
+  }
+  @media (max-width: 640px) { .faq-form { padding: 1.25rem; } }
+</style>

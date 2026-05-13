@@ -1,5 +1,5 @@
 ---
-import { CATEGORIES } from '../consts';
+import { CATEGORIES, catHref } from '../consts';
 const cats = Object.values(CATEGORIES);
 ---
 
@@ -8,7 +8,7 @@ const cats = Object.values(CATEGORIES);
     <nav class="hero-nav">
       {cats.map((cat, i) => (
         <>
-          <a href={`/servicios#${cat.slug}`} class="hero-nav-link">
+          <a href={catHref(cat.slug)} class="hero-nav-link">
             {cat.label}
           </a>
           {i < cats.length && <span class="hero-nav-sep" aria-hidden="true"></span>}

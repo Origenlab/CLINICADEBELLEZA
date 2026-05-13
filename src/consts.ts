@@ -66,8 +66,8 @@ export const CATEGORIES = {
       { label: 'Rejuvenecimiento Facial', href: '/servicios/rejuvenecimiento-facial' },
       { label: 'Peelings Químicos', href: '/servicios/peelings-quimicos' },
       { label: 'Tratamiento Antiacné', href: '/servicios/tratamiento-antiacne' },
-      { label: 'Manchas e hiperpigmentación', href: '/servicios#facial' },
-      { label: 'Microneedling', href: '/servicios#facial' },
+      { label: 'Manchas e hiperpigmentación', href: '/servicios/tratamientos-faciales' },
+      { label: 'Microneedling', href: '/servicios/tratamientos-faciales' },
     ],
   },
   corporal: {
@@ -84,8 +84,8 @@ export const CATEGORIES = {
       { label: 'Reducción de Grasa Localizada', href: '/servicios/reduccion-grasa-localizada' },
       { label: 'Drenaje Linfático Manual', href: '/servicios/drenaje-linfatico' },
       { label: 'Masaje Reductivo y Anticelulitis', href: '/servicios/masaje-anticelulitis' },
-      { label: 'Tonificación muscular', href: '/servicios#corporal' },
-      { label: 'Tratamiento post-operatorio', href: '/servicios#corporal' },
+      { label: 'Tonificación muscular', href: '/servicios/tratamientos-corporales' },
+      { label: 'Tratamiento post-operatorio', href: '/servicios/tratamientos-corporales' },
     ],
   },
   laser: {
@@ -120,8 +120,8 @@ export const CATEGORIES = {
       { label: 'Toxina Botulínica', href: '/servicios/toxina-botulinica' },
       { label: 'Plasma Rico en Plaquetas', href: '/servicios/plasma-rico-plaquetas' },
       { label: 'Hilos Tensores', href: '/servicios/hilos-tensores' },
-      { label: 'Bioestimuladores de colágeno', href: '/servicios#medicina-estetica' },
-      { label: 'Skinboosters', href: '/servicios#medicina-estetica' },
+      { label: 'Bioestimuladores de colágeno', href: '/servicios/medicina-estetica-avanzada' },
+      { label: 'Skinboosters', href: '/servicios/medicina-estetica-avanzada' },
     ],
   },
   capilar: {
@@ -143,6 +143,20 @@ export const CATEGORIES = {
 } as const;
 
 export type Category = keyof typeof CATEGORIES;
+
+// Páginas dedicadas por categoría — URLs SEO-friendly con keywords completas.
+// Agrega aquí el slug → ruta cuando se cree el landing.
+// Las que no estén aquí caen a la ancla del catálogo principal `/servicios#<slug>`.
+export const CATEGORY_LANDING_PAGES: Partial<Record<Category, string>> = {
+  facial: '/servicios/tratamientos-faciales',
+  corporal: '/servicios/tratamientos-corporales',
+  laser: '/servicios/depilacion-laser',
+  'medicina-estetica': '/servicios/medicina-estetica-avanzada',
+  capilar: '/servicios/tratamientos-capilares',
+};
+
+export const catHref = (slug: Category | string) =>
+  CATEGORY_LANDING_PAGES[slug as Category] ?? `/servicios#${slug}`;
 
 export const STATS = [
   { value: '45', label: 'Años de experiencia' },

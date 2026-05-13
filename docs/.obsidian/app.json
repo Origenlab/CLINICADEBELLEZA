@@ -1,0 +1,11 @@
+{
+  "promptDelete": false,
+  "alwaysUpdateLinks": true,
+  "newLinkFormat": "shortest",
+  "useMarkdownLinks": false,
+  "attachmentFolderPath": "attachments",
+  "defaultViewMode": "preview",
+  "livePreview": true,
+  "showLineNumber": false,
+  "spellcheckLanguages": ["es", "en-US"]
+}

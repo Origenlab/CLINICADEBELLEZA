@@ -10,7 +10,6 @@ import SectorsAudience from '../components/SectorsAudience.astro';
 import Testimonials from '../components/Testimonials.astro';
 import BlogPreview from '../components/BlogPreview.astro';
 import FAQContact from '../components/FAQContact.astro';
-import CTA from '../components/CTA.astro';
 import { SITE } from '../consts';
 ---
 
@@ -49,13 +48,13 @@ import { SITE } from '../consts';
             </p>
             <p>
               Aquí encuentras
-              <a href="/servicios#facial">tratamientos faciales</a> (limpieza
+              <a href="/servicios/tratamientos-faciales">tratamientos faciales</a> (limpieza
               profunda, rejuvenecimiento, peelings químicos, antiacné),
-              <a href="/servicios#corporal">tratamientos corporales</a>
+              <a href="/servicios/tratamientos-corporales">tratamientos corporales</a>
               (radiofrecuencia, reducción localizada, drenaje linfático),
-              <a href="/servicios#laser">depilación láser</a> profesional para
+              <a href="/servicios/depilacion-laser">depilación láser</a> profesional para
               todas las zonas, y
-              <a href="/servicios#medicina-estetica">medicina estética avanzada</a>
+              <a href="/servicios/medicina-estetica-avanzada">medicina estética avanzada</a>
               con ácido hialurónico, toxina botulínica, plasma rico en plaquetas
               e hilos tensores.
             </p>
@@ -81,8 +80,6 @@ import { SITE } from '../consts';
       </div>
     </div>
   </section>
-
-  <CTA />
 </BaseLayout>
 
 <style>
@@ -121,13 +118,13 @@ import { SITE } from '../consts';
     margin-bottom: 1.25rem;
   }
   .seo-block strong { color: var(--color-ink-900); font-weight: 600; }
-  .seo-block a {
+  .seo-block a:not(.btn) {
     color: var(--color-mauve-500);
     text-decoration: underline;
     text-decoration-color: rgba(139, 90, 107, 0.3);
     text-underline-offset: 3px;
     transition: text-decoration-color 0.3s ease;
   }
-  .seo-block a:hover { text-decoration-color: var(--color-mauve-500); }
+  .seo-block a:not(.btn):hover { text-decoration-color: var(--color-mauve-500); }
   .seo-block .mt-4 { margin-top: 1rem; display: inline-flex; }
 </style>

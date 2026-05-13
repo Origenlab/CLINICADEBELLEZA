@@ -1,0 +1,190 @@
+---
+import { SITE } from '../consts';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+  /** label encima del trail, ej: "Catálogo CLIBEL" */
+  kicker?: string;
+  /** Variant de fondo */
+  variant?: 'cream' | 'white' | 'dark';
+}
+
+const { items, kicker, variant = 'cream' } = Astro.props;
+
+// Genera schema.org BreadcrumbList para SEO
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITE.url },
+    ...items.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 2,
+      name: c.label,
+      ...(c.href ? { item: new URL(c.href, SITE.url).toString() } : {}),
+    })),
+  ],
+};
+---
+
+<nav class:list={['bc', `bc--${variant}`]} aria-label="Migas de pan">
+  <div class="container-x bc-inner">
+    {kicker && <span class="bc-kicker">{kicker}</span>}
+
+    <ol class="bc-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li class="bc-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" class="bc-link">
+          <span itemprop="name">Inicio</span>
+        </a>
+        <meta itemprop="position" content="1" />
+        <span class="bc-sep" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </li>
+
+      {items.map((c, i) => {
+        const isLast = i === items.length - 1;
+        return (
+          <li class:list={['bc-item', isLast && 'is-current']} itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            {c.href && !isLast ? (
+              <>
+                <a href={c.href} itemprop="item" class="bc-link">
+                  <span itemprop="name">{c.label}</span>
+                </a>
+                <span class="bc-sep" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </>
+            ) : (
+              <span class="bc-current" itemprop="name" aria-current="page">{c.label}</span>
+            )}
+            <meta itemprop="position" content={String(i + 2)} />
+          </li>
+        );
+      })}
+    </ol>
+  </div>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+<style>
+  .bc {
+    border-bottom: 1px solid rgba(201, 169, 97, 0.18);
+    border-top: 1px solid rgba(201, 169, 97, 0.12);
+  }
+  .bc--cream {
+    background: var(--color-brand-50);
+  }
+  .bc--white {
+    background: white;
+  }
+  .bc--dark {
+    background: var(--color-ink-900);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .bc-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding-block: 0.85rem;
+    min-height: 50px;
+  }
+
+  .bc-kicker {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    padding-right: 1.25rem;
+    border-right: 1px solid rgba(201, 169, 97, 0.35);
+    white-space: nowrap;
+  }
+  .bc--dark .bc-kicker {
+    color: var(--color-brand-400);
+    border-right-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .bc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    font-size: 0.78rem;
+  }
+
+  .bc-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    color: var(--color-ink-500);
+  }
+  .bc--dark .bc-item { color: rgba(242, 235, 223, 0.6); }
+
+  .bc-link {
+    display: inline-block;
+    padding: 0.3rem 0;
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.25s ease;
+    letter-spacing: 0.01em;
+  }
+  .bc-link:hover {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .bc--dark .bc-link:hover { color: white; }
+
+  .bc-sep {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    color: var(--color-brand-400);
+    opacity: 0.7;
+  }
+  .bc--dark .bc-sep { color: var(--color-brand-300); opacity: 0.5; }
+
+  .bc-current {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    background: rgba(232, 213, 196, 0.4);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 999px;
+    font-weight: 600;
+    color: var(--color-ink-900);
+    letter-spacing: 0.01em;
+  }
+  .bc--white .bc-current {
+    background: var(--color-brand-50);
+  }
+  .bc--dark .bc-current {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(201, 169, 97, 0.3);
+    color: white;
+  }
+
+  @media (max-width: 480px) {
+    .bc-inner { gap: 0.65rem; padding-block: 0.7rem; }
+    .bc-kicker {
+      width: 100%;
+      padding-right: 0;
+      border-right: 0;
+      padding-bottom: 0.25rem;
+    }
+    .bc-list { font-size: 0.72rem; }
+    .bc-sep { width: 18px; }
+  }
+</style>

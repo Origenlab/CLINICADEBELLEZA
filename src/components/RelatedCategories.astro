@@ -1,0 +1,261 @@
+---
+import { CATEGORIES, catHref, type Category } from '../consts';
+
+interface Props {
+  /** Categoría actual — se excluye de las recomendaciones */
+  current: Category;
+  /** Opcional: categorías a recomendar. Por defecto sugiere 3 según mapa */
+  recommend?: Category[];
+  /** Variante visual */
+  variant?: 'cream' | 'white';
+}
+
+const { current, recommend, variant = 'cream' } = Astro.props;
+
+// Mapa de recomendaciones por categoría — combinaciones que CLIBEL suele sugerir
+const defaultRecommendations: Record<Category, Category[]> = {
+  facial:             ['medicina-estetica', 'capilar', 'laser'],
+  corporal:           ['facial', 'laser', 'medicina-estetica'],
+  laser:              ['facial', 'corporal', 'medicina-estetica'],
+  'medicina-estetica':['facial', 'capilar', 'corporal'],
+  capilar:            ['facial', 'medicina-estetica', 'corporal'],
+};
+
+const cats = recommend ?? defaultRecommendations[current] ?? [];
+const recommended = cats
+  .filter((slug) => slug !== current)
+  .map((slug) => CATEGORIES[slug])
+  .filter(Boolean);
+
+// Razones de combinación clínica (justificación editorial)
+const reasoning: Record<Category, Record<string, string>> = {
+  facial: {
+    'medicina-estetica': 'Después de tratar la salud cutánea con protocolos faciales, la medicina estética avanzada potencia resultados.',
+    'capilar':           'Salud capilar y facial comparten ciclos hormonales: trabajarlos en paralelo da resultado más sólido.',
+    'laser':             'Depilación láser facial complementa cuidados estéticos eliminando vello fino sin agredir la piel.',
+    'corporal':          'Cuerpo y rostro como sistema integrado: planes faciales + corporales en mismo cronograma.',
+  },
+  corporal: {
+    'facial':            'Plan corporal integral suele acompañarse de protocolo facial para coherencia estética global.',
+    'laser':             'Depilación láser corporal complementa la remodelación: piel suave en zonas tratadas con RF.',
+    'medicina-estetica': 'Después del trabajo corporal, medicina estética facial cierra el plan estético integral.',
+    'capilar':           'Recuperación posparto suele combinar planes corporales con tratamiento capilar para efluvio.',
+  },
+  laser: {
+    'facial':            'Tras completar el plan láser, protocolos faciales aprovechan la piel sin vello para tratamientos más cómodos.',
+    'corporal':          'Depilación láser corporal y radiofrecuencia o drenaje se combinan frecuentemente en CLIBEL.',
+    'medicina-estetica': 'Plan láser permanente más medicina estética facial es la combinación más eficiente a largo plazo.',
+    'capilar':           'Salud capilar como contrapeso: mientras quitamos vello indeseado, cuidamos cabello donde sí lo quieres.',
+  },
+  'medicina-estetica': {
+    'facial':            'Tratamientos faciales mantienen la calidad cutánea entre sesiones de medicina estética avanzada.',
+    'capilar':           'Antienvejecimiento integral: rostro con medicina estética y cabello con tratamiento capilar regenerativo.',
+    'corporal':          'Armonización facial con remodelación corporal: planes integrales que CLIBEL combina frecuentemente.',
+    'laser':             'Depilación láser libera tiempo y mejora confianza estética cotidiana junto a la medicina estética facial.',
+  },
+  capilar: {
+    'facial':            'Salud capilar y facial responden a las mismas hormonas: tratar ambos da resultado clínico más completo.',
+    'medicina-estetica': 'PRP capilar y facial comparten principio biológico — sesiones combinadas optimizan tiempo y costo.',
+    'corporal':          'Recuperación posparto integral: efluvio capilar + reafirmación corporal en mismo cronograma.',
+    'laser':             'Equilibrio: tratar caída donde sí queremos cabello y eliminar vello con láser donde no lo queremos.',
+  },
+};
+
+const reasons = reasoning[current] ?? {};
+---
+
+<section class:list={['rcat', `rcat--${variant}`]} aria-label="Categorías relacionadas">
+  <div class="container-x">
+    <header class="rcat-head">
+      <span class="rcat-kicker">Complementa tu plan</span>
+      <h2 class="rcat-title">
+        Categorías que <em>CLIBEL</em> combina con esta.
+      </h2>
+      <p class="rcat-lede">
+        Cuando llegas a <strong>CLIBEL</strong> por una categoría, en
+        valoración solemos identificar oportunidades en otras. Estas son
+        las combinaciones clínicas más frecuentes — no como venta cruzada,
+        sino como criterio integral.
+      </p>
+    </header>
+
+    <div class="rcat-grid" data-count={recommended.length}>
+      {recommended.map((c, i) => (
+        <a href={catHref(c.slug)} class="rcat-card">
+          <span class="rcat-card-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div class="rcat-card-body">
+            <span class="rcat-card-kicker">Categoría · {c.short}</span>
+            <h3 class="rcat-card-name">{c.label}</h3>
+            <p class="rcat-card-text">{reasons[c.slug] ?? c.description}</p>
+            <span class="rcat-card-cta">
+              Ver categoría
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .rcat { padding-block: clamp(3.5rem, 6vw, 5.5rem); }
+  .rcat--cream { background: var(--color-brand-50); }
+  .rcat--white { background: white; }
+
+  .rcat-head {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto clamp(2.5rem, 4vw, 3.25rem);
+  }
+  .rcat-kicker {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    margin-bottom: 0.85rem;
+  }
+  .rcat-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.85rem, 3.2vw, 2.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--color-ink-900);
+    margin: 0 0 0.95rem;
+  }
+  .rcat-title em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+  }
+  .rcat-lede {
+    font-size: clamp(0.95rem, 1vw, 1.05rem);
+    line-height: 1.7;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .rcat-lede strong { color: var(--color-ink-900); font-weight: 600; }
+
+  /* === Grid === */
+  .rcat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+  @media (min-width: 700px) {
+    .rcat-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    .rcat-grid[data-count="3"] { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1100px) {
+    .rcat-grid[data-count="3"] { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  }
+
+  /* === Card === */
+  .rcat-card {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.1rem;
+    padding: clamp(1.5rem, 2vw, 1.85rem);
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.1rem;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    transition: transform 0.45s cubic-bezier(.2,.8,.2,1), box-shadow 0.45s ease, border-color 0.4s ease !important;
+  }
+  .rcat--white .rcat-card { background: var(--color-brand-50); }
+  .rcat-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-500));
+    transition: width 0.4s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  .rcat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(139, 90, 107, 0.45);
+    box-shadow: 0 28px 48px -22px rgba(31, 20, 24, 0.2);
+  }
+  .rcat-card:hover::before { width: 6px; }
+
+  .rcat-card-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.25rem, 3vw, 2.85rem);
+    color: var(--color-mauve-500);
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+    opacity: 0.85;
+    transition: color 0.3s ease, transform 0.4s ease !important;
+  }
+  .rcat-card:hover .rcat-card-num {
+    color: var(--color-brand-500);
+    transform: translateY(-3px);
+  }
+
+  .rcat-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-width: 0;
+    flex: 1;
+  }
+  .rcat-card-kicker {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    opacity: 0.85;
+  }
+  .rcat-card-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.3rem, 1.65vw, 1.55rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.18;
+    letter-spacing: -0.018em;
+    transition: color 0.3s ease !important;
+  }
+  .rcat-card:hover .rcat-card-name { color: var(--color-mauve-700); }
+
+  .rcat-card-text {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+  }
+
+  .rcat-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.45rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.3);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    transition: gap 0.3s ease, color 0.25s ease !important;
+  }
+  .rcat-card:hover .rcat-card-cta {
+    color: var(--color-mauve-700);
+    gap: 0.7rem;
+  }
+  .rcat-card-cta svg { transition: transform 0.3s ease !important; }
+  .rcat-card:hover .rcat-card-cta svg { transform: translateX(3px); }
+</style>

@@ -1,5 +1,5 @@
 ---
-import { CATEGORIES } from '../consts';
+import { CATEGORIES, catHref } from '../consts';
 import SectionHeader from './SectionHeader.astro';
 const cats = Object.values(CATEGORIES);
 
@@ -69,7 +69,7 @@ const placeholderStyles: Record<string, { from: string; to: string; tone: string
                 ))}
               </div>
 
-              <a href={`/servicios#${cat.slug}`} class="catalog-card-cta">
+              <a href={catHref(cat.slug)} class="catalog-card-cta">
                 <span>Ver tratamientos</span>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12"/>

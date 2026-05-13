@@ -1,0 +1,242 @@
+---
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  /** Lista de enlaces que se renderizan como links tipográficos */
+  links: NavItem[];
+  /** CTA final con flecha (énfasis mauve) */
+  cta?: NavItem;
+  /** Etiqueta opcional a la izquierda (kicker uppercase) */
+  label?: string;
+  /** Label accesible para la nav */
+  ariaLabel?: string;
+  /** Variant visual */
+  variant?: 'cream' | 'white' | 'dark';
+}
+
+const {
+  links,
+  cta,
+  label,
+  ariaLabel = 'Navegación secundaria',
+  variant = 'cream',
+} = Astro.props;
+---
+
+<section class:list={['hnav', `hnav--${variant}`]} aria-label={ariaLabel}>
+  <div class="container-x hnav-inner">
+    {label && (
+      <span class="hnav-label">
+        <span class="hnav-label-line" aria-hidden="true"></span>
+        {label}
+      </span>
+    )}
+
+    <nav class="hnav-list" aria-label={ariaLabel}>
+      {links.map((item, i) => (
+        <>
+          <a href={item.href} class="hnav-link">
+            {item.label}
+          </a>
+          {i < links.length - 1 && <span class="hnav-sep" aria-hidden="true"></span>}
+        </>
+      ))}
+      {cta && (
+        <>
+          {links.length > 0 && <span class="hnav-sep hnav-sep--strong" aria-hidden="true"></span>}
+          <a href={cta.href} class="hnav-link hnav-link--cta" target={cta.href.startsWith('http') ? '_blank' : undefined} rel={cta.href.startsWith('http') ? 'noopener' : undefined}>
+            {cta.label}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </>
+      )}
+    </nav>
+  </div>
+</section>
+
+<style>
+  .hnav {
+    position: relative;
+    z-index: 2;
+    border-block: 1px solid rgba(201, 169, 97, 0.22);
+    padding-block: 1.1rem;
+  }
+  .hnav--cream {
+    background: var(--color-brand-50);
+  }
+  .hnav--white {
+    background: white;
+  }
+  .hnav--dark {
+    background: var(--color-ink-900);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--color-brand-100);
+  }
+
+  .hnav-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    align-items: center;
+    text-align: center;
+  }
+  @media (min-width: 1024px) {
+    .hnav-inner {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      text-align: left;
+    }
+  }
+
+  /* ===== Label izquierda ===== */
+  .hnav-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .hnav--dark .hnav-label { color: var(--color-brand-400); }
+  .hnav-label-line {
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-brand-400), var(--color-mauve-500));
+  }
+  .hnav--dark .hnav-label-line {
+    background: linear-gradient(90deg, transparent, var(--color-brand-400), white);
+  }
+
+  /* ===== Lista de links ===== */
+  .hnav-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem 1.4rem;
+    width: 100%;
+  }
+  @media (min-width: 1024px) {
+    .hnav-list {
+      flex-wrap: nowrap;
+      gap: 0;
+      justify-content: flex-end;
+      width: auto;
+      flex: 1;
+    }
+  }
+
+  .hnav-link {
+    position: relative;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-700);
+    padding: 0.35rem 0;
+    transition: color 0.3s ease !important;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .hnav--dark .hnav-link {
+    color: rgba(242, 235, 223, 0.78);
+  }
+  @media (min-width: 1024px) {
+    .hnav-link {
+      padding: 0.4rem 1.25rem;
+    }
+  }
+  .hnav-link::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    transition: all 0.4s cubic-bezier(.2,.8,.2,1) !important;
+    transform: translateX(-50%);
+  }
+  .hnav--dark .hnav-link::after {
+    background: linear-gradient(90deg, var(--color-brand-400), white);
+  }
+  .hnav-link:hover {
+    color: var(--color-mauve-700);
+  }
+  .hnav--dark .hnav-link:hover {
+    color: white;
+  }
+  .hnav-link:hover::after {
+    width: 72%;
+  }
+
+  /* ===== Separador ===== */
+  .hnav-sep {
+    width: 1px;
+    height: 12px;
+    background: rgba(201, 169, 97, 0.4);
+    display: none;
+    flex-shrink: 0;
+  }
+  @media (min-width: 1024px) {
+    .hnav-sep { display: inline-block; }
+  }
+  .hnav--dark .hnav-sep {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  .hnav-sep--strong {
+    height: 16px;
+    background: var(--color-brand-400) !important;
+    opacity: 0.6;
+  }
+
+  /* ===== CTA ===== */
+  .hnav-link--cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--color-mauve-700);
+    font-weight: 700;
+    margin-left: 0;
+  }
+  .hnav--dark .hnav-link--cta {
+    color: var(--color-brand-400);
+  }
+  @media (min-width: 1024px) {
+    .hnav-link--cta {
+      margin-left: 0.5rem;
+      padding-left: 1.25rem;
+    }
+  }
+  .hnav-link--cta::after {
+    background: var(--color-mauve-700);
+  }
+  .hnav--dark .hnav-link--cta::after {
+    background: var(--color-brand-400);
+  }
+  .hnav-link--cta:hover {
+    color: var(--color-ink-900);
+  }
+  .hnav--dark .hnav-link--cta:hover {
+    color: white;
+  }
+  .hnav-link--cta svg {
+    transition: transform 0.35s ease !important;
+  }
+  .hnav-link--cta:hover svg {
+    transform: translateX(3px);
+  }
+</style>

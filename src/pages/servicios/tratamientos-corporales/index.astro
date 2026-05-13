@@ -1,0 +1,1483 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ServiceCard from '../../../components/ServiceCard.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import HeroNavBar from '../../../components/HeroNavBar.astro';
+import RelatedCategories from '../../../components/RelatedCategories.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES, SITE, CONTACT, catHref } from '../../../consts';
+
+const cat = CATEGORIES.corporal;
+
+const all = await getCollection('servicios');
+const items = all
+  .filter((s) => s.data.category === 'corporal')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, me gustaría agendar una cita en CLIBEL para tratamientos corporales.')}`;
+
+// ============ SCHEMAS SEO ============
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITE.url },
+    { '@type': 'ListItem', position: 2, name: 'Servicios', item: `${SITE.url}/servicios` },
+    { '@type': 'ListItem', position: 3, name: 'Tratamientos Corporales', item: `${SITE.url}/servicios/tratamientos-corporales` },
+  ],
+};
+const catalogSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalSpecialty',
+  name: 'Tratamientos Corporales — CLIBEL',
+  description: 'Radiofrecuencia corporal, reducción de grasa localizada, drenaje linfático y anticelulitis con respaldo médico en CDMX.',
+  url: `${SITE.url}/servicios/tratamientos-corporales`,
+  provider: { '@id': `${SITE.url}/#clinic` },
+  relevantSpecialty: ['Dermatology', 'PhysicalTherapy'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Catálogo de tratamientos corporales CLIBEL',
+    itemListElement: items.map((s) => ({
+      '@type': 'MedicalProcedure',
+      name: s.data.title,
+      description: s.data.description,
+      url: `${SITE.url}/servicios/${s.id}`,
+    })),
+  },
+};
+
+// ============ CONCERNS — qué resolvemos ============
+const concerns = [
+  {
+    title: 'Flacidez corporal',
+    text: 'CLIBEL combina radiofrecuencia bipolar, ultrasonido focalizado y trabajo manual para estimular colágeno nuevo y reafirmar piel en abdomen, brazos, glúteos y piernas — sin cirugía y con resultados graduales.',
+  },
+  {
+    title: 'Grasa localizada',
+    text: 'En CLIBEL diseñamos planes de reducción no invasiva combinando técnicas térmicas y mecánicas para zonas resistentes al ejercicio: abdomen bajo, flancos, espalda baja y muslos internos.',
+  },
+  {
+    title: 'Celulitis y piel de naranja',
+    text: 'CLIBEL atiende celulitis adiposa, edematosa y fibrosa con protocolos diferenciados. Combinamos drenaje, presoterapia, masaje reductivo y radiofrecuencia para mejorar textura y firmeza.',
+  },
+  {
+    title: 'Retención de líquidos',
+    text: 'Drenaje linfático manual y mecánico aplicado por especialistas formados en CLIBEL para activar circulación, descongestionar tejidos y reducir hinchazón crónica o circunstancial.',
+  },
+  {
+    title: 'Recuperación posparto',
+    text: 'CLIBEL diseña protocolos posparto seguros para mamás —respetando lactancia y diástasis— con drenaje, radiofrecuencia controlada y reactivación muscular gradual.',
+  },
+  {
+    title: 'Recuperación post-quirúrgica',
+    text: 'Acompañamiento clínico en CLIBEL para drenaje post-liposucción, abdominoplastía o cirugía estética con coordinación directa con tu cirujano y seguimiento documentado.',
+  },
+];
+
+// ============ STACK — tecnología y productos ============
+const stack = [
+  { kicker: 'Equipos clínicos', value: 'Radiofrecuencia bipolar', detail: 'Reafirmación profunda con estimulación de colágeno' },
+  { kicker: 'Equipos clínicos', value: 'Ultrasonido focalizado', detail: 'Reducción no invasiva en zonas específicas' },
+  { kicker: 'Equipos clínicos', value: 'Presoterapia', detail: 'Drenaje mecánico de retorno linfático y venoso' },
+  { kicker: 'Técnicas manuales', value: 'Masaje reductivo', detail: 'Movilización adiposa profunda por terapeutas certificadas' },
+  { kicker: 'Técnicas manuales', value: 'Drenaje linfático Vodder', detail: 'Método certificado para descongestión tisular' },
+  { kicker: 'Productos', value: 'Activos profesionales', detail: 'Lipolíticos, reafirmantes y descongestivos COFEPRIS' },
+];
+
+// ============ PLANES INTEGRALES — nuevo en L3 corporal ============
+const plans = [
+  {
+    name: 'Plan Reafirmación',
+    sessions: '8–12 sesiones',
+    frequency: '2 por semana · 6 semanas',
+    includes: ['Radiofrecuencia corporal', 'Masaje reductivo dirigido', 'Activos reafirmantes profesionales'],
+    target: 'Flacidez visible post-pérdida de peso, post-embarazo o por edad. Zonas: abdomen, brazos, muslos internos.',
+    accent: 'mauve',
+  },
+  {
+    name: 'Plan Reducción',
+    sessions: '6–10 sesiones',
+    frequency: '1–2 por semana · 4–6 semanas',
+    includes: ['Ultrasonido focalizado', 'Radiofrecuencia bipolar', 'Drenaje complementario'],
+    target: 'Grasa localizada resistente al ejercicio en flancos, abdomen bajo, espalda y muslos. Sin cirugía.',
+    accent: 'gold',
+  },
+  {
+    name: 'Plan Posparto / Recuperación',
+    sessions: '10–15 sesiones',
+    frequency: 'A partir de las 6 semanas posparto',
+    includes: ['Drenaje linfático manual', 'Trabajo abdominal supervisado', 'Reafirmación gradual con RF'],
+    target: 'Mamás que buscan recuperar tono y reducir hinchazón posparto, respetando lactancia y diástasis abdominal.',
+    accent: 'rose',
+  },
+];
+
+// ============ TIMELINE DE RESULTADOS — nuevo en L3 corporal ============
+const timeline = [
+  {
+    when: 'Sesión 01',
+    label: 'Diagnóstico y baseline',
+    text: 'CLIBEL documenta medidas, fotos clínicas y bioimpedancia. Primera sesión técnica con respuesta inicial visible en circulación y volumen.',
+  },
+  {
+    when: 'Sesión 03',
+    label: 'Primer cambio medible',
+    text: 'Reducción de centímetros y mejora de textura cutánea. CLIBEL ajusta intensidad y zona según respuesta documentada del tejido.',
+  },
+  {
+    when: 'Sesión 06',
+    label: 'Resultado consolidado',
+    text: 'Reafirmación visible, reducción confirmada en mediciones y mejora estructural de la piel. Es el punto crítico de evaluación clínica en CLIBEL.',
+  },
+  {
+    when: 'Mantenimiento',
+    label: 'Resultado sostenible',
+    text: 'CLIBEL diseña plan de mantenimiento mensual o bimestral para sostener resultados a largo plazo, con seguimiento fotográfico cada trimestre.',
+  },
+];
+
+// ============ AFTERCARE — por fases temporales ============
+const aftercare = [
+  {
+    phase: 'Primeras 24 h',
+    title: 'Hidratación intensa',
+    text: 'CLIBEL te indica protocolo de hidratación abundante (2.5–3 L), reposo activo y evitar calor extremo. Sin sauna ni vapor en las primeras 24 horas.',
+  },
+  {
+    phase: '7 días',
+    title: 'Movimiento controlado',
+    text: 'Caminata ligera y rutina de hidratación tópica que CLIBEL te entrega por escrito. Documentamos respuesta y ajustamos el plan en revisión semanal.',
+  },
+  {
+    phase: '30 días',
+    title: 'Consolidación',
+    text: 'Primera evaluación fotográfica comparativa en CLIBEL. Mediciones documentadas. Si hay respuesta esperada, continuamos plan; si no, replanteamos protocolo.',
+  },
+  {
+    phase: '90 días',
+    title: 'Resultados duraderos',
+    text: 'CLIBEL evalúa resultado final del plan y propone esquema de mantenimiento personalizado. La trazabilidad se conserva en tu expediente clínico digital.',
+  },
+];
+
+// ============ FAQS específicas corporales ============
+const faqs = [
+  { q: '¿Cuántas sesiones de radiofrecuencia necesito para ver firmeza?', a: 'En CLIBEL el cambio en textura se nota desde la sesión 3 con un protocolo de 1–2 por semana. La reafirmación clínica completa se documenta entre las sesiones 6 y 10, dependiendo del estado basal de tu piel y tu edad. Cada plan se diseña a medida.' },
+  { q: '¿La reducción de grasa localizada es definitiva?', a: 'CLIBEL aplica técnicas no invasivas (ultrasonido focalizado, RF) que destruyen adipocitos en zonas específicas. La grasa eliminada no regresa si mantienes tu peso, pero células remanentes pueden crecer si subes mucho. Por eso CLIBEL incluye plan nutricional sugerido y mantenimiento.' },
+  { q: '¿Es seguro hacer tratamientos corporales en lactancia o posparto temprano?', a: 'En CLIBEL trabajamos posparto a partir de las 6 semanas, con protocolos seguros para lactancia: drenaje manual, masaje reductivo y RF controlada sin activos sistémicos. Coordinamos con tu ginecóloga si hay diástasis abdominal o cesárea reciente.' },
+  { q: '¿Duele algún tratamiento corporal?', a: 'CLIBEL trabaja con técnicas no invasivas: radiofrecuencia y ultrasonido producen calor confortable, el drenaje es suave y el masaje reductivo puede ser intenso pero nunca doloroso. Si algún protocolo te resulta incómodo, ajustamos intensidad en tiempo real.' },
+  { q: '¿Puedo combinar varios tratamientos corporales?', a: 'Sí, y es lo que CLIBEL recomienda. Los planes integrales (Reafirmación, Reducción, Posparto) combinan 2–3 técnicas complementarias para resultados superiores. Cada combinación se diseña según diagnóstico, no como paquete prearmado.' },
+  { q: '¿Necesito dieta o ejercicio durante el tratamiento?', a: 'CLIBEL recomienda mantener alimentación equilibrada y actividad física moderada para potenciar resultados, pero NO exigimos dietas extremas ni rutinas de gimnasio. Si quieres, podemos coordinarnos con tu nutriólogo o entrenador.' },
+];
+---
+
+<BaseLayout
+  title={`${cat.label} en CDMX | CLIBEL`}
+  description={`${cat.label} en CLIBEL: radiofrecuencia, reducción de grasa localizada, drenaje linfático y anticelulitis con respaldo médico, tecnología no invasiva certificada y planes integrales personalizados en CDMX.`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(catalogSchema)} />
+
+  <!-- ============================ BREADCRUMB ============================ -->
+  <Breadcrumb
+    kicker="Categoría 02 · Corporales"
+    items={[
+      { label: 'Servicios', href: '/servicios' },
+      { label: 'Tratamientos Corporales' },
+    ]}
+  />
+
+  <!-- ============================ HERO ============================ -->
+  <section class="cat-hero">
+    <div aria-hidden="true" class="cat-hero-bg"></div>
+    <div aria-hidden="true" class="cat-hero-blob cat-hero-blob-1"></div>
+    <div aria-hidden="true" class="cat-hero-blob cat-hero-blob-2"></div>
+    <div aria-hidden="true" class="cat-hero-grain"></div>
+
+    <div class="container-x relative">
+      <div class="cat-hero-grid">
+        <div class="cat-hero-col cat-hero-col--left fade-up">
+          <span class="eyebrow-tag">
+            <span class="dot" aria-hidden="true"></span>
+            Categoría 02 · {cat.badgeLabel} · {items.length} tratamientos
+          </span>
+
+          <h1 class="cat-hero-headline">
+            <span class="cat-hero-headline-line">Tratamientos</span>
+            <span class="cat-hero-headline-line"><em>corporales</em> en CDMX.</span>
+          </h1>
+
+          <p class="cat-hero-lede">
+            Remodelación, reafirmación y bienestar físico con
+            <strong>tecnología no invasiva certificada</strong>. CLIBEL diseña
+            planes corporales a medida tras valoración clínica, sin paquetes
+            prearmados ni promesas vacías.
+          </p>
+
+          <div class="cat-hero-trust">
+            <span class="cat-hero-trust-label">Trabajamos con</span>
+            <div class="cat-hero-trust-list">
+              <span>Venus Concept</span><span aria-hidden="true">·</span>
+              <span>BTL</span><span aria-hidden="true">·</span>
+              <span>Indiba</span><span aria-hidden="true">·</span>
+              <span>Sinclair</span><span aria-hidden="true">·</span>
+              <span>Cellulazione</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cat-hero-col cat-hero-col--right fade-up-delay-2">
+          <span class="cat-hero-kicker">Qué hace CLIBEL en corporales</span>
+
+          <p class="cat-hero-paragraph">
+            <strong>CLIBEL</strong> es una clínica de belleza con respaldo
+            médico real, especializada en remodelación corporal no invasiva
+            en Ciudad de México. Combinamos tecnología certificada
+            —radiofrecuencia bipolar, ultrasonido focalizado, presoterapia— con
+            técnicas manuales aplicadas por terapeutas formadas y supervisadas
+            por personal médico. Cada plan corporal en CLIBEL se diseña tras un
+            diagnóstico clínico que incluye medidas, fotografía y bioimpedancia.
+          </p>
+
+          <p class="cat-hero-paragraph">
+            En esta categoría <strong>CLIBEL</strong> reúne sus protocolos
+            corporales más solicitados: <strong>radiofrecuencia</strong> para
+            reafirmar piel, <strong>reducción de grasa localizada</strong>
+            no invasiva, <strong>drenaje linfático</strong> manual y mecánico,
+            y <strong>masaje reductivo y anticelulitis</strong>. CLIBEL trabaja
+            con resultados medibles —centímetros, fotografía comparativa,
+            respuesta tisular— documentados sesión a sesión en tu expediente.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ NAV TOP ============================ -->
+  <HeroNavBar
+    label="Otras categorías"
+    ariaLabel="Otras categorías de tratamientos CLIBEL"
+    variant="cream"
+    links={[
+      { label: 'Faciales',           href: catHref('facial') },
+      { label: 'Depilación láser',   href: catHref('laser') },
+      { label: 'Medicina estética',  href: catHref('medicina-estetica') },
+      { label: 'Capilares',          href: catHref('capilar') },
+    ]}
+    cta={{ label: 'Volver al catálogo', href: '/servicios' }}
+  />
+
+  <!-- ============================ CATÁLOGO ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker={`Catálogo · ${items.length} tratamientos`}
+        title="Tratamientos corporales en <em>CLIBEL</em>."
+        paragraphs={[
+          '<strong>CLIBEL</strong> realiza tratamientos corporales con grado clínico real: cada protocolo se aplica con tecnología certificada, técnicas validadas y respuesta tisular documentada sesión a sesión. En CLIBEL trabajamos remodelación, reafirmación, reducción de grasa localizada, drenaje y recuperación posparto o post-quirúrgica.',
+          'Cada plan corporal en <strong>CLIBEL</strong> registra medidas iniciales, fotografía clínica de baseline y parámetros de cada equipo en expediente digital. Esa trazabilidad permite a CLIBEL ajustar intensidad, frecuencia y técnica con base en cómo responde tu cuerpo, no según un guion comercial.',
+        ]}
+        cta={{ label: 'Solicitar valoración', href: '/contacto', variant: 'primary' }}
+      />
+
+      <div class="cat-grid">
+        {items.map((s) => (
+          <ServiceCard
+            href={`/servicios/${s.id}`}
+            title={s.data.title}
+            description={s.data.description}
+            category={s.data.category}
+            duration={s.data.duration}
+            sessions={s.data.sessions}
+            icon={s.data.icon}
+            featured={s.data.featured}
+            benefits={s.data.benefits}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CONCERNS ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Qué resolvemos"
+        title="Problemas corporales que atiende <em>CLIBEL</em>."
+        paragraphs={[
+          '<strong>CLIBEL</strong> aborda las preocupaciones corporales más comunes que llegan a consulta: flacidez post-pérdida de peso o por edad, grasa localizada resistente al ejercicio, celulitis en sus diferentes tipos, retención de líquidos, recuperación posparto y post-quirúrgica. Cada motivo de consulta tiene un protocolo clínico distinto en CLIBEL — no aplicamos plantillas.',
+          'En <strong>CLIBEL</strong> el diagnóstico define el plan: combinamos radiofrecuencia, ultrasonido, drenaje y trabajo manual según lo que tu cuerpo realmente necesita. No tratamos zonas que no requieren intervención, ni vendemos paquetes sin antes evaluar.',
+        ]}
+      />
+
+      <div class="concern-grid">
+        {concerns.map((c, i) => (
+          <article class="concern reveal">
+            <span class="concern-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="concern-title">{c.title}</h3>
+            <p class="concern-text">{c.text}</p>
+            <span class="concern-line" aria-hidden="true"></span>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ TECNOLOGÍA Y STACK ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Tecnología y productos"
+        title="Lo que <em>CLIBEL</em> usa en cada sesión corporal."
+        paragraphs={[
+          '<strong>CLIBEL</strong> opera con plataformas corporales de marcas internacionales certificadas —Venus Concept, BTL, Indiba— y técnicas manuales formadas en escuelas clínicas reconocidas (método Vodder, técnica francesa, drenaje sueco). Cada equipo se calibra antes de la sesión y cada protocolo se documenta en expediente.',
+          'En <strong>CLIBEL</strong> los productos tópicos profesionales —lipolíticos, reafirmantes, descongestivos— tienen registro COFEPRIS visible con lote y trazabilidad disponibles para el paciente. CLIBEL no usa cosmecéuticos sin respaldo ni equipos imitación.',
+        ]}
+      />
+
+      <div class="stack-grid">
+        {stack.map((item, i) => (
+          <article class="stack-item reveal">
+            <span class="stack-kicker">{item.kicker}</span>
+            <h3 class="stack-value">{item.value}</h3>
+            <p class="stack-detail">{item.detail}</p>
+            <span class="stack-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ PLANES INTEGRALES ============================ -->
+  <section class="section svc-plans">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Planes integrales"
+        title="Combinaciones clínicas que diseña <em>CLIBEL</em>."
+        paragraphs={[
+          '<strong>CLIBEL</strong> arma planes integrales que combinan 2–3 técnicas corporales complementarias para resultados superiores a cualquier tratamiento aislado. Cada plan en CLIBEL incluye número estimado de sesiones, frecuencia clínica óptima y técnicas que se refuerzan entre sí.',
+          'Estos planes son <strong>orientativos</strong>. CLIBEL siempre personaliza el plan final tras tu valoración clínica — adaptamos sesiones, frecuencia, intensidad y combinación de técnicas según tu diagnóstico real, no según un paquete prearmado.',
+        ]}
+      />
+
+      <div class="plans-grid">
+        {plans.map((p, i) => (
+          <article class={`plan plan--${p.accent} reveal`}>
+            <header class="plan-head">
+              <span class="plan-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div class="plan-title-block">
+                <span class="plan-kicker">Plan integral</span>
+                <h3 class="plan-name">{p.name}</h3>
+              </div>
+            </header>
+
+            <div class="plan-meta">
+              <div>
+                <span class="plan-meta-label">Sesiones</span>
+                <span class="plan-meta-value">{p.sessions}</span>
+              </div>
+              <div>
+                <span class="plan-meta-label">Frecuencia</span>
+                <span class="plan-meta-value">{p.frequency}</span>
+              </div>
+            </div>
+
+            <div class="plan-body">
+              <span class="plan-includes-label">Incluye</span>
+              <ul class="plan-includes">
+                {p.includes.map((inc) => (
+                  <li>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    {inc}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <p class="plan-target">{p.target}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ TIMELINE DE RESULTADOS ============================ -->
+  <section class="section svc-timeline">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Resultados esperados"
+        title="Cuándo verás cambios con <em>CLIBEL</em>."
+        paragraphs={[
+          'En <strong>CLIBEL</strong> documentamos cada sesión con medidas, fotografía clínica y respuesta tisular. Esta línea de tiempo refleja la respuesta promedio en pacientes de CLIBEL — los tuyos pueden variar según diagnóstico inicial, edad, hábitos y respuesta individual.',
+          '<strong>CLIBEL</strong> no promete resultados milagrosos. Te decimos por escrito qué esperar en cada etapa del plan, qué evidencia clínica respalda esa expectativa y cómo se ajusta si tu cuerpo responde diferente a lo previsto.',
+        ]}
+      />
+
+      <ol class="tl-list">
+        {timeline.map((t, i) => (
+          <li class="tl-step reveal">
+            <div class="tl-step-mark">
+              <span class="tl-step-when">{t.when}</span>
+              <span class="tl-step-dot" aria-hidden="true"></span>
+            </div>
+            <div class="tl-step-body">
+              <h3 class="tl-step-label">{t.label}</h3>
+              <p class="tl-step-text">{t.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ AFTERCARE POR FASES ============================ -->
+  <section class="section svc-aftercare">
+    <div aria-hidden="true" class="svc-aftercare-bg"></div>
+    <div aria-hidden="true" class="svc-aftercare-blob"></div>
+
+    <div class="container-x relative">
+      <SectionHeader
+        kicker="Aftercare por fases"
+        title="Cuidados que <em>CLIBEL</em> documenta y supervisa."
+        variant="dark"
+        paragraphs={[
+          'Un tratamiento corporal en <strong>CLIBEL</strong> no termina cuando sales del consultorio: empieza la fase clave donde se consolidan los resultados. CLIBEL entrega protocolo aftercare por fases temporales —24 horas, 7 días, 30 días, 90 días— con indicaciones específicas, señales de alerta y revisión documentada.',
+          'En <strong>CLIBEL</strong> abrimos línea directa con tu terapeuta y médico responsable para resolver dudas durante el postratamiento. La consolidación del resultado requiere acompañamiento clínico real, no un PDF genérico — eso es parte del estándar CLIBEL.',
+        ]}
+      />
+
+      <ol class="after-list">
+        {aftercare.map((a, i) => (
+          <li class="after-item reveal">
+            <span class="after-phase" aria-hidden="true">{a.phase}</span>
+            <div class="after-body">
+              <span class="after-step-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="after-title">{a.title}</h3>
+              <p class="after-text">{a.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ FAQ + FORM ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Preguntas frecuentes y contacto"
+        title="Resuelve dudas o pide tu <em>valoración corporal</em>."
+        paragraphs={[
+          'Las preguntas más frecuentes que recibe <strong>CLIBEL</strong> sobre tratamientos corporales no invasivos —resultados, seguridad, lactancia, combinaciones— resueltas con criterio clínico. A la derecha puedes enviarnos tus datos: la consulta llega directo al WhatsApp clínico de CLIBEL.',
+          'En <strong>CLIBEL</strong> entendemos que un tratamiento corporal implica decisiones legítimas: tiempo de inversión, expectativa real, compatibilidad con tu rutina y tu cuerpo. CLIBEL responde con honestidad y diagnóstico personalizado, no con guion comercial.',
+        ]}
+      />
+
+      <div class="faq-grid">
+        <div class="faq-col">
+          <span class="faq-col-label">Lo que más nos preguntan</span>
+          <div class="faq-list">
+            {faqs.map((f, i) => (
+              <details class="faq" open={i === 0}>
+                <summary class="faq-sum">
+                  <span class="faq-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="faq-q">{f.q}</span>
+                  <span class="faq-plus" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </span>
+                </summary>
+                <div class="faq-a">{f.a}</div>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        <aside class="faq-form-wrap">
+          <form id="corpWaForm" class="faq-form" novalidate>
+            <span class="faq-form-kicker">Valoración corporal sin costo</span>
+            <h3 class="faq-form-title">Escríbenos por <em>WhatsApp</em></h3>
+            <p class="faq-form-sub">
+              Llena el formulario y abre tu mensaje pre-armado en WhatsApp.
+              Respuesta de <strong>CLIBEL</strong> en menos de 2 horas en horario clínica.
+            </p>
+
+            <div class="faq-form-row">
+              <label for="corp-nombre">Nombre completo <span aria-hidden="true">*</span></label>
+              <input id="corp-nombre" name="nombre" type="text" required autocomplete="name" />
+            </div>
+
+            <div class="faq-form-grid-2">
+              <div class="faq-form-row">
+                <label for="corp-tel">Teléfono <span aria-hidden="true">*</span></label>
+                <input id="corp-tel" name="telefono" type="tel" required autocomplete="tel" placeholder="55 1234 5678" />
+              </div>
+              <div class="faq-form-row">
+                <label for="corp-email">Email</label>
+                <input id="corp-email" name="email" type="email" autocomplete="email" />
+              </div>
+            </div>
+
+            <div class="faq-form-grid-2">
+              <div class="faq-form-row">
+                <label for="corp-interes">Tratamiento de interés</label>
+                <select id="corp-interes" name="interes">
+                  <option value="">Selecciona uno (opcional)</option>
+                  {items.map((s) => (
+                    <option value={s.data.title}>{s.data.title}</option>
+                  ))}
+                  <option value="Plan integral — no estoy segura">Plan integral — no estoy segura</option>
+                </select>
+              </div>
+              <div class="faq-form-row">
+                <label for="corp-zona">Zona principal</label>
+                <select id="corp-zona" name="zona">
+                  <option value="">Selecciona (opcional)</option>
+                  <option value="Abdomen">Abdomen</option>
+                  <option value="Brazos">Brazos</option>
+                  <option value="Espalda">Espalda</option>
+                  <option value="Flancos / cintura">Flancos / cintura</option>
+                  <option value="Glúteos">Glúteos</option>
+                  <option value="Muslos / piernas">Muslos / piernas</option>
+                  <option value="Recuperación posparto">Recuperación posparto</option>
+                  <option value="Postoperatorio">Postoperatorio</option>
+                  <option value="Cuerpo completo">Cuerpo completo</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="faq-form-row">
+              <label for="corp-msg">Cuéntanos qué buscas (opcional)</label>
+              <textarea id="corp-msg" name="mensaje" rows="3" placeholder="Ej: posparto reciente, busco reafirmación, tengo X meses de objetivo, etc."></textarea>
+            </div>
+
+            <label class="faq-form-check">
+              <input type="checkbox" name="privacidad" required />
+              <span>Acepto el <a href="/aviso-de-privacidad">Aviso de Privacidad</a> y autorizo el contacto por WhatsApp.</span>
+            </label>
+
+            <button type="submit" class="faq-form-submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+              Enviar por WhatsApp
+            </button>
+
+            <p class="faq-form-foot">
+              Respuesta &lt; 2h · COFEPRIS · Sin compromiso
+            </p>
+          </form>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
+    (function () {
+      const form = document.getElementById('corpWaForm');
+      if (!form) return;
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const d = new FormData(form);
+        const get = (k) => (d.get(k) || '').toString().trim();
+        const nombre = get('nombre'), tel = get('telefono'), email = get('email');
+        const interes = get('interes'), zona = get('zona'), msg = get('mensaje');
+        const acepto = form.querySelector('[name="privacidad"]').checked;
+
+        if (!nombre || !tel || !acepto) {
+          form.classList.add('is-invalid');
+          return;
+        }
+        form.classList.remove('is-invalid');
+
+        const lines = [
+          'Hola CLIBEL, vengo desde la página de Tratamientos Corporales.',
+          '',
+          'Nombre: ' + nombre,
+          'Teléfono: ' + tel,
+        ];
+        if (email)   lines.push('Email: ' + email);
+        if (interes) lines.push('Me interesa: ' + interes);
+        if (zona)    lines.push('Zona principal: ' + zona);
+        if (msg)     lines.push('', 'Comentario: ' + msg);
+
+        window.open(waBase + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
+      });
+    })();
+  </script>
+
+  <!-- ============================ RELATED L3 ============================ -->
+  <RelatedCategories current="corporal" variant="cream" />
+
+  <!-- ============================ NAV PRE-FOOTER ============================ -->
+  <HeroNavBar
+    label="Tratamientos corporales"
+    ariaLabel="Tratamientos corporales individuales"
+    variant="dark"
+    links={items.map((s) => ({ label: s.data.title, href: `/servicios/${s.id}` }))}
+    cta={{ label: 'Escríbenos por WhatsApp', href: wa }}
+  />
+</BaseLayout>
+
+<style>
+  /* ============= HERO (homologado con L1/L2/L3 facial) ============= */
+  .cat-hero {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, var(--color-brand-100) 100%);
+    isolation: isolate;
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(201,169,97,0.18), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.16), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .cat-hero-blob {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(110px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+  .cat-hero-blob-1 { width: 36rem; height: 36rem; top: -10rem; right: -10rem; background: var(--color-brand-300); }
+  .cat-hero-blob-2 { width: 32rem; height: 32rem; bottom: -12rem; left: -8rem; background: var(--color-mauve-300); }
+  .cat-hero-grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(31,20,24,0.05) 1px, transparent 1px);
+    background-size: 3px 3px;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .cat-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem;
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    width: 100% !important;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .cat-hero-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: clamp(2rem, 4vw, 4.5rem);
+    }
+  }
+  .cat-hero-col {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .cat-hero-col--left {
+    container-type: inline-size;
+    container-name: catheroleft;
+  }
+  .cat-hero-headline {
+    font-family: var(--font-display);
+    font-weight: 450;
+    letter-spacing: -0.022em;
+    line-height: 1.02;
+    color: var(--color-ink-900);
+    font-size: clamp(2.5rem, 10.5cqi, 6.5rem);
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    width: 100%;
+    margin: 0.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05em;
+  }
+  .cat-hero-headline-line { display: block; width: 100%; }
+  .cat-hero-headline em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+  }
+  @media (max-width: 899px) {
+    .cat-hero-headline { font-size: clamp(2.5rem, 9.5vw, 4.5rem); }
+  }
+
+  .cat-hero-lede {
+    font-size: clamp(1rem, 1.1vw, 1.18rem);
+    line-height: 1.65;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .cat-hero-lede strong { color: var(--color-ink-900); font-weight: 600; }
+
+  .cat-hero-trust {
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(201, 169, 97, 0.25);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem;
+  }
+  .cat-hero-trust-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .cat-hero-trust-list {
+    display: inline-flex; flex-wrap: wrap; gap: 0.55rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--color-ink-700);
+  }
+  .cat-hero-trust-list span[aria-hidden] { color: var(--color-brand-400); }
+
+  .cat-hero-col--right { gap: 1.25rem; }
+  @media (min-width: 900px) {
+    .cat-hero-col--right {
+      padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+      border-left: 1px solid rgba(201, 169, 97, 0.25);
+    }
+  }
+  .cat-hero-kicker {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--color-brand-400);
+    align-self: flex-start;
+  }
+  .cat-hero-paragraph {
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.75;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .cat-hero-paragraph strong {
+    color: var(--color-ink-900);
+    font-weight: 600;
+  }
+  @media (max-width: 899px) {
+    .cat-hero-col { gap: 1.25rem; }
+  }
+
+  /* ============= Catálogo grid ============= */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 640px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .cat-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+
+  /* ============= Concerns ============= */
+  .concern-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 640px) { .concern-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .concern-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; } }
+  .concern {
+    position: relative;
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.22);
+    border-radius: 1.1rem;
+    transition: all 0.45s cubic-bezier(.2,.8,.2,1) !important;
+    overflow: hidden;
+  }
+  .concern:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139, 90, 107, 0.45);
+    box-shadow: 0 28px 48px -22px rgba(31, 20, 24, 0.18);
+  }
+  .concern-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    opacity: 0.85;
+  }
+  .concern-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: var(--color-ink-900);
+    margin: 0 0 0.6rem;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .concern-text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .concern-line {
+    display: block;
+    margin-top: 1.1rem;
+    width: 24px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    transition: width 0.5s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  .concern:hover .concern-line { width: 60px; }
+
+  /* ============= Stack ============= */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid rgba(201, 169, 97, 0.25);
+  }
+  @media (min-width: 768px) { .stack-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .stack-grid { grid-template-columns: repeat(3, 1fr); } }
+  .stack-item {
+    position: relative;
+    padding: 1.75rem clamp(1.25rem, 2vw, 1.75rem);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.25);
+    transition: background 0.3s ease !important;
+  }
+  @media (min-width: 768px) {
+    .stack-item:nth-child(2n) { border-left: 1px solid rgba(201, 169, 97, 0.25); }
+  }
+  @media (min-width: 1100px) {
+    .stack-item:nth-child(2n) { border-left: 0; }
+    .stack-item:not(:nth-child(3n+1)) { border-left: 1px solid rgba(201, 169, 97, 0.25); }
+  }
+  .stack-item:hover { background: var(--color-brand-50); }
+  .stack-kicker {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-bottom: 0.65rem;
+  }
+  .stack-value {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.2rem, 1.4vw, 1.45rem);
+    color: var(--color-ink-900);
+    margin: 0 0 0.4rem;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .stack-detail {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--color-ink-500);
+    margin: 0;
+  }
+  .stack-num {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.25rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--color-brand-400);
+    opacity: 0.6;
+    transition: opacity 0.3s ease !important;
+  }
+  .stack-item:hover .stack-num { opacity: 1; }
+
+  /* ============= NEW: Planes integrales ============= */
+  .svc-plans {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, var(--color-brand-100) 100%);
+  }
+  .plans-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .plans-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  }
+  .plan {
+    position: relative;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.25rem;
+    padding: clamp(1.5rem, 2vw, 1.9rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1), box-shadow 0.5s ease, border-color 0.4s ease !important;
+  }
+  .plan::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--accent-color, var(--color-brand-400));
+    transition: height 0.4s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  .plan:hover {
+    transform: translateY(-6px);
+    border-color: rgba(139, 90, 107, 0.45);
+    box-shadow:
+      0 4px 8px rgba(31, 20, 24, 0.05),
+      0 32px 56px -22px rgba(31, 20, 24, 0.22);
+  }
+  .plan:hover::before { height: 6px; }
+  .plan--mauve { --accent-color: var(--color-mauve-500); }
+  .plan--gold  { --accent-color: var(--color-brand-500); }
+  .plan--rose  { --accent-color: var(--color-mauve-300); }
+
+  .plan-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .plan-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.25rem, 3.5vw, 3rem);
+    color: var(--accent-color, var(--color-brand-500));
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+  .plan-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .plan-kicker {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    opacity: 0.85;
+  }
+  .plan-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 1.8vw, 1.75rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+  }
+
+  .plan-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding-block: 0.85rem;
+    border-block: 1px dashed rgba(201, 169, 97, 0.32);
+  }
+  .plan-meta > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .plan-meta-label {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .plan-meta-value {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--color-ink-900);
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+  }
+
+  .plan-body { display: flex; flex-direction: column; gap: 0.45rem; }
+  .plan-includes-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .plan-includes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .plan-includes li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--color-ink-700);
+  }
+  .plan-includes li svg {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    color: var(--accent-color, var(--color-mauve-500));
+  }
+
+  .plan-target {
+    margin: 0;
+    padding: 0.85rem 0.95rem;
+    background: var(--color-brand-50);
+    border-left: 3px solid var(--accent-color, var(--color-brand-400));
+    border-radius: 0 0.55rem 0.55rem 0;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+    font-style: italic;
+  }
+
+  /* ============= NEW: Timeline de resultados ============= */
+  .svc-timeline { background: white; }
+  .tl-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .tl-step {
+    display: grid;
+    grid-template-columns: clamp(110px, 18vw, 200px) 1fr;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    padding-block: clamp(1.5rem, 2.5vw, 2.25rem);
+    border-top: 1px solid rgba(201, 169, 97, 0.22);
+    align-items: start;
+    position: relative;
+  }
+  .tl-step:first-child { border-top: 0; padding-top: 0; }
+  .tl-step-mark {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    align-items: flex-start;
+    position: relative;
+  }
+  .tl-step-when {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.65rem, 2.5vw, 2.25rem);
+    color: var(--color-mauve-500);
+    line-height: 1;
+    letter-spacing: -0.018em;
+  }
+  .tl-step-dot {
+    width: 10px; height: 10px;
+    border-radius: 999px;
+    background: var(--color-brand-400);
+    box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.18), 0 0 0 8px rgba(201, 169, 97, 0.07);
+  }
+  .tl-step-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    max-width: 60ch;
+  }
+  .tl-step-label {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.25rem, 1.8vw, 1.65rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .tl-step-text {
+    font-size: clamp(0.92rem, 1vw, 1.02rem);
+    line-height: 1.7;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .tl-step { grid-template-columns: 1fr; gap: 0.75rem; }
+    .tl-step-mark { flex-direction: row; align-items: center; gap: 1rem; }
+  }
+
+  /* ============= Aftercare por fases (dark) ============= */
+  .svc-aftercare {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .svc-aftercare-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .svc-aftercare-blob {
+    position: absolute;
+    top: -10rem; right: -8rem;
+    width: 32rem; height: 32rem;
+    border-radius: 999px;
+    background: rgba(92, 57, 70, 0.35);
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .after-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 640px) {
+    .after-list { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+  }
+  @media (min-width: 1100px) {
+    .after-list { grid-template-columns: repeat(4, 1fr); }
+  }
+  .after-item {
+    position: relative;
+    padding: 1.5rem 1.5rem 1.6rem;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.1rem;
+    transition: all 0.4s ease !important;
+  }
+  .after-item:hover {
+    background: rgba(255, 255, 255, 0.055);
+    border-color: rgba(201, 169, 97, 0.45);
+    transform: translateY(-4px);
+  }
+  .after-phase {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-brand-400);
+    padding: 0.3rem 0.7rem;
+    background: rgba(201, 169, 97, 0.1);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 999px;
+    margin-bottom: 1rem;
+  }
+  .after-body { display: flex; flex-direction: column; gap: 0.45rem; position: relative; }
+  .after-step-num {
+    position: absolute;
+    top: -2.6rem;
+    right: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 2.5rem;
+    line-height: 1;
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.55;
+    letter-spacing: -0.015em;
+  }
+  .after-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+  .after-text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: rgba(242, 235, 223, 0.78);
+    margin: 0;
+  }
+
+  /* ============= FAQ + Form ============= */
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 3vw, 2.75rem);
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .faq-grid {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: clamp(2.5rem, 4vw, 3.5rem);
+    }
+  }
+  .faq-col-label {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-bottom: 1.1rem;
+  }
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .faq {
+    background: var(--color-brand-50);
+    border: 1px solid rgba(201, 169, 97, 0.22);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: border-color 0.3s ease, background 0.3s ease !important;
+  }
+  .faq[open] {
+    background: white;
+    border-color: var(--color-mauve-500);
+  }
+  .faq-sum {
+    list-style: none;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+  }
+  .faq-sum::-webkit-details-marker { display: none; }
+  .faq-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    opacity: 0.8;
+    min-width: 24px;
+  }
+  .faq-q {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1rem, 1.1vw, 1.12rem);
+    color: var(--color-ink-900);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .faq-plus {
+    width: 32px; height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--color-brand-100);
+    color: var(--color-mauve-500);
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1), background 0.3s ease, color 0.3s ease !important;
+  }
+  .faq[open] .faq-plus {
+    transform: rotate(45deg);
+    background: var(--color-mauve-500);
+    color: white;
+  }
+  .faq-a {
+    padding: 0 1.25rem 1.25rem clamp(3.5rem, 6vw, 4rem);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--color-ink-700);
+  }
+
+  /* ===== Form WhatsApp (mismo patrón) ===== */
+  .faq-form-wrap { position: relative; }
+  @media (min-width: 1024px) {
+    .faq-form-wrap { position: sticky; top: clamp(6rem, 10vh, 7.5rem); }
+  }
+  .faq-form {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-brand-50) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.25rem;
+    padding: clamp(1.5rem, 2vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    box-shadow:
+      0 1px 2px rgba(31, 20, 24, 0.03),
+      0 24px 56px -28px rgba(31, 20, 24, 0.18);
+  }
+  .faq-form-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .faq-form-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.45rem, 2vw, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink-900);
+    margin: 0;
+  }
+  .faq-form-title em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+  }
+  .faq-form-sub {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-ink-500);
+    margin: 0 0 0.5rem;
+  }
+  .faq-form-sub strong { color: var(--color-ink-900); font-weight: 600; }
+  .faq-form-row { display: flex; flex-direction: column; gap: 0.32rem; }
+  .faq-form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  @media (min-width: 520px) {
+    .faq-form-grid-2 { grid-template-columns: 1fr 1fr; }
+  }
+  .faq-form-row label {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-ink-700);
+    letter-spacing: 0.02em;
+  }
+  .faq-form-row label span[aria-hidden] {
+    color: var(--color-mauve-500);
+    margin-left: 2px;
+  }
+  .faq-form input,
+  .faq-form select,
+  .faq-form textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    color: var(--color-ink-900);
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    border-radius: 0.65rem;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+    appearance: none;
+    line-height: 1.4;
+  }
+  .faq-form select {
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--color-mauve-500) 50%),
+      linear-gradient(135deg, var(--color-mauve-500) 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 13px) calc(50% - 2px);
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2rem;
+    cursor: pointer;
+  }
+  .faq-form textarea { resize: vertical; min-height: 80px; }
+  .faq-form input:focus,
+  .faq-form select:focus,
+  .faq-form textarea:focus {
+    border-color: var(--color-mauve-500);
+    box-shadow: 0 0 0 3px rgba(139, 90, 107, 0.12);
+    background: var(--color-brand-50);
+  }
+  .faq-form.is-invalid input:required:invalid,
+  .faq-form.is-invalid input[type="checkbox"]:invalid + span { border-color: #c62b3e; }
+
+  .faq-form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--color-ink-500);
+    cursor: pointer;
+  }
+  .faq-form-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    accent-color: var(--color-mauve-500);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .faq-form-check a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .faq-form-check a:hover { color: var(--color-mauve-700); }
+  .faq-form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.95rem 1.25rem;
+    margin-top: 0.5rem;
+    background: #25D366;
+    color: white;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow:
+      0 10px 24px -10px rgba(37, 211, 102, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+  }
+  .faq-form-submit:hover {
+    background: #1FB855;
+    transform: translateY(-2px);
+    box-shadow:
+      0 16px 32px -10px rgba(37, 211, 102, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  .faq-form-foot {
+    margin: 0;
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-500);
+    opacity: 0.85;
+  }
+  @media (max-width: 640px) { .faq-form { padding: 1.25rem; } }
+</style>

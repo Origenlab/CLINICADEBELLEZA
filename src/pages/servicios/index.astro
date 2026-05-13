@@ -1,10 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
-import PartnersMarquee from '../../components/PartnersMarquee.astro';
-import CTA from '../../components/CTA.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import HeroNavBar from '../../components/HeroNavBar.astro';
+import Process from '../../components/Process.astro';
+import FAQContact from '../../components/FAQContact.astro';
 import { getCollection } from 'astro:content';
-import { CATEGORIES } from '../../consts';
+import { CATEGORIES, SITE, CONTACT, catHref, CATEGORY_LANDING_PAGES } from '../../consts';
 
 const all = await getCollection('servicios');
 all.sort((a, b) => a.data.order - b.data.order);
@@ -13,60 +16,295 @@ const grouped = Object.values(CATEGORIES).map((cat) => ({
   ...cat,
   items: all.filter((s) => s.data.category === cat.slug),
 }));
+
+const featured = all.filter((s) => s.data.featured).slice(0, 4);
+
+const totalServices = all.length;
+
+const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
+
+// Deep-links a tratamientos específicos para interlinking SEO en la nav inferior
+const topTreatmentLinks = [
+  { label: 'Limpieza facial',      href: '/servicios/limpieza-facial-profunda' },
+  { label: 'Rejuvenecimiento',     href: '/servicios/rejuvenecimiento-facial' },
+  { label: 'Ácido hialurónico',    href: '/servicios/acido-hialuronico' },
+  { label: 'Toxina botulínica',    href: '/servicios/toxina-botulinica' },
+  { label: 'Radiofrecuencia',      href: '/servicios/radiofrecuencia-corporal' },
+];
+
+// Links a las 5 categorías para la nav previa al footer
+// Usa catHref() — si la categoría tiene landing dedicada, apunta ahí; si no, a la ancla
+const categoryAnchorLinks = [
+  { label: 'Faciales',           href: catHref('facial') },
+  { label: 'Corporales',         href: catHref('corporal') },
+  { label: 'Depilación láser',   href: catHref('laser') },
+  { label: 'Medicina estética',  href: catHref('medicina-estetica') },
+  { label: 'Capilares',          href: catHref('capilar') },
+];
+
+// SEO — Schema para catálogo de servicios (breadcrumb se genera dentro del componente)
+const serviceCatalog = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Catálogo de tratamientos CLIBEL',
+  itemListElement: all.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'MedicalProcedure',
+      name: s.data.title,
+      description: s.data.description,
+      url: `${SITE.url}/servicios/${s.id}`,
+      category: CATEGORIES[s.data.category]?.label ?? s.data.category,
+    },
+  })),
+};
+
+// Garantías / pilares (sección de credibilidad)
+const guarantees = [
+  {
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
+    title: 'Respaldo COFEPRIS',
+    text: 'Todos los productos con registro sanitario vigente y trazabilidad documentada.',
+  },
+  {
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7L9 18l-5-5"/></svg>',
+    title: 'Diagnóstico previo obligatorio',
+    text: 'Sin tratamiento sin valoración médica. Tu seguridad clínica primero.',
+  },
+  {
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg>',
+    title: 'Médicos certificados',
+    text: 'Especialistas con cédula profesional y formación internacional verificable.',
+  },
+  {
+    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l6 6L21 6"/></svg>',
+    title: 'Resultados naturales',
+    text: 'Filosofía conservadora: realzamos tu belleza, no la transformamos.',
+  },
+];
+
+// Párrafos explicativos por categoría — todos mencionan CLIBEL y describen su práctica clínica
+const categoryParagraphs: Record<string, string[]> = {
+  facial: [
+    'En <strong>CLIBEL</strong> diseñamos cada protocolo facial tras una valoración dermatológica completa. Trabajamos limpieza profunda, rejuvenecimiento, peelings químicos controlados y planes antiacné con productos de grado médico certificados por COFEPRIS, ajustando dosis y técnica al tipo y momento de cada piel.',
+    '<strong>CLIBEL</strong> documenta cada sesión en expediente clínico personal: insumos, lote, parámetros y respuesta cutánea. Esa trazabilidad permite afinar el plan sesión a sesión y mantener resultados visibles, naturales y sostenibles en el tiempo.',
+  ],
+  corporal: [
+    '<strong>CLIBEL</strong> aborda la remodelación corporal con tecnología no invasiva de última generación —radiofrecuencia, reducción de grasa localizada, drenaje linfático y masaje anticelulitis— combinada con valoración médica previa para definir el plan adecuado a cada anatomía y objetivo.',
+    'En <strong>CLIBEL</strong> priorizamos resultados graduales y duraderos sobre paquetes prefabricados. Acompañamos cada protocolo con hábitos, mediciones objetivas y seguimiento clínico documentado para que la mejora se mantenga después de terminar el plan.',
+  ],
+  laser: [
+    '<strong>CLIBEL</strong> opera plataformas láser de marcas certificadas internacionalmente para depilación segura y duradera en todas las zonas y todos los fototipos. Cada sesión incluye prueba de parche, parámetros documentados y técnico capacitado supervisado por personal médico.',
+    'En <strong>CLIBEL</strong> diseñamos el plan láser según fototipo, grosor del vello y fase de crecimiento. Resultado: sesiones cómodas, espaciadas según ciclo biológico y con reducción visible desde las primeras semanas, sin sacrificar seguridad clínica.',
+  ],
+  'medicina-estetica': [
+    'La medicina estética avanzada en <strong>CLIBEL</strong> está a cargo de médicos especialistas con cédula profesional. Aplicamos ácido hialurónico, toxina botulínica, plasma rico en plaquetas e hilos tensores siguiendo un análisis facial proporcional y los protocolos de las marcas referentes globales.',
+    'En <strong>CLIBEL</strong> trabajamos exclusivamente con productos originales y registro COFEPRIS vigente —Allergan, Galderma, Merz, Sculptra, Sinclair— con lote y trazabilidad disponibles para cada paciente. Filosofía conservadora: realzamos tu rostro, no lo transformamos.',
+  ],
+  capilar: [
+    '<strong>CLIBEL</strong> ofrece tratamientos capilares regenerativos basados en evidencia clínica: plasma rico en plaquetas, mesoterapia capilar y bioactivos para fortalecer el folículo, frenar caída y devolver densidad. Cada plan parte de un diagnóstico tricológico profesional.',
+    'En <strong>CLIBEL</strong> acompañamos el tratamiento capilar con seguimiento fotográfico, ajustes de dosis y revisiones periódicas. El objetivo es restaurar la salud del cabello desde la raíz, con protocolos seguros, documentados y resultados verificables.',
+  ],
+};
+
+// Comparativa "Por qué CLIBEL vs spa común"
+const comparison = [
+  { feature: 'Valoración médica previa', clibel: true, otros: false },
+  { feature: 'Productos con registro COFEPRIS visible', clibel: true, otros: false },
+  { feature: 'Personal médico certificado', clibel: true, otros: false },
+  { feature: 'Expediente clínico documentado', clibel: true, otros: false },
+  { feature: 'Marcas internacionales originales', clibel: true, otros: false },
+  { feature: 'Plan personalizado por escrito', clibel: true, otros: false },
+  { feature: 'Seguimiento post-tratamiento', clibel: true, otros: false },
+  { feature: 'Paquetes pre-armados sin diagnóstico', clibel: false, otros: true },
+];
 ---
 
 <BaseLayout
-  title="Tratamientos Estéticos en CDMX"
-  description="25+ tratamientos faciales, corporales, depilación láser y medicina estética en una sola clínica. Diagnóstico médico previo y resultados naturales."
+  title="Tratamientos Estéticos en CDMX | Catálogo Completo"
+  description={`${totalServices}+ tratamientos faciales, corporales, depilación láser, medicina estética y capilares con respaldo médico en CDMX. Diagnóstico previo gratuito y resultados naturales.`}
 >
-  <!-- Header -->
-  <section class="gradient-soft relative overflow-hidden">
-    <div aria-hidden="true" class="absolute -top-32 -right-32 w-[36rem] h-[36rem] rounded-full bg-[color:var(--color-brand-300)]/40 blur-3xl pointer-events-none"></div>
+  <!-- Schema catalog -->
+  <script type="application/ld+json" set:html={JSON.stringify(serviceCatalog)} />
 
-    <div class="container-x relative section">
-      <span class="kicker-line">Catálogo CLIBEL</span>
-      <h1 class="mt-4 h-display text-5xl sm:text-6xl lg:text-7xl max-w-4xl">
-        Todos nuestros <em>tratamientos</em><br/>
-        en un solo lugar.
-      </h1>
-      <p class="mt-6 text-lg text-[color:var(--color-ink-700)] max-w-2xl leading-relaxed">
-        Más de 25 tratamientos organizados por categoría. Cada protocolo se
-        diseña a medida después de tu valoración inicial, con tecnología de
-        marcas internacionales y productos certificados COFEPRIS.
-      </p>
+  <!-- ============================ BREADCRUMB ============================ -->
+  <Breadcrumb
+    kicker="Catálogo CLIBEL"
+    items={[{ label: 'Tratamientos' }]}
+  />
 
-      <!-- Quick anchors -->
-      <div class="mt-10 flex flex-wrap gap-2">
-        {grouped.map(g => (
-          <a href={`#${g.slug}`} class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[color:var(--color-brand-200)] hover:bg-[color:var(--color-mauve-500)] hover:text-white hover:border-[color:var(--color-mauve-500)] transition text-sm">
-            <span>{g.icon}</span>
-            <span class="font-medium">{g.label}</span>
-            <span class="text-[10px] uppercase tracking-wider opacity-60">{g.items.length}</span>
-          </a>
+  <!-- ============================ HERO ============================ -->
+  <section class="svc-hero">
+    <div aria-hidden="true" class="svc-hero-bg"></div>
+    <div aria-hidden="true" class="svc-hero-blob svc-hero-blob-1"></div>
+    <div aria-hidden="true" class="svc-hero-blob svc-hero-blob-2"></div>
+    <div aria-hidden="true" class="svc-hero-grain"></div>
+
+    <div class="container-x relative">
+      <div class="svc-hero-grid">
+        <!-- LEFT — brand statement -->
+        <div class="svc-hero-col svc-hero-col--left fade-up">
+          <span class="eyebrow-tag">
+            <span class="dot" aria-hidden="true"></span>
+            Catálogo clínico · {totalServices} tratamientos
+          </span>
+
+          <h1 class="svc-hero-headline">
+            <span class="svc-hero-headline-line">Tratamientos con</span>
+            <span class="svc-hero-headline-line"><em>respaldo médico</em>.</span>
+          </h1>
+
+          <p class="svc-hero-lede">
+            45 años en CDMX. <strong>Más de {totalServices} protocolos clínicos</strong>
+            en cinco áreas: faciales, corporales, depilación láser, medicina
+            estética avanzada y cuidado capilar.
+          </p>
+
+          <div class="svc-hero-trust">
+            <span class="svc-hero-trust-label">Marcas que usamos</span>
+            <div class="svc-hero-trust-list">
+              <span>Allergan</span><span aria-hidden="true">·</span>
+              <span>Galderma</span><span aria-hidden="true">·</span>
+              <span>Merz</span><span aria-hidden="true">·</span>
+              <span>Sculptra</span><span aria-hidden="true">·</span>
+              <span>Venus</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT — explicativo de la empresa -->
+        <div class="svc-hero-col svc-hero-col--right fade-up-delay-2">
+          <span class="svc-hero-kicker">Qué hacemos en CLIBEL</span>
+
+          <p class="svc-hero-paragraph">
+            <strong>CLIBEL</strong> es una clínica de belleza especializada en
+            tratamientos estéticos faciales, corporales y medicina estética
+            avanzada en CDMX. Combinamos tecnología de vanguardia, atención
+            personalizada y procedimientos diseñados específicamente para las
+            necesidades de cada paciente, con el respaldo de un
+            <strong>equipo médico certificado</strong>. Cada protocolo se diseña
+            tras una valoración médica previa, sin paquetes prearmados ni presión
+            comercial, garantizando seguridad clínica y resultados naturales.
+          </p>
+
+          <p class="svc-hero-paragraph">
+            Somos expertos en <strong>tratamientos faciales</strong> (limpieza
+            profunda, rejuvenecimiento, peelings químicos y antiacné),
+            <strong>tratamientos corporales</strong> (radiofrecuencia, reducción
+            de grasa localizada, drenaje linfático y anticelulitis),
+            <strong>depilación láser profesional</strong> para todas las zonas,
+            <strong>medicina estética avanzada</strong> (ácido hialurónico,
+            toxina botulínica, plasma rico en plaquetas e hilos tensores) y
+            <strong>tratamientos capilares</strong> regenerativos con PRP y
+            mesoterapia. Todo en un solo lugar, con productos certificados por
+            COFEPRIS y trazabilidad documentada de cada sesión.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ NAV SECUNDARIA — explora el sitio ============================ -->
+  <HeroNavBar
+    label="Explora el sitio"
+    ariaLabel="Navegación del sitio CLIBEL"
+    variant="cream"
+    links={[
+      { label: 'Inicio',     href: '/' },
+      { label: 'Tecnología', href: '/tecnologia' },
+      { label: 'Equipo',     href: '/equipo' },
+      { label: 'Nosotros',   href: '/nosotros' },
+      { label: 'Blog',       href: '/blog' },
+    ]}
+    cta={{ label: 'Contacto', href: '/contacto' }}
+  />
+
+  <!-- ============================ DESTACADOS ============================ -->
+  {featured.length > 0 && (
+    <section class="section bg-white">
+      <div class="container-x">
+        <SectionHeader
+          kicker="Más solicitados"
+          title="Tratamientos <em>destacados</em>."
+          paragraphs={[
+            '<strong>CLIBEL</strong> es una clínica de belleza especializada en medicina estética avanzada, tratamientos faciales, corporales, depilación láser y cuidado capilar en CDMX. Esta selección reúne los procedimientos que CLIBEL realiza con mayor frecuencia: combinan respaldo médico, resultados visibles y trazabilidad documentada.',
+            'Cada protocolo destacado en <strong>CLIBEL</strong> parte de una valoración clínica gratuita y se diseña a medida del paciente. CLIBEL no vende paquetes prearmados: planificamos sesiones, dosis y seguimiento con base en tu diagnóstico, objetivos estéticos y respuesta del cuerpo.',
+          ]}
+          cta={{ label: 'Ver catálogo completo abajo', href: '#facial', variant: 'outline' }}
+        />
+
+        <div class="svc-feat-grid">
+          {featured.map((s) => (
+            <ServiceCard
+              href={`/servicios/${s.id}`}
+              title={s.data.title}
+              description={s.data.description}
+              category={s.data.category}
+              duration={s.data.duration}
+              sessions={s.data.sessions}
+              icon={s.data.icon}
+              featured={s.data.featured}
+              benefits={s.data.benefits}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ============================ GARANTÍAS / PILARES ============================ -->
+  <section class="section svc-guarantees">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Lo que respalda cada tratamiento"
+        title="Cuatro garantías <em>no negociables</em>."
+        variant="dark"
+        paragraphs={[
+          'Cada tratamiento que realizamos en <strong>CLIBEL</strong> pasa por cuatro estándares clínicos no negociables. CLIBEL es una clínica de belleza con respaldo médico real en CDMX, que combina tecnología certificada, productos COFEPRIS y especialistas titulados para garantizar seguridad en cada sesión.',
+          'En <strong>CLIBEL</strong> diseñamos protocolos personalizados de medicina estética avanzada, depilación láser, tratamientos faciales, corporales y capilares — siempre tras una valoración médica previa. Esto significa que CLIBEL nunca aplica un procedimiento sin diagnóstico, sin trazabilidad y sin un plan documentado por escrito para cada paciente.',
+        ]}
+      />
+
+      <div class="svc-guarantees-grid">
+        {guarantees.map((g) => (
+          <article class="svc-guarantee reveal">
+            <div class="svc-guarantee-icon" set:html={g.icon} />
+            <h3 class="svc-guarantee-title">{g.title}</h3>
+            <p class="svc-guarantee-text">{g.text}</p>
+          </article>
         ))}
       </div>
     </div>
   </section>
 
-  <PartnersMarquee />
-
-  <!-- Categories -->
-  {grouped.map((g) => (
-    <section id={g.slug} class="section scroll-mt-32 odd:bg-white even:bg-[color:var(--color-brand-50)]">
+  <!-- ============================ CATÁLOGO POR CATEGORÍA ============================ -->
+  {grouped.map((g, idx) => (
+    <section
+      id={g.slug}
+      class={`section svc-cat scroll-mt-32 ${idx % 2 === 0 ? 'svc-cat--light' : 'svc-cat--cream'}`}
+      data-cat={g.slug}
+    >
       <div class="container-x">
-        <div class="grid lg:grid-cols-[1fr_auto] gap-6 items-end mb-10">
-          <div class="max-w-2xl">
-            <span class="text-[10px] uppercase tracking-[0.2em] text-[color:var(--color-brand-500)] font-semibold">{g.badgeLabel} · {g.badgeCount}</span>
-            <h2 class="mt-2 h-display text-4xl sm:text-5xl">{g.label}</h2>
-            <p class="mt-4 text-[color:var(--color-ink-500)] leading-relaxed">{g.description}</p>
-          </div>
-          <a href="/contacto" class="btn btn-outline self-start lg:self-end shrink-0">Solicitar valoración</a>
-        </div>
+        <SectionHeader
+          kicker={`Categoría ${String(idx + 1).padStart(2, '0')} · ${g.badgeLabel} · ${g.items.length} ${g.items.length === 1 ? 'tratamiento' : 'tratamientos'}`}
+          title={g.label}
+          paragraphs={categoryParagraphs[g.slug] ?? [g.description]}
+          cta={CATEGORY_LANDING_PAGES[g.slug as keyof typeof CATEGORY_LANDING_PAGES]
+            ? { label: `Ver página de ${g.short.toLowerCase()}`, href: CATEGORY_LANDING_PAGES[g.slug as keyof typeof CATEGORY_LANDING_PAGES] as string, variant: 'primary' }
+            : { label: 'Solicitar valoración', href: '/contacto', variant: 'outline' }}
+        />
 
         {g.items.length === 0 ? (
-          <p class="text-[color:var(--color-ink-500)]">Próximamente más tratamientos en esta categoría.</p>
+          <div class="svc-cat-empty">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+            </svg>
+            <p>Próximamente publicaremos más tratamientos en esta categoría. <a href={wa} target="_blank" rel="noopener">Pregúntanos por WhatsApp</a> si buscas algo específico.</p>
+          </div>
         ) : (
-          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="svc-cat-grid">
             {g.items.map((s) => (
               <ServiceCard
                 href={`/servicios/${s.id}`}
@@ -74,14 +312,572 @@ const grouped = Object.values(CATEGORIES).map((cat) => ({
                 description={s.data.description}
                 category={s.data.category}
                 duration={s.data.duration}
+                sessions={s.data.sessions}
                 icon={s.data.icon}
+                featured={s.data.featured}
+                benefits={s.data.benefits}
               />
             ))}
           </div>
         )}
+
+        <!-- Footer de categoría: enlaces relacionados -->
+        <footer class="svc-cat-footer reveal">
+          <span class="svc-cat-footer-label">Relacionado:</span>
+          <div class="svc-cat-footer-links">
+            {g.items.slice(0, 4).map((s) => (
+              <a href={`/servicios/${s.id}`} class="svc-cat-footer-link">
+                {s.data.title}
+              </a>
+            ))}
+          </div>
+        </footer>
       </div>
     </section>
   ))}
 
-  <CTA />
+  <!-- ============================ COMPARATIVA ============================ -->
+  <section class="section svc-compare">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Calidad clínica"
+        title="CLIBEL vs <em>spa común</em>."
+        paragraphs={[
+          '<strong>CLIBEL</strong> opera como una clínica de belleza con respaldo médico real: valoración clínica previa, productos con registro COFEPRIS, expediente documentado y especialistas con cédula profesional. CLIBEL realiza medicina estética, depilación láser, faciales, corporales y capilares con los mismos estándares que un consultorio médico.',
+          'Esta comparativa explica qué hace <strong>CLIBEL</strong> diferente de una sala de belleza tradicional. En CLIBEL no hay paquetes pre-armados sin diagnóstico, ni productos sin trazabilidad, ni protocolos genéricos: cada tratamiento se planifica por escrito, se aplica con marcas internacionales originales y se le da seguimiento clínico hasta el resultado final.',
+        ]}
+      />
+
+      <div class="svc-compare-table reveal">
+        <div class="svc-compare-row svc-compare-row--head">
+          <div class="svc-compare-cell svc-compare-cell--feat">Característica</div>
+          <div class="svc-compare-cell svc-compare-cell--brand">
+            <span class="svc-compare-brand-label">CLIBEL</span>
+            <span class="svc-compare-brand-sub">Clínica de belleza</span>
+          </div>
+          <div class="svc-compare-cell svc-compare-cell--other">
+            <span class="svc-compare-other-label">Spa común</span>
+            <span class="svc-compare-other-sub">Sin respaldo médico</span>
+          </div>
+        </div>
+
+        {comparison.map((row) => (
+          <div class="svc-compare-row">
+            <div class="svc-compare-cell svc-compare-cell--feat">{row.feature}</div>
+            <div class="svc-compare-cell svc-compare-cell--brand">
+              {row.clibel ? (
+                <span class="svc-compare-yes" title="Sí">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              ) : (
+                <span class="svc-compare-no" title="No">—</span>
+              )}
+            </div>
+            <div class="svc-compare-cell svc-compare-cell--other">
+              {row.otros ? (
+                <span class="svc-compare-yes svc-compare-yes--muted" title="Sí">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              ) : (
+                <span class="svc-compare-no" title="No">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p class="svc-compare-note reveal">
+        ¿Te tomas tu cara y tu cuerpo en serio?
+        <a href="/contacto">Agenda tu valoración gratuita →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================ PROCESO ============================ -->
+  <Process />
+
+  <!-- ============================ NAV INFERIOR — interlinking a tratamientos ============================ -->
+  <HeroNavBar
+    label="Tratamientos más solicitados"
+    ariaLabel="Tratamientos destacados de CLIBEL"
+    variant="dark"
+    links={topTreatmentLinks}
+    cta={{ label: 'Ver tratamientos faciales', href: catHref('facial') }}
+  />
+
+  <!-- ============================ FAQ + CONTACT ============================ -->
+  <FAQContact />
+
+  <!-- ============================ NAV PRE-FOOTER — categorías de tratamientos ============================ -->
+  <HeroNavBar
+    label="Categorías de tratamientos"
+    ariaLabel="Categorías de tratamientos CLIBEL"
+    variant="cream"
+    links={categoryAnchorLinks}
+    cta={{ label: 'Escríbenos por WhatsApp', href: wa }}
+  />
 </BaseLayout>
+
+<style>
+  /* ============= HERO (homologado con Hero.astro del index) ============= */
+  .svc-hero {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, var(--color-brand-100) 100%);
+    isolation: isolate;
+    position: relative;
+    overflow: hidden;
+  }
+  .svc-hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(201,169,97,0.18), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.16), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .svc-hero-blob {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(110px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+  .svc-hero-blob-1 {
+    width: 36rem; height: 36rem;
+    top: -10rem; right: -10rem;
+    background: var(--color-brand-300);
+  }
+  .svc-hero-blob-2 {
+    width: 32rem; height: 32rem;
+    bottom: -12rem; left: -8rem;
+    background: var(--color-mauve-300);
+  }
+  .svc-hero-grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(31,20,24,0.05) 1px, transparent 1px);
+    background-size: 3px 3px;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Grid 50/50 — idéntico al index Hero */
+  .svc-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem;
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    width: 100% !important;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .svc-hero-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: clamp(2rem, 4vw, 4.5rem);
+    }
+  }
+
+  .svc-hero-col {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .svc-hero-col--left {
+    container-type: inline-size;
+    container-name: svcheroleft;
+  }
+
+  /* ===== LEFT ===== */
+  .svc-hero-headline {
+    font-family: var(--font-display);
+    font-weight: 450;
+    letter-spacing: -0.022em;
+    line-height: 1.02;
+    color: var(--color-ink-900);
+    font-size: clamp(2.5rem, 10.5cqi, 6.5rem);
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    width: 100%;
+    margin: 0.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05em;
+  }
+  .svc-hero-headline-line {
+    display: block;
+    width: 100%;
+  }
+  .svc-hero-headline em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+  }
+  @media (max-width: 899px) {
+    .svc-hero-headline {
+      font-size: clamp(2.5rem, 9.5vw, 4.5rem);
+    }
+  }
+
+  .svc-hero-lede {
+    font-size: clamp(1rem, 1.1vw, 1.18rem);
+    line-height: 1.65;
+    color: var(--color-ink-700);
+    margin: 0;
+    width: 100%;
+  }
+  .svc-hero-lede strong { color: var(--color-ink-900); font-weight: 600; }
+
+  .svc-hero-trust {
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(201, 169, 97, 0.25);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem;
+    width: 100%;
+  }
+  .svc-hero-trust-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .svc-hero-trust-list {
+    display: inline-flex; flex-wrap: wrap; gap: 0.55rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--color-ink-700);
+  }
+  .svc-hero-trust-list span[aria-hidden] { color: var(--color-brand-400); }
+
+  /* ===== RIGHT — 2 párrafos explicativos ===== */
+  .svc-hero-col--right { gap: 1.25rem; }
+  @media (min-width: 900px) {
+    .svc-hero-col--right {
+      padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+      border-left: 1px solid rgba(201, 169, 97, 0.25);
+    }
+  }
+
+  .svc-hero-kicker {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--color-brand-400);
+    align-self: flex-start;
+  }
+
+  .svc-hero-paragraph {
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.75;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .svc-hero-paragraph strong {
+    color: var(--color-ink-900);
+    font-weight: 600;
+  }
+
+  @media (max-width: 899px) {
+    .svc-hero-col { gap: 1.25rem; }
+  }
+
+  /* ============= FEATURED ============= */
+  .svc-feat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .svc-feat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .svc-feat-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  }
+
+  /* ============= GUARANTEES ============= */
+  .svc-guarantees {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    position: relative;
+    overflow: hidden;
+  }
+  .svc-guarantees::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .svc-guarantees > * { position: relative; }
+
+  .svc-guarantees-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 640px) {
+    .svc-guarantees-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .svc-guarantees-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+  }
+
+  .svc-guarantee {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.1rem;
+    padding: 1.5rem;
+    transition: all 0.4s ease;
+  }
+  .svc-guarantee:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(201, 169, 97, 0.4);
+    transform: translateY(-4px);
+  }
+  .svc-guarantee-icon {
+    display: grid;
+    place-items: center;
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(201, 169, 97, 0.2), rgba(139, 90, 107, 0.15));
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    color: var(--color-brand-400);
+    margin-bottom: 1.1rem;
+  }
+  .svc-guarantee-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: white;
+    margin: 0 0 0.5rem;
+    line-height: 1.2;
+  }
+  .svc-guarantee-text {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: rgba(242, 235, 223, 0.72);
+    margin: 0;
+  }
+
+  /* ============= CATEGORY SECTIONS ============= */
+  .svc-cat--light { background: white; }
+  .svc-cat--cream { background: var(--color-brand-50); }
+
+  .svc-cat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .svc-cat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .svc-cat-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  }
+  @media (min-width: 1600px) {
+    .svc-cat-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .svc-cat-empty {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 1.75rem;
+    background: white;
+    border: 1px dashed rgba(201, 169, 97, 0.45);
+    border-radius: 1rem;
+    color: var(--color-ink-500);
+  }
+  .svc-cat--light .svc-cat-empty { background: var(--color-brand-50); }
+  .svc-cat-empty svg { color: var(--color-brand-500); flex-shrink: 0; }
+  .svc-cat-empty p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .svc-cat-empty a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    font-weight: 500;
+  }
+
+  /* Category footer */
+  .svc-cat-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(201, 169, 97, 0.25);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem 1.25rem;
+    align-items: center;
+  }
+  .svc-cat-footer-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .svc-cat-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+  }
+  .svc-cat-footer-link {
+    font-size: 0.82rem;
+    color: var(--color-ink-700);
+    border-bottom: 1px dashed rgba(139, 90, 107, 0.35);
+    transition: all 0.25s ease;
+  }
+  .svc-cat-footer-link:hover {
+    color: var(--color-mauve-500);
+    border-bottom-color: var(--color-mauve-500);
+  }
+
+  /* ============= COMPARISON TABLE ============= */
+  .svc-compare {
+    background: var(--color-brand-50);
+  }
+
+  .svc-compare-table {
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow:
+      0 1px 2px rgba(31, 20, 24, 0.03),
+      0 18px 36px -22px rgba(31, 20, 24, 0.16);
+  }
+  .svc-compare-row {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr 0.8fr;
+    border-top: 1px solid rgba(201, 169, 97, 0.2);
+  }
+  .svc-compare-row:first-child { border-top: 0; }
+  .svc-compare-row:nth-child(even) { background: rgba(250, 247, 242, 0.55); }
+  .svc-compare-row:hover:not(.svc-compare-row--head) {
+    background: rgba(232, 213, 196, 0.18);
+  }
+
+  .svc-compare-row--head {
+    background: var(--color-ink-900) !important;
+    color: white;
+  }
+  .svc-compare-row--head .svc-compare-cell {
+    padding: 1.1rem 1.25rem;
+  }
+
+  .svc-compare-cell {
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.92rem;
+    color: var(--color-ink-700);
+  }
+  @media (max-width: 640px) {
+    .svc-compare-cell { padding: 0.85rem 0.9rem; font-size: 0.82rem; }
+  }
+  .svc-compare-cell--feat {
+    font-weight: 500;
+    color: var(--color-ink-900);
+  }
+  .svc-compare-row--head .svc-compare-cell--feat {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+  }
+  .svc-compare-cell--brand,
+  .svc-compare-cell--other {
+    justify-content: center;
+    text-align: center;
+  }
+  .svc-compare-brand-label,
+  .svc-compare-other-label {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: white;
+    line-height: 1.1;
+  }
+  .svc-compare-other-label { color: rgba(255,255,255,0.65); }
+  .svc-compare-brand-sub,
+  .svc-compare-other-sub {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0.25rem;
+  }
+  .svc-compare-cell--brand:not(.svc-compare-row--head .svc-compare-cell--brand) {
+    background: rgba(201, 169, 97, 0.08);
+  }
+
+  .svc-compare-yes {
+    display: grid;
+    place-items: center;
+    width: 32px; height: 32px;
+    border-radius: 999px;
+    background: var(--color-mauve-500);
+    color: white;
+  }
+  .svc-compare-yes--muted {
+    background: rgba(139, 90, 107, 0.35);
+    color: rgba(255,255,255,0.7);
+  }
+  .svc-compare-no {
+    display: grid;
+    place-items: center;
+    width: 32px; height: 32px;
+    border-radius: 999px;
+    background: rgba(168, 155, 160, 0.18);
+    color: var(--color-ink-300);
+  }
+
+  .svc-compare-note {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--color-ink-700);
+  }
+  .svc-compare-note a {
+    color: var(--color-mauve-500);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-left: 0.4rem;
+  }
+  .svc-compare-note a:hover { color: var(--color-mauve-700); }
+
+  /* ============= Mobile cascade ============= */
+  @media (max-width: 640px) {
+    .svc-compare-row { grid-template-columns: 1.3fr 0.7fr 0.7fr; }
+    .svc-compare-brand-label,
+    .svc-compare-other-label { font-size: 0.95rem; }
+    .svc-compare-brand-sub,
+    .svc-compare-other-sub { display: none; }
+  }
+</style>

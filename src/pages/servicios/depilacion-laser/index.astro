@@ -1,0 +1,1594 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ServiceCard from '../../../components/ServiceCard.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import HeroNavBar from '../../../components/HeroNavBar.astro';
+import RelatedCategories from '../../../components/RelatedCategories.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES, SITE, CONTACT, catHref } from '../../../consts';
+
+const cat = CATEGORIES.laser;
+
+const all = await getCollection('servicios');
+const items = all
+  .filter((s) => s.data.category === 'laser')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, me gustaría agendar mi sesión de depilación láser en CLIBEL.')}`;
+
+// ============ SCHEMAS SEO ============
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITE.url },
+    { '@type': 'ListItem', position: 2, name: 'Servicios', item: `${SITE.url}/servicios` },
+    { '@type': 'ListItem', position: 3, name: 'Depilación Láser', item: `${SITE.url}/servicios/depilacion-laser` },
+  ],
+};
+const catalogSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalSpecialty',
+  name: 'Depilación Láser — CLIBEL',
+  description: 'Depilación láser profesional para todas las zonas del cuerpo con tecnología Alexandrita y Nd:YAG, segura para todos los fototipos.',
+  url: `${SITE.url}/servicios/depilacion-laser`,
+  provider: { '@id': `${SITE.url}/#clinic` },
+  relevantSpecialty: ['Dermatology'],
+};
+
+// ============ ZONAS — catálogo por área anatómica (NUEVO) ============
+const zones = [
+  { area: 'Rostro',  zone: 'Bigote',          duration: '10 min', sessions: '6–8',  note: 'Hormonal' },
+  { area: 'Rostro',  zone: 'Mentón',          duration: '10 min', sessions: '6–10', note: 'Hormonal' },
+  { area: 'Rostro',  zone: 'Patillas',        duration: '10 min', sessions: '6–8',  note: '' },
+  { area: 'Rostro',  zone: 'Rostro completo', duration: '25 min', sessions: '6–8',  note: 'Combinación zonas' },
+  { area: 'Tronco',  zone: 'Axilas',          duration: '15 min', sessions: '6–8',  note: 'Más solicitada' },
+  { area: 'Tronco',  zone: 'Espalda completa',duration: '40 min', sessions: '6–8',  note: '' },
+  { area: 'Tronco',  zone: 'Pecho',           duration: '25 min', sessions: '6–8',  note: '' },
+  { area: 'Tronco',  zone: 'Abdomen',         duration: '20 min', sessions: '6–8',  note: 'Línea o completo' },
+  { area: 'Inguinal',zone: 'Bikini básico',   duration: '15 min', sessions: '6–8',  note: '' },
+  { area: 'Inguinal',zone: 'Brasileño completo', duration: '25 min', sessions: '6–10', note: 'Hormonal' },
+  { area: 'Piernas', zone: 'Piernas completas',  duration: '50 min', sessions: '6–8',  note: '' },
+  { area: 'Piernas', zone: 'Medias piernas',  duration: '30 min', sessions: '6–8',  note: '' },
+];
+
+// ============ TECNOLOGÍAS LÁSER (NUEVO — comparación clínica) ============
+const lasers = [
+  {
+    name: 'Alexandrita',
+    wavelength: '755 nm',
+    fototipo: 'I, II, III',
+    target: 'Pieles claras a medias con vello oscuro',
+    detail: 'Mayor afinidad por melanina del folículo, sesiones más rápidas en pieles claras. CLIBEL la usa como primera línea en fototipos I-III.',
+    accent: 'gold',
+  },
+  {
+    name: 'Nd:YAG',
+    wavelength: '1064 nm',
+    fototipo: 'IV, V, VI',
+    target: 'Pieles morenas, latinas e indígenas con todo tipo de vello',
+    detail: 'Penetración más profunda con menor absorción en la epidermis. CLIBEL la prioriza en pieles morenas para evitar quemaduras o hipopigmentación.',
+    accent: 'mauve',
+  },
+  {
+    name: 'Diodo',
+    wavelength: '810 nm',
+    fototipo: 'II, III, IV (versátil)',
+    target: 'Pieles intermedias con vello grueso a fino',
+    detail: 'Compromiso entre velocidad y seguridad. CLIBEL lo emplea cuando el fototipo es intermedio o cuando hay variación entre zonas del cuerpo.',
+    accent: 'rose',
+  },
+];
+
+// ============ FOTOTIPOS — guía Fitzpatrick (NUEVO) ============
+const fototipos = [
+  { code: 'I',   label: 'Muy clara',  detail: 'Se quema siempre, nunca broncea',  laser: 'Alexandrita' },
+  { code: 'II',  label: 'Clara',      detail: 'Se quema fácil, broncea mínimo',  laser: 'Alexandrita' },
+  { code: 'III', label: 'Intermedia', detail: 'Se quema a veces, broncea progresivo', laser: 'Alexandrita / Diodo' },
+  { code: 'IV',  label: 'Trigueña',   detail: 'Rara vez se quema, broncea fácil', laser: 'Diodo / Nd:YAG' },
+  { code: 'V',   label: 'Morena',     detail: 'Casi nunca se quema, muy morena', laser: 'Nd:YAG' },
+  { code: 'VI',  label: 'Negra',      detail: 'Nunca se quema, profundamente morena', laser: 'Nd:YAG' },
+];
+
+// ============ CICLO DE CRECIMIENTO (NUEVO) ============
+const cycle = [
+  {
+    phase: 'Anágena',
+    coverage: '~30%',
+    text: 'Fase de crecimiento activo donde el folículo tiene mayor concentración de melanina. Es la única fase donde el láser destruye eficazmente el folículo.',
+  },
+  {
+    phase: 'Catágena',
+    coverage: '~2%',
+    text: 'Fase de transición breve. El folículo se desconecta de la papila y empieza a involucionar. Respuesta limitada al láser.',
+  },
+  {
+    phase: 'Telógena',
+    coverage: '~68%',
+    text: 'Fase de reposo. El vello no está conectado a la melanina activa. Por eso CLIBEL espacia las sesiones cada 5–8 semanas para que más folículos entren en anágena.',
+  },
+];
+
+// ============ PRE / POST sesión ============
+const prepProtocol = {
+  pre: [
+    'Sin exposición solar 15 días antes',
+    'Rasurar la zona 24 h antes (NO cera, NO pinzas)',
+    'Suspender retinoides 7 días previos',
+    'Asistir sin maquillaje, cremas ni desodorante',
+    'Avisar a CLIBEL si tomas medicamentos fotosensibles',
+  ],
+  post: [
+    'SPF 50+ obligatorio en zona tratada',
+    'Sin sauna, vapor ni ejercicio intenso 24 h',
+    'Aplicar calmante o gel post-láser indicado por CLIBEL',
+    'No exfoliar la zona durante 5 días',
+    'No depilar con cera entre sesiones — solo rasurar',
+  ],
+};
+
+// ============ MITOS vs REALIDAD (NUEVO) ============
+const myths = [
+  {
+    myth: 'El láser quema la piel morena',
+    truth: 'Falso con tecnología correcta. CLIBEL aplica Nd:YAG en fototipos IV-VI, que es seguro y eficaz en piel latina. Lo que quema es usar Alexandrita en piel oscura sin valoración.',
+  },
+  {
+    myth: 'El vello vuelve a crecer después',
+    truth: 'CLIBEL aclara: el láser destruye permanentemente el folículo tratado, pero pueden activarse folículos nuevos por causas hormonales. Por eso bigote y brasileño requieren más sesiones y mantenimiento.',
+  },
+  {
+    myth: 'Es muy doloroso',
+    truth: 'Falso. Los equipos modernos que usa CLIBEL incluyen sistema de enfriamiento por contacto. La sensación es de "ligas calientes" — incómodo pero tolerable. No requiere anestesia tópica.',
+  },
+  {
+    myth: 'Con 1–2 sesiones es suficiente',
+    truth: 'Imposible biológicamente. Solo el 30% del vello está en fase anágena en cada momento. CLIBEL trabaja protocolos de 6–8 sesiones espaciadas para tratar todos los folículos.',
+  },
+];
+
+// ============ FAQs específicas láser ============
+const faqs = [
+  { q: '¿Es seguro el láser durante el embarazo o lactancia?', a: 'En CLIBEL no aplicamos láser durante embarazo por principio de precaución, aunque no hay evidencia de daño. En lactancia sí es seguro, pero los cambios hormonales pueden requerir más sesiones para resultados estables.' },
+  { q: '¿Cada cuánto tengo que ir a sesión?', a: 'Las sesiones se espacian según ciclo de crecimiento del vello en cada zona: rostro cada 4–5 semanas, axilas/inglés cada 6–8 semanas, piernas/espalda cada 8–10 semanas. CLIBEL ajusta el calendario según tu respuesta documentada.' },
+  { q: '¿Funciona con vello rubio, blanco o cano?', a: 'CLIBEL lo evalúa caso por caso. El láser requiere melanina en el folículo para funcionar — el vello blanco o cano no la tiene. El vello rubio claro responde de forma limitada. En valoración te confirmamos viabilidad.' },
+  { q: '¿Cuánto cuesta una sesión?', a: 'El precio depende de la zona (15–60 min) y de la tecnología necesaria según tu fototipo. CLIBEL ofrece valoración sin costo donde recibes presupuesto por escrito con el plan completo de sesiones.' },
+  { q: '¿Puedo broncearme mientras hago el tratamiento?', a: 'CLIBEL recomienda evitar bronceado durante todo el plan láser. El sol aumenta riesgo de hiperpigmentación y reduce eficacia. Si te broncearas accidentalmente, posponemos sesión 3–4 semanas.' },
+  { q: '¿Qué pasa si me salto una sesión?', a: 'No pasa nada grave pero pierdes la sincronía con el ciclo de crecimiento. CLIBEL replantifica para que la siguiente sesión coincida con la fase anágena de los folículos que iban tocando.' },
+];
+---
+
+<BaseLayout
+  title={`Depilación Láser en CDMX | CLIBEL`}
+  description={`Depilación láser profesional en CDMX con CLIBEL: Alexandrita, Nd:YAG y Diodo para todos los fototipos. 12+ zonas corporales, planes documentados y valoración sin costo.`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(catalogSchema)} />
+
+  <!-- ============================ BREADCRUMB ============================ -->
+  <Breadcrumb
+    kicker="Categoría 03 · Láser"
+    items={[
+      { label: 'Servicios', href: '/servicios' },
+      { label: 'Depilación Láser' },
+    ]}
+  />
+
+  <!-- ============================ HERO ============================ -->
+  <section class="cat-hero">
+    <div aria-hidden="true" class="cat-hero-bg"></div>
+    <div aria-hidden="true" class="cat-hero-blob cat-hero-blob-1"></div>
+    <div aria-hidden="true" class="cat-hero-blob cat-hero-blob-2"></div>
+    <div aria-hidden="true" class="cat-hero-grain"></div>
+
+    <div class="container-x relative">
+      <div class="cat-hero-grid">
+        <div class="cat-hero-col cat-hero-col--left fade-up">
+          <span class="eyebrow-tag">
+            <span class="dot" aria-hidden="true"></span>
+            Categoría 03 · {cat.badgeLabel} · 12+ zonas
+          </span>
+
+          <h1 class="cat-hero-headline">
+            <span class="cat-hero-headline-line">Depilación</span>
+            <span class="cat-hero-headline-line"><em>láser</em> en CDMX.</span>
+          </h1>
+
+          <p class="cat-hero-lede">
+            Tecnología láser para <strong>todos los fototipos</strong>:
+            Alexandrita, Nd:YAG y Diodo. CLIBEL diseña tu plan completo
+            tras valoración con prueba de parche, sin paquetes prearmados
+            ni quemaduras por equipo equivocado.
+          </p>
+
+          <div class="cat-hero-trust">
+            <span class="cat-hero-trust-label">Tecnología</span>
+            <div class="cat-hero-trust-list">
+              <span>Alexandrita 755nm</span><span aria-hidden="true">·</span>
+              <span>Nd:YAG 1064nm</span><span aria-hidden="true">·</span>
+              <span>Diodo 810nm</span><span aria-hidden="true">·</span>
+              <span>Sistema de enfriamiento</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cat-hero-col cat-hero-col--right fade-up-delay-2">
+          <span class="cat-hero-kicker">Qué hace CLIBEL en láser</span>
+
+          <p class="cat-hero-paragraph">
+            <strong>CLIBEL</strong> es una clínica de belleza con respaldo
+            médico especializada en depilación láser profesional en Ciudad
+            de México. Operamos con tres tecnologías láser
+            certificadas internacionalmente para cubrir todos los fototipos
+            (Fitzpatrick I-VI) con seguridad clínica. CLIBEL selecciona
+            la tecnología según tu piel, no según el equipo que esté libre
+            ese día.
+          </p>
+
+          <p class="cat-hero-paragraph">
+            En esta categoría <strong>CLIBEL</strong> ofrece más de 12 zonas
+            corporales con planes documentados, prueba de parche obligatoria
+            en primera cita y técnicos certificados supervisados por personal
+            médico. Cada sesión registra fluencia, fototipo, zona, respuesta
+            y porcentaje de reducción en expediente clínico digital — para
+            que el plan se afine sesión a sesión hasta resultado final.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ NAV TOP ============================ -->
+  <HeroNavBar
+    label="Otras categorías"
+    ariaLabel="Otras categorías de tratamientos CLIBEL"
+    variant="cream"
+    links={[
+      { label: 'Faciales',           href: catHref('facial') },
+      { label: 'Corporales',         href: catHref('corporal') },
+      { label: 'Medicina estética',  href: catHref('medicina-estetica') },
+      { label: 'Capilares',          href: catHref('capilar') },
+    ]}
+    cta={{ label: 'Volver al catálogo', href: '/servicios' }}
+  />
+
+  <!-- ============================ CATÁLOGO DE SERVICIO ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker={`Catálogo · ${items.length} ${items.length === 1 ? 'tratamiento base' : 'tratamientos'}`}
+        title="Depilación láser profesional en <em>CLIBEL</em>."
+        paragraphs={[
+          '<strong>CLIBEL</strong> ofrece depilación láser como protocolo clínico, no como servicio express. Cada plan en CLIBEL parte de una valoración con prueba de parche, asignación de tecnología según tu fototipo y calendario de sesiones documentado por escrito antes de empezar.',
+          'El tratamiento base se adapta a cualquier zona corporal. <strong>CLIBEL</strong> documenta fluencia, parámetros, respuesta tisular y porcentaje de reducción visible sesión a sesión — para que tu plan se afine con evidencia, no con conjeturas.',
+        ]}
+        cta={{ label: 'Solicitar valoración con prueba de parche', href: '/contacto', variant: 'primary' }}
+      />
+
+      <div class="cat-grid">
+        {items.map((s) => (
+          <ServiceCard
+            href={`/servicios/${s.id}`}
+            title={s.data.title}
+            description={s.data.description}
+            category={s.data.category}
+            duration={s.data.duration}
+            sessions={s.data.sessions}
+            icon={s.data.icon}
+            featured={s.data.featured}
+            benefits={s.data.benefits}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ ZONAS — tabla profesional ============================ -->
+  <section class="section svc-zones">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Zonas corporales · 12+"
+        title="Zonas que trata <em>CLIBEL</em> con láser."
+        paragraphs={[
+          'Todas las zonas anatómicas estándar y combinaciones más solicitadas. <strong>CLIBEL</strong> ofrece tratamiento individual por zona o paquetes combinados con descuento progresivo. Cada zona tiene un protocolo específico de fluencia, técnica y número de sesiones recomendadas.',
+          'Las sesiones mostradas son el <strong>rango promedio</strong> que CLIBEL maneja para una reducción del 80–90%. Zonas con componente hormonal (bigote, mentón, brasileño) pueden requerir sesiones extra de mantenimiento.',
+        ]}
+      />
+
+      <div class="zones-table reveal">
+        <div class="zones-row zones-row--head">
+          <div class="zones-cell zones-cell--zone">Zona</div>
+          <div class="zones-cell">Duración</div>
+          <div class="zones-cell">Sesiones</div>
+          <div class="zones-cell">Notas</div>
+        </div>
+        {zones.map((z, i) => (
+          <div class="zones-row">
+            <div class="zones-cell zones-cell--zone">
+              <span class="zones-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div class="zones-zone-block">
+                <span class="zones-area">{z.area}</span>
+                <span class="zones-zone">{z.zone}</span>
+              </div>
+            </div>
+            <div class="zones-cell"><span class="zones-mobile-label">Duración</span>{z.duration}</div>
+            <div class="zones-cell"><span class="zones-mobile-label">Sesiones</span>{z.sessions}</div>
+            <div class="zones-cell"><span class="zones-mobile-label">Notas</span>{z.note || '—'}</div>
+          </div>
+        ))}
+      </div>
+
+      <p class="zones-foot reveal">
+        ¿Buscas una zona combinada? <a href={wa} target="_blank" rel="noopener">Consulta paquetes en WhatsApp →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================ TECNOLOGÍAS LÁSER — comparativa ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Tecnología láser"
+        title="Tres láseres, <em>una piel correcta</em> para cada uno."
+        paragraphs={[
+          '<strong>CLIBEL</strong> opera tres plataformas láser distintas porque la piel mexicana es heterogénea: clínicas que usan un solo equipo terminan quemando pieles morenas o aplicando láser ineficaz en pieles claras. En CLIBEL la tecnología se elige según tu fototipo Fitzpatrick, no según disponibilidad.',
+          'Las longitudes de onda determinan profundidad de penetración y selectividad por melanina. <strong>CLIBEL</strong> documenta en tu expediente qué tecnología aplicó en cada zona y por qué — trazabilidad real para tu seguridad clínica.',
+        ]}
+      />
+
+      <div class="lasers-grid">
+        {lasers.map((l, i) => (
+          <article class={`laser laser--${l.accent} reveal`}>
+            <header class="laser-head">
+              <span class="laser-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <span class="laser-kicker">Tecnología láser</span>
+                <h3 class="laser-name">{l.name}</h3>
+                <span class="laser-wave">{l.wavelength}</span>
+              </div>
+            </header>
+
+            <div class="laser-spec">
+              <div>
+                <span class="laser-spec-label">Fototipos</span>
+                <span class="laser-spec-value">{l.fototipo}</span>
+              </div>
+              <div>
+                <span class="laser-spec-label">Indicado para</span>
+                <span class="laser-spec-value">{l.target}</span>
+              </div>
+            </div>
+
+            <p class="laser-detail">{l.detail}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FOTOTIPOS GUIDE ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Guía Fitzpatrick"
+        title="Tu fototipo define el <em>láser correcto</em>."
+        paragraphs={[
+          'La escala Fitzpatrick clasifica la piel según su respuesta al sol — del I (muy clara, siempre se quema) al VI (muy oscura, nunca se quema). <strong>CLIBEL</strong> determina tu fototipo en la valoración inicial mediante examen clínico y prueba de parche para asignar la tecnología láser apropiada.',
+          'Aplicar la tecnología equivocada a un fototipo no compatible es la causa principal de quemaduras y hipopigmentación en depilación láser. Por eso <strong>CLIBEL</strong> nunca empieza sin esta clasificación documentada.',
+        ]}
+      />
+
+      <div class="fototipos-grid">
+        {fototipos.map((ft) => (
+          <article class="fototipo reveal">
+            <span class="fototipo-code" aria-hidden="true">{ft.code}</span>
+            <div class="fototipo-body">
+              <h3 class="fototipo-label">{ft.label}</h3>
+              <p class="fototipo-detail">{ft.detail}</p>
+              <span class="fototipo-laser">
+                <span class="fototipo-laser-kicker">CLIBEL aplica</span>
+                <strong>{ft.laser}</strong>
+              </span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CICLO DE CRECIMIENTO ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Ciclo de crecimiento capilar"
+        title="Por qué <em>CLIBEL</em> espacia tus sesiones."
+        paragraphs={[
+          'El cabello crece en tres fases. <strong>CLIBEL</strong> espacia las sesiones porque el láser solo destruye folículos en fase activa (anágena) — y en cualquier momento solo el 30% del vello está ahí. Sesiones muy seguidas no aceleran resultados, solo gastan tu tiempo y dinero.',
+          'Esta es la razón biológica de por qué <strong>CLIBEL</strong> necesita 6–8 sesiones para cubrir todos los folículos en cada zona. Cualquier clínica que prometa "depilación permanente en 2 sesiones" está mintiendo.',
+        ]}
+      />
+
+      <div class="cycle-grid">
+        {cycle.map((c, i) => (
+          <article class="cycle reveal">
+            <div class="cycle-percent">
+              <span class="cycle-percent-value">{c.coverage}</span>
+              <span class="cycle-percent-label">del vello</span>
+            </div>
+            <div class="cycle-body">
+              <span class="cycle-num" aria-hidden="true">Fase 0{i + 1}</span>
+              <h3 class="cycle-phase">{c.phase}</h3>
+              <p class="cycle-text">{c.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="cycle-note reveal">
+        <strong>Conclusión clínica de CLIBEL:</strong> 5–8 semanas entre sesiones es el espaciado óptimo para sincronizar con la fase anágena de la mayoría de los folículos. Cualquier protocolo más corto no funciona biológicamente.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ PRE / POST PROTOCOLOS ============================ -->
+  <section class="section svc-protocols">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Protocolos pre / post sesión"
+        title="Lo que <em>CLIBEL</em> indica antes y después."
+        variant="dark"
+        paragraphs={[
+          '<strong>CLIBEL</strong> entrega protocolo pre y post sesión por escrito. Seguirlo no es opcional: la eficacia del láser y tu seguridad clínica dependen directamente de cumplir estas indicaciones simples. CLIBEL prefiere reagendar antes que aplicar láser sobre piel mal preparada.',
+          'En <strong>CLIBEL</strong> tu técnica certificada revisa el cumplimiento antes de cada sesión. Si no preparaste la zona o estás bronceada, reagendamos sin penalización — es responsabilidad clínica, no comercial.',
+        ]}
+      />
+
+      <div class="protocol-grid">
+        <article class="protocol reveal">
+          <header class="protocol-head">
+            <span class="protocol-tag protocol-tag--pre">Antes</span>
+            <h3 class="protocol-title">Pre-sesión</h3>
+          </header>
+          <ol class="protocol-list">
+            {prepProtocol.pre.map((p, i) => (
+              <li>
+                <span class="protocol-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span>{p}</span>
+              </li>
+            ))}
+          </ol>
+        </article>
+
+        <article class="protocol reveal">
+          <header class="protocol-head">
+            <span class="protocol-tag protocol-tag--post">Después</span>
+            <h3 class="protocol-title">Post-sesión</h3>
+          </header>
+          <ol class="protocol-list">
+            {prepProtocol.post.map((p, i) => (
+              <li>
+                <span class="protocol-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span>{p}</span>
+              </li>
+            ))}
+          </ol>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ MITOS vs REALIDAD ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Mitos vs realidad"
+        title="Lo que <em>NO</em> es cierto sobre depilación láser."
+        paragraphs={[
+          '<strong>CLIBEL</strong> escucha estos mitos en cada valoración inicial. Algunos vienen de información obsoleta, otros de spas sin respaldo médico que aplicaron mal el tratamiento. Aquí están desmontados con evidencia clínica.',
+          'En <strong>CLIBEL</strong> creemos que un paciente bien informado toma mejores decisiones clínicas y obtiene mejores resultados. Por eso preferimos educarte antes que venderte.',
+        ]}
+      />
+
+      <div class="myths-list">
+        {myths.map((m, i) => (
+          <article class="myth reveal">
+            <div class="myth-left">
+              <span class="myth-tag myth-tag--false">Mito</span>
+              <h3 class="myth-q">"{m.myth}"</h3>
+            </div>
+            <div class="myth-right">
+              <span class="myth-tag myth-tag--true">Realidad CLIBEL</span>
+              <p class="myth-a">{m.truth}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FAQ + FORM ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Preguntas frecuentes y contacto"
+        title="Resuelve dudas o pide tu <em>prueba de parche</em>."
+        paragraphs={[
+          'Las dudas más frecuentes sobre depilación láser que recibe <strong>CLIBEL</strong> resueltas con criterio clínico. A la derecha puedes enviarnos zona y fototipo: el mensaje llega al WhatsApp clínico de CLIBEL con tu información pre-armada.',
+          'En <strong>CLIBEL</strong> la primera consulta incluye <strong>prueba de parche gratuita</strong> para validar tecnología y respuesta de tu piel antes de cualquier plan completo. Sin compromiso, sin presión comercial.',
+        ]}
+      />
+
+      <div class="faq-grid">
+        <div class="faq-col">
+          <span class="faq-col-label">Lo que más nos preguntan</span>
+          <div class="faq-list">
+            {faqs.map((f, i) => (
+              <details class="faq" open={i === 0}>
+                <summary class="faq-sum">
+                  <span class="faq-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="faq-q">{f.q}</span>
+                  <span class="faq-plus" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </span>
+                </summary>
+                <div class="faq-a">{f.a}</div>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        <aside class="faq-form-wrap">
+          <form id="laserWaForm" class="faq-form" novalidate>
+            <span class="faq-form-kicker">Prueba de parche sin costo</span>
+            <h3 class="faq-form-title">Reserva por <em>WhatsApp</em></h3>
+            <p class="faq-form-sub">
+              Llena el formulario y abre tu mensaje pre-armado en WhatsApp.
+              Respuesta de <strong>CLIBEL</strong> en menos de 2 horas en horario clínica.
+            </p>
+
+            <div class="faq-form-row">
+              <label for="lsr-nombre">Nombre completo <span aria-hidden="true">*</span></label>
+              <input id="lsr-nombre" name="nombre" type="text" required autocomplete="name" />
+            </div>
+
+            <div class="faq-form-grid-2">
+              <div class="faq-form-row">
+                <label for="lsr-tel">Teléfono <span aria-hidden="true">*</span></label>
+                <input id="lsr-tel" name="telefono" type="tel" required autocomplete="tel" placeholder="55 1234 5678" />
+              </div>
+              <div class="faq-form-row">
+                <label for="lsr-email">Email</label>
+                <input id="lsr-email" name="email" type="email" autocomplete="email" />
+              </div>
+            </div>
+
+            <div class="faq-form-grid-2">
+              <div class="faq-form-row">
+                <label for="lsr-zona">Zona principal <span aria-hidden="true">*</span></label>
+                <select id="lsr-zona" name="zona" required>
+                  <option value="">Selecciona</option>
+                  {zones.map((z) => (
+                    <option value={`${z.area} — ${z.zone}`}>{z.area} · {z.zone}</option>
+                  ))}
+                  <option value="Combinación de zonas">Combinación de varias zonas</option>
+                </select>
+              </div>
+              <div class="faq-form-row">
+                <label for="lsr-fototipo">Mi piel</label>
+                <select id="lsr-fototipo" name="fototipo">
+                  <option value="">Selecciona (opcional)</option>
+                  <option value="I — Muy clara, siempre se quema">I · Muy clara</option>
+                  <option value="II — Clara, se quema fácil">II · Clara</option>
+                  <option value="III — Intermedia, broncea progresivo">III · Intermedia</option>
+                  <option value="IV — Trigueña, broncea fácil">IV · Trigueña</option>
+                  <option value="V — Morena">V · Morena</option>
+                  <option value="VI — Negra">VI · Negra</option>
+                  <option value="No estoy segura">No estoy segura — quiero diagnóstico</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="faq-form-row">
+              <label for="lsr-msg">Cuéntanos qué buscas (opcional)</label>
+              <textarea id="lsr-msg" name="mensaje" rows="3" placeholder="Ej: nunca me he hecho láser, tengo vello hormonal, etc."></textarea>
+            </div>
+
+            <label class="faq-form-check">
+              <input type="checkbox" name="privacidad" required />
+              <span>Acepto el <a href="/aviso-de-privacidad">Aviso de Privacidad</a> y autorizo el contacto por WhatsApp.</span>
+            </label>
+
+            <button type="submit" class="faq-form-submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+              Enviar por WhatsApp
+            </button>
+
+            <p class="faq-form-foot">
+              Respuesta &lt; 2h · COFEPRIS · Prueba de parche sin costo
+            </p>
+          </form>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
+    (function () {
+      const form = document.getElementById('laserWaForm');
+      if (!form) return;
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const d = new FormData(form);
+        const g = (k) => (d.get(k) || '').toString().trim();
+        const nombre = g('nombre'), tel = g('telefono'), email = g('email');
+        const zona = g('zona'), fototipo = g('fototipo'), msg = g('mensaje');
+        const acepto = form.querySelector('[name="privacidad"]').checked;
+
+        if (!nombre || !tel || !zona || !acepto) {
+          form.classList.add('is-invalid');
+          return;
+        }
+        form.classList.remove('is-invalid');
+
+        const lines = [
+          'Hola CLIBEL, vengo desde la página de Depilación Láser.',
+          '',
+          'Nombre: ' + nombre,
+          'Teléfono: ' + tel,
+        ];
+        if (email)    lines.push('Email: ' + email);
+        if (zona)     lines.push('Zona principal: ' + zona);
+        if (fototipo) lines.push('Fototipo: ' + fototipo);
+        if (msg)      lines.push('', 'Comentario: ' + msg);
+
+        window.open(waBase + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
+      });
+    })();
+  </script>
+
+  <!-- ============================ RELATED L3 ============================ -->
+  <RelatedCategories current="laser" variant="cream" />
+
+  <!-- ============================ NAV PRE-FOOTER ============================ -->
+  <HeroNavBar
+    label="Zonas más solicitadas"
+    ariaLabel="Zonas láser populares"
+    variant="dark"
+    links={[
+      { label: 'Axilas',         href: wa },
+      { label: 'Bikini',         href: wa },
+      { label: 'Piernas',        href: wa },
+      { label: 'Rostro',         href: wa },
+      { label: 'Espalda',        href: wa },
+    ]}
+    cta={{ label: 'Reserva prueba de parche', href: '/contacto' }}
+  />
+</BaseLayout>
+
+<style>
+  /* ============= HERO (homologado L1/L2/L3) ============= */
+  .cat-hero {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, var(--color-brand-100) 100%);
+    isolation: isolate;
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(201,169,97,0.18), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.16), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .cat-hero-blob { position: absolute; border-radius: 999px; filter: blur(110px); pointer-events: none; z-index: 0; opacity: 0.5; }
+  .cat-hero-blob-1 { width: 36rem; height: 36rem; top: -10rem; right: -10rem; background: var(--color-brand-300); }
+  .cat-hero-blob-2 { width: 32rem; height: 32rem; bottom: -12rem; left: -8rem; background: var(--color-mauve-300); }
+  .cat-hero-grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(31,20,24,0.05) 1px, transparent 1px);
+    background-size: 3px 3px;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .cat-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem;
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    width: 100% !important;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .cat-hero-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: clamp(2rem, 4vw, 4.5rem);
+    }
+  }
+  .cat-hero-col {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .cat-hero-col--left { container-type: inline-size; container-name: catheroleft; }
+  .cat-hero-headline {
+    font-family: var(--font-display);
+    font-weight: 450;
+    letter-spacing: -0.022em;
+    line-height: 1.02;
+    color: var(--color-ink-900);
+    font-size: clamp(2.5rem, 10.5cqi, 6.5rem);
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    width: 100%;
+    margin: 0.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05em;
+  }
+  .cat-hero-headline-line { display: block; width: 100%; }
+  .cat-hero-headline em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+  }
+  @media (max-width: 899px) { .cat-hero-headline { font-size: clamp(2.5rem, 9.5vw, 4.5rem); } }
+  .cat-hero-lede {
+    font-size: clamp(1rem, 1.1vw, 1.18rem);
+    line-height: 1.65;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .cat-hero-lede strong { color: var(--color-ink-900); font-weight: 600; }
+  .cat-hero-trust {
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(201, 169, 97, 0.25);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem;
+  }
+  .cat-hero-trust-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .cat-hero-trust-list {
+    display: inline-flex; flex-wrap: wrap; gap: 0.55rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--color-ink-700);
+  }
+  .cat-hero-trust-list span[aria-hidden] { color: var(--color-brand-400); }
+  .cat-hero-col--right { gap: 1.25rem; }
+  @media (min-width: 900px) {
+    .cat-hero-col--right {
+      padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+      border-left: 1px solid rgba(201, 169, 97, 0.25);
+    }
+  }
+  .cat-hero-kicker {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--color-brand-400);
+    align-self: flex-start;
+  }
+  .cat-hero-paragraph {
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.75;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .cat-hero-paragraph strong {
+    color: var(--color-ink-900);
+    font-weight: 600;
+  }
+  @media (max-width: 899px) { .cat-hero-col { gap: 1.25rem; } }
+
+  /* ============= Catálogo grid ============= */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 640px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .cat-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+
+  /* ============= NEW: Zones table ============= */
+  .svc-zones { background: white; }
+  .zones-table {
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow:
+      0 1px 2px rgba(31, 20, 24, 0.03),
+      0 18px 36px -22px rgba(31, 20, 24, 0.16);
+  }
+  .zones-row {
+    display: grid;
+    grid-template-columns: 2.2fr 0.7fr 0.7fr 1.4fr;
+    border-top: 1px solid rgba(201, 169, 97, 0.2);
+    transition: background 0.3s ease !important;
+  }
+  .zones-row:first-child { border-top: 0; }
+  .zones-row:hover:not(.zones-row--head) { background: var(--color-brand-50); }
+  .zones-row--head {
+    background: var(--color-ink-900) !important;
+    color: white;
+  }
+  .zones-cell {
+    padding: 1rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.9rem;
+    color: var(--color-ink-700);
+    line-height: 1.4;
+  }
+  .zones-row--head .zones-cell {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    padding: 0.95rem 1.1rem;
+  }
+  .zones-cell--zone { gap: 0.95rem; }
+  .zones-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--color-brand-500);
+    line-height: 1;
+    opacity: 0.7;
+    min-width: 22px;
+  }
+  .zones-zone-block { display: flex; flex-direction: column; gap: 0.1rem; line-height: 1.2; }
+  .zones-area {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .zones-zone {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.02rem;
+    color: var(--color-ink-900);
+    letter-spacing: -0.005em;
+  }
+  .zones-mobile-label { display: none; }
+  @media (max-width: 768px) {
+    .zones-row { grid-template-columns: 1fr; }
+    .zones-row--head { display: none; }
+    .zones-cell { padding: 0.6rem 1.1rem; }
+    .zones-cell--zone { padding-top: 1.1rem; border-top: 1px dashed rgba(201, 169, 97, 0.3); }
+    .zones-row:first-child .zones-cell--zone { border-top: 0; }
+    .zones-cell:last-child { padding-bottom: 1.1rem; }
+    .zones-mobile-label {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-brand-500);
+      min-width: 76px;
+    }
+  }
+  .zones-foot {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.92rem;
+    color: var(--color-ink-700);
+  }
+  .zones-foot a {
+    color: var(--color-mauve-500);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-left: 0.3rem;
+  }
+  .zones-foot a:hover { color: var(--color-mauve-700); }
+
+  /* ============= NEW: Tecnologías láser cards ============= */
+  .lasers-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .lasers-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  }
+  .laser {
+    position: relative;
+    padding: clamp(1.5rem, 2vw, 1.9rem);
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1), box-shadow 0.5s ease, border-color 0.4s ease !important;
+  }
+  .laser::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--accent-color, var(--color-brand-400));
+    transition: height 0.4s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  .laser:hover {
+    transform: translateY(-6px);
+    border-color: rgba(139, 90, 107, 0.45);
+    box-shadow: 0 4px 8px rgba(31,20,24,0.05), 0 32px 56px -22px rgba(31,20,24,0.22);
+  }
+  .laser:hover::before { height: 6px; }
+  .laser--gold  { --accent-color: var(--color-brand-500); }
+  .laser--mauve { --accent-color: var(--color-mauve-500); }
+  .laser--rose  { --accent-color: var(--color-mauve-300); }
+
+  .laser-head { display: flex; align-items: flex-start; gap: 1rem; }
+  .laser-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    color: var(--accent-color, var(--color-brand-500));
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+  .laser-kicker {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    opacity: 0.85;
+    margin-bottom: 0.2rem;
+  }
+  .laser-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 1.8vw, 1.75rem);
+    color: var(--color-ink-900);
+    margin: 0 0 0.15rem;
+    line-height: 1.1;
+    letter-spacing: -0.018em;
+  }
+  .laser-wave {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--accent-color, var(--color-brand-500));
+  }
+  .laser-spec {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding-block: 0.85rem;
+    border-block: 1px dashed rgba(201, 169, 97, 0.32);
+  }
+  @media (min-width: 520px) { .laser-spec { grid-template-columns: 1fr 1.4fr; gap: 1rem; } }
+  .laser-spec > div { display: flex; flex-direction: column; gap: 0.2rem; }
+  .laser-spec-label {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .laser-spec-value {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.93rem;
+    color: var(--color-ink-900);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .laser-detail {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--color-ink-700);
+  }
+
+  /* ============= NEW: Fototipos guide ============= */
+  .fototipos-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 640px) { .fototipos-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .fototipos-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
+  .fototipo {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    border-radius: 1rem;
+    transition: all 0.4s ease !important;
+  }
+  .fototipo:hover {
+    border-color: var(--color-mauve-500);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -22px rgba(31, 20, 24, 0.18);
+  }
+  .fototipo-code {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--color-brand-300), var(--color-mauve-300));
+    color: white;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.1rem;
+    letter-spacing: -0.005em;
+  }
+  .fototipo-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+  .fototipo-label {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+  }
+  .fototipo-detail {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--color-ink-500);
+    margin: 0 0 0.3rem;
+  }
+  .fototipo-laser {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 0.35rem 0.6rem;
+    border-radius: 0.45rem;
+    background: var(--color-brand-50);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    align-self: flex-start;
+  }
+  .fototipo-laser-kicker {
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .fototipo-laser strong {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--color-ink-900);
+    letter-spacing: -0.005em;
+  }
+
+  /* ============= NEW: Cycle de crecimiento ============= */
+  .cycle-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (min-width: 768px) { .cycle-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; } }
+  .cycle {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    padding: 1.4rem;
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-brand-50) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    border-radius: 1.1rem;
+    align-items: center;
+    transition: all 0.4s ease !important;
+  }
+  .cycle:hover {
+    border-color: var(--color-mauve-500);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -22px rgba(31, 20, 24, 0.18);
+  }
+  .cycle-percent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 0.95rem;
+    background: var(--color-ink-900);
+    color: white;
+    border-radius: 0.85rem;
+    min-width: 78px;
+  }
+  .cycle-percent-value {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--color-brand-400);
+    letter-spacing: -0.01em;
+  }
+  .cycle-percent-label {
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(242,235,223,0.65);
+    margin-top: 0.4rem;
+  }
+  .cycle-body { display: flex; flex-direction: column; gap: 0.35rem; }
+  .cycle-num {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .cycle-phase {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+  .cycle-text {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .cycle-note {
+    padding: 1.1rem 1.4rem;
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    border-radius: 0.85rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    border-left: 3px solid var(--color-brand-400);
+  }
+  .cycle-note strong { color: white; font-weight: 600; }
+
+  /* ============= NEW: Pre/Post protocolos (dark) ============= */
+  .svc-protocols {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    position: relative;
+    isolation: isolate;
+  }
+  .protocol-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 900px) {
+    .protocol-grid { grid-template-columns: 1fr 1fr; gap: 1.75rem; }
+  }
+  .protocol {
+    padding: clamp(1.5rem, 2vw, 2rem);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1.25rem;
+    transition: all 0.4s ease !important;
+  }
+  .protocol:hover {
+    background: rgba(255,255,255,0.055);
+    border-color: rgba(201, 169, 97, 0.45);
+    transform: translateY(-4px);
+  }
+  .protocol-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+  .protocol-tag {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+  }
+  .protocol-tag--pre {
+    background: rgba(201, 169, 97, 0.15);
+    color: var(--color-brand-400);
+    border: 1px solid rgba(201, 169, 97, 0.4);
+  }
+  .protocol-tag--post {
+    background: rgba(139, 90, 107, 0.2);
+    color: var(--color-mauve-300);
+    border: 1px solid rgba(188, 142, 156, 0.45);
+  }
+  .protocol-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 1.8vw, 1.75rem);
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .protocol-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .protocol-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding-block: 0.65rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.18);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: rgba(242, 235, 223, 0.85);
+  }
+  .protocol-list li:first-child { border-top: 0; padding-top: 0; }
+  .protocol-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--color-brand-400);
+    line-height: 1.45;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    min-width: 24px;
+  }
+
+  /* ============= NEW: Mitos vs realidad ============= */
+  .myths-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .myth {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    border-radius: 1.1rem;
+    overflow: hidden;
+    transition: all 0.4s ease !important;
+  }
+  .myth:hover {
+    border-color: var(--color-mauve-500);
+    box-shadow: 0 18px 36px -22px rgba(31, 20, 24, 0.18);
+  }
+  @media (min-width: 768px) {
+    .myth { grid-template-columns: 1fr 1.4fr; }
+  }
+  .myth-left {
+    padding: 1.4rem 1.4rem 1.4rem 1.4rem;
+    background: var(--color-brand-50);
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    border-bottom: 1px dashed rgba(201, 169, 97, 0.3);
+  }
+  .myth-right {
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  @media (min-width: 768px) {
+    .myth-left { border-bottom: 0; border-right: 1px dashed rgba(201, 169, 97, 0.3); }
+  }
+  .myth-tag {
+    display: inline-block;
+    align-self: flex-start;
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+  }
+  .myth-tag--false {
+    background: rgba(198, 43, 62, 0.1);
+    color: #c62b3e;
+    border: 1px solid rgba(198, 43, 62, 0.3);
+  }
+  .myth-tag--true {
+    background: rgba(46, 125, 50, 0.1);
+    color: #2e7d32;
+    border: 1px solid rgba(46, 125, 50, 0.3);
+  }
+  .myth-q {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.05rem, 1.25vw, 1.2rem);
+    color: var(--color-ink-700);
+    margin: 0;
+    line-height: 1.35;
+  }
+  .myth-a {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-ink-800);
+    margin: 0;
+  }
+
+  /* ============= FAQ + Form (mismo patrón) ============= */
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 3vw, 2.75rem);
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .faq-grid { grid-template-columns: 1.15fr 0.85fr; gap: clamp(2.5rem, 4vw, 3.5rem); }
+  }
+  .faq-col-label {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-bottom: 1.1rem;
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .faq {
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.22);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: border-color 0.3s ease, background 0.3s ease !important;
+  }
+  .faq[open] { border-color: var(--color-mauve-500); }
+  .faq-sum {
+    list-style: none;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+  }
+  .faq-sum::-webkit-details-marker { display: none; }
+  .faq-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    opacity: 0.8;
+    min-width: 24px;
+  }
+  .faq-q {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1rem, 1.1vw, 1.12rem);
+    color: var(--color-ink-900);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .faq-plus {
+    width: 32px; height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--color-brand-100);
+    color: var(--color-mauve-500);
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1), background 0.3s ease, color 0.3s ease !important;
+  }
+  .faq[open] .faq-plus {
+    transform: rotate(45deg);
+    background: var(--color-mauve-500);
+    color: white;
+  }
+  .faq-a {
+    padding: 0 1.25rem 1.25rem clamp(3.5rem, 6vw, 4rem);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--color-ink-700);
+  }
+
+  /* Form WhatsApp */
+  .faq-form-wrap { position: relative; }
+  @media (min-width: 1024px) { .faq-form-wrap { position: sticky; top: clamp(6rem, 10vh, 7.5rem); } }
+  .faq-form {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-brand-50) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.25rem;
+    padding: clamp(1.5rem, 2vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    box-shadow:
+      0 1px 2px rgba(31, 20, 24, 0.03),
+      0 24px 56px -28px rgba(31, 20, 24, 0.18);
+  }
+  .faq-form-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .faq-form-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.45rem, 2vw, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink-900);
+    margin: 0;
+  }
+  .faq-form-title em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+  }
+  .faq-form-sub {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-ink-500);
+    margin: 0 0 0.5rem;
+  }
+  .faq-form-sub strong { color: var(--color-ink-900); font-weight: 600; }
+  .faq-form-row { display: flex; flex-direction: column; gap: 0.32rem; }
+  .faq-form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  @media (min-width: 520px) {
+    .faq-form-grid-2 { grid-template-columns: 1fr 1fr; }
+  }
+  .faq-form-row label {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-ink-700);
+    letter-spacing: 0.02em;
+  }
+  .faq-form-row label span[aria-hidden] { color: var(--color-mauve-500); margin-left: 2px; }
+  .faq-form input,
+  .faq-form select,
+  .faq-form textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    color: var(--color-ink-900);
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    border-radius: 0.65rem;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+    appearance: none;
+    line-height: 1.4;
+  }
+  .faq-form select {
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--color-mauve-500) 50%),
+      linear-gradient(135deg, var(--color-mauve-500) 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 13px) calc(50% - 2px);
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2rem;
+    cursor: pointer;
+  }
+  .faq-form textarea { resize: vertical; min-height: 80px; }
+  .faq-form input:focus,
+  .faq-form select:focus,
+  .faq-form textarea:focus {
+    border-color: var(--color-mauve-500);
+    box-shadow: 0 0 0 3px rgba(139, 90, 107, 0.12);
+    background: var(--color-brand-50);
+  }
+  .faq-form.is-invalid input:required:invalid,
+  .faq-form.is-invalid select:required:invalid { border-color: #c62b3e; }
+  .faq-form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--color-ink-500);
+    cursor: pointer;
+  }
+  .faq-form-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    accent-color: var(--color-mauve-500);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .faq-form-check a { color: var(--color-mauve-500); text-decoration: underline; text-underline-offset: 2px; }
+  .faq-form-check a:hover { color: var(--color-mauve-700); }
+  .faq-form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.95rem 1.25rem;
+    margin-top: 0.5rem;
+    background: #25D366;
+    color: white;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow:
+      0 10px 24px -10px rgba(37, 211, 102, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+  }
+  .faq-form-submit:hover {
+    background: #1FB855;
+    transform: translateY(-2px);
+    box-shadow:
+      0 16px 32px -10px rgba(37, 211, 102, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  .faq-form-foot {
+    margin: 0;
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-500);
+    opacity: 0.85;
+  }
+  @media (max-width: 640px) { .faq-form { padding: 1.25rem; } }
+</style>

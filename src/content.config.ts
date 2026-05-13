@@ -18,6 +18,35 @@ const servicios = defineCollection({
     featured: z.boolean().default(false),
     order: z.number().default(99),
     publishedAt: z.coerce.date().default(() => new Date()),
+
+    // === Campos opcionales para L4 template ===
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
+    /** Lede largo del hero (override del description) */
+    heroLede: z.string().optional(),
+    /** Sub-tagline del hero, breve */
+    heroTagline: z.string().optional(),
+    /** Pasos del protocolo clínico del servicio */
+    protocolSteps: z.array(z.object({
+      n: z.string(),
+      title: z.string(),
+      text: z.string(),
+    })).default([]),
+    /** Timeline de resultados esperados */
+    timeline: z.array(z.object({
+      when: z.string(),
+      label: z.string(),
+      text: z.string(),
+    })).default([]),
+    /** Indicaciones pre-sesión */
+    preCare: z.array(z.string()).default([]),
+    /** Indicaciones post-sesión */
+    postCare: z.array(z.string()).default([]),
+    /** FAQs específicas del servicio */
+    faqs: z.array(z.object({
+      q: z.string(),
+      a: z.string(),
+    })).default([]),
   }),
 });
 

@@ -1,0 +1,1643 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ServiceCard from '../../../components/ServiceCard.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import HeroNavBar from '../../../components/HeroNavBar.astro';
+import RelatedCategories from '../../../components/RelatedCategories.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES, SITE, CONTACT, catHref } from '../../../consts';
+
+const cat = CATEGORIES.facial;
+
+const all = await getCollection('servicios');
+const items = all
+  .filter((s) => s.data.category === 'facial')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, me gustaría agendar una cita en CLIBEL para tratamientos faciales.')}`;
+
+// Schemas
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITE.url },
+    { '@type': 'ListItem', position: 2, name: 'Servicios', item: `${SITE.url}/servicios` },
+    { '@type': 'ListItem', position: 3, name: 'Tratamientos Faciales', item: `${SITE.url}/servicios/tratamientos-faciales` },
+  ],
+};
+const catalogSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalSpecialty',
+  name: 'Tratamientos Faciales — CLIBEL',
+  description: 'Limpieza facial profunda, rejuvenecimiento, peelings químicos y tratamiento antiacné con respaldo médico en CDMX.',
+  url: `${SITE.url}/servicios/tratamientos-faciales`,
+  provider: { '@id': `${SITE.url}/#clinic` },
+  relevantSpecialty: 'Dermatology',
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Catálogo de tratamientos faciales CLIBEL',
+    itemListElement: items.map((s) => ({
+      '@type': 'MedicalProcedure',
+      name: s.data.title,
+      description: s.data.description,
+      url: `${SITE.url}/servicios/${s.id}`,
+    })),
+  },
+};
+
+// === Diagnóstico dermatológico previo (NUEVO — homologa con otros L3) ===
+const diagnosis = [
+  {
+    n: '01',
+    title: 'Análisis cutáneo profesional',
+    text: 'CLIBEL evalúa con diagnóstico digital tu tipo de piel, fototipo, hidratación, sensibilidad, daño solar y poros. Sin este paso ningún protocolo facial se ajusta a tu realidad clínica.',
+  },
+  {
+    n: '02',
+    title: 'Historia clínica completa',
+    text: 'Antecedentes alérgicos, hormonales, medicamentos fotosensibles, dermatitis previas y embarazo. CLIBEL pregunta antes de aplicar — la seguridad cutánea empieza en la conversación.',
+  },
+  {
+    n: '03',
+    title: 'Identificación de motivos',
+    text: 'Acné, manchas, rosácea, líneas, opacidad, deshidratación — cada uno requiere protocolo distinto. CLIBEL prioriza el motivo principal y aborda secundarios sin sobrecargar la piel.',
+  },
+  {
+    n: '04',
+    title: 'Plan documentado por escrito',
+    text: 'Diagnóstico, plan de sesiones, rutina domiciliaria y expectativas realistas. CLIBEL entrega todo por escrito antes de empezar — para que decidas con información completa.',
+  },
+];
+
+// === Casos clínicos / planes faciales por objetivo (NUEVO) ===
+const cases = [
+  {
+    name: 'Plan piel grasa con acné',
+    duration: '4–6 sesiones · 3 meses',
+    profile: 'Pieles 18–35 años con brotes activos',
+    combo: ['Limpiezas profundas mensuales', 'Peeling salicílico fraccionado', 'Rutina domiciliaria con retinoides supervisados'],
+    target: 'Controlar brotes, regular sebo y prevenir cicatrices post-acné. CLIBEL combina técnica clínica + cosmecéuticos compatibles para resultado sostenido.',
+    accent: 'gold',
+  },
+  {
+    name: 'Plan antimanchas y luminosidad',
+    duration: '6 sesiones · 4 meses',
+    profile: 'Pieles 30+ con melasma o fotoenvejecimiento',
+    combo: ['Peelings despigmentantes progresivos', 'Hidratación clínica intermedia', 'Protección solar y rutina domiciliaria estricta'],
+    target: 'Uniformar tono cutáneo, atenuar manchas y prevenir recidiva. CLIBEL trabaja con paciencia clínica — la pigmentación no responde al apuro.',
+    accent: 'mauve',
+  },
+  {
+    name: 'Plan rejuvenecimiento integral',
+    duration: '5 sesiones · 3 meses',
+    profile: 'Pieles 35+ con primeras líneas',
+    combo: ['Rejuvenecimiento facial profesional', 'Microneedling con activos', 'Radiofrecuencia facial reafirmante'],
+    target: 'Mejorar textura, firmeza y luminosidad. CLIBEL diseña progresión sin invasividad y con resultados verificables en fotografía clínica.',
+    accent: 'rose',
+  },
+  {
+    name: 'Plan mantenimiento mensual',
+    duration: 'Indefinido · 1 sesión / mes',
+    profile: 'Pacientes con plan consolidado',
+    combo: ['Limpieza facial profunda mensual', 'Hidratación enzimática', 'Revisión y ajuste de rutina'],
+    target: 'Sostener calidad cutánea como rutina clínica ligera. CLIBEL lo recomienda tras completar plan intensivo para mantener resultados.',
+    accent: 'gold',
+  },
+];
+
+// === Pre / Post sesión protocolos (NUEVO) ===
+const protocols = {
+  pre: [
+    'Suspender retinoides y ácidos exfoliantes 5–7 días antes',
+    'Sin exposición solar intensa 48 h previas',
+    'Asistir sin maquillaje denso ni cremas oclusivas',
+    'Hidratación tópica diaria los días previos',
+    'Avisar a CLIBEL si tomas medicamentos fotosensibles o tienes herpes recurrente',
+  ],
+  post: [
+    'SPF 50+ obligatorio diariamente durante todo el plan',
+    'Limpiadores suaves sin sulfatos las primeras 48 h',
+    'Sin sauna, vapor ni piscina 24 h',
+    'No exfoliar mecánicamente 5–7 días según protocolo',
+    'Reportar a CLIBEL cualquier reacción inesperada por WhatsApp clínico',
+  ],
+};
+
+// === Qué resolvemos en faciales ===
+const concerns = [
+  {
+    title: 'Acné y brotes hormonales',
+    text: 'CLIBEL diseña protocolos antiacné combinando peelings, fotomedicina y rutina domiciliaria personalizada para controlar brotes y prevenir cicatrices.',
+  },
+  {
+    title: 'Manchas e hiperpigmentación',
+    text: 'En CLIBEL atendemos melasma, fotoenvejecimiento e hiperpigmentación posinflamatoria con peelings progresivos, despigmentantes médicos y protección solar clínica.',
+  },
+  {
+    title: 'Líneas de expresión y arrugas',
+    text: 'CLIBEL emplea radiofrecuencia facial, peelings de renovación, microneedling y bioestimuladores para suavizar líneas finas sin congelar la expresión.',
+  },
+  {
+    title: 'Poros dilatados y exceso de grasa',
+    text: 'Protocolos de limpieza profunda y peelings ácidos calibrados por CLIBEL para regular sebo, depurar poros y mejorar la textura visible.',
+  },
+  {
+    title: 'Piel apagada y deshidratada',
+    text: 'CLIBEL aplica hidratación profunda, exfoliación enzimática y vitaminas tópicas para devolver luminosidad sin agredir la barrera cutánea.',
+  },
+  {
+    title: 'Rosácea y sensibilidad cutánea',
+    text: 'En CLIBEL trabajamos pieles reactivas con protocolos suaves, calmantes profesionales y diagnóstico dermatológico previo para evitar irritación.',
+  },
+];
+
+// === Tecnología y productos usados en faciales ===
+const stack = [
+  { kicker: 'Equipos clínicos', value: 'Radiofrecuencia facial', detail: 'Estimulación de colágeno y reafirmación' },
+  { kicker: 'Equipos clínicos', value: 'Microneedling profesional', detail: 'Renovación cutánea controlada' },
+  { kicker: 'Equipos clínicos', value: 'Diagnóstico digital de piel', detail: 'Evaluación cuantitativa antes de cada plan' },
+  { kicker: 'Productos', value: 'Peelings médicos', detail: 'AHA, BHA, retinol controlado por concentración' },
+  { kicker: 'Productos', value: 'Cosmecéuticos profesionales', detail: 'Marcas dermo-cosméticas con registro COFEPRIS' },
+  { kicker: 'Productos', value: 'Despigmentantes médicos', detail: 'Aplicación supervisada en consulta' },
+];
+
+// === Aftercare ===
+const aftercare = [
+  {
+    n: '01',
+    title: 'Protección solar diaria',
+    text: 'CLIBEL te entrega protocolo escrito: SPF 50+ aplicado cada mañana es la condición no negociable de cualquier tratamiento facial.',
+  },
+  {
+    n: '02',
+    title: 'Hidratación clínica',
+    text: 'Rutina de hidratación y reparación de barrera diseñada por CLIBEL según tu tipo de piel y la fase del tratamiento.',
+  },
+  {
+    n: '03',
+    title: 'Suspensiones y precauciones',
+    text: 'CLIBEL indica por escrito qué activos suspender (retinoides, ácidos, exfoliantes) y por cuánto tiempo según el procedimiento.',
+  },
+  {
+    n: '04',
+    title: 'Seguimiento programado',
+    text: 'CLIBEL agenda revisiones a 7, 30 y 90 días con fotografía clínica comparativa para validar resultados y ajustar el plan.',
+  },
+];
+
+// === FAQs específicas faciales ===
+const faqs = [
+  { q: '¿Con qué frecuencia debo hacerme una limpieza facial profunda?', a: 'En CLIBEL recomendamos una sesión mensual de mantenimiento para pieles sanas y cada 15-21 días si tu piel es grasa, mixta o tiene tendencia comedónica. La frecuencia exacta sale de tu valoración inicial.' },
+  { q: '¿Los peelings químicos descaman mucho?', a: 'Depende de la profundidad. Los peelings superficiales que aplicamos en CLIBEL provocan descamación leve y discreta. Para peelings medios entregamos protocolo de recuperación con cuidados específicos y línea telefónica directa con tu médico.' },
+  { q: '¿En cuántas sesiones desaparecen mis manchas?', a: 'El melasma y la hiperpigmentación responden gradualmente. CLIBEL trabaja en planes de 4-6 sesiones espaciadas, con activos domiciliarios y protección solar estricta. Los resultados se documentan con fotografía clínica.' },
+  { q: '¿Puedo combinar varios tratamientos faciales?', a: 'Sí, y normalmente es lo más eficaz. CLIBEL diseña planes combinados — limpieza + peeling + radiofrecuencia — respetando tiempos clínicos y la respuesta de tu piel sesión a sesión.' },
+  { q: '¿Los tratamientos faciales son seguros durante el embarazo?', a: 'Muchos sí (limpieza facial, hidratación, drenaje), otros no (peelings medios, retinoides, microneedling profundo). En CLIBEL valoramos cada caso por separado y adaptamos un plan seguro durante embarazo y lactancia.' },
+];
+---
+
+<BaseLayout
+  title={`${cat.label} en CDMX | CLIBEL`}
+  description={`${cat.label} en CLIBEL: limpieza facial profunda, rejuvenecimiento, peelings químicos y antiacné con respaldo médico, productos COFEPRIS y diagnóstico previo gratuito en CDMX.`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(catalogSchema)} />
+
+  <!-- ============================ BREADCRUMB ============================ -->
+  <Breadcrumb
+    kicker="Categoría 01 · Faciales"
+    items={[
+      { label: 'Servicios', href: '/servicios' },
+      { label: 'Tratamientos Faciales' },
+    ]}
+  />
+
+  <!-- ============================ HERO ============================ -->
+  <section class="cat-hero">
+    <div aria-hidden="true" class="cat-hero-bg"></div>
+    <div aria-hidden="true" class="cat-hero-blob cat-hero-blob-1"></div>
+    <div aria-hidden="true" class="cat-hero-blob cat-hero-blob-2"></div>
+    <div aria-hidden="true" class="cat-hero-grain"></div>
+
+    <div class="container-x relative">
+      <div class="cat-hero-grid">
+        <!-- LEFT — brand statement -->
+        <div class="cat-hero-col cat-hero-col--left fade-up">
+          <span class="eyebrow-tag">
+            <span class="dot" aria-hidden="true"></span>
+            Categoría 01 · {cat.badgeLabel} · {items.length} tratamientos
+          </span>
+
+          <h1 class="cat-hero-headline">
+            <span class="cat-hero-headline-line">Tratamientos</span>
+            <span class="cat-hero-headline-line"><em>faciales</em> en CDMX.</span>
+          </h1>
+
+          <p class="cat-hero-lede">
+            Renovación, luminosidad y salud de la piel con
+            <strong>respaldo médico real</strong>. CLIBEL atiende cada
+            rostro con diagnóstico previo, productos certificados y planes
+            documentados sesión a sesión.
+          </p>
+
+          <div class="cat-hero-trust">
+            <span class="cat-hero-trust-label">Trabajamos con</span>
+            <div class="cat-hero-trust-list">
+              <span>Allergan</span><span aria-hidden="true">·</span>
+              <span>Galderma</span><span aria-hidden="true">·</span>
+              <span>Merz</span><span aria-hidden="true">·</span>
+              <span>SkinCeuticals</span><span aria-hidden="true">·</span>
+              <span>Mesoestetic</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT — 2 párrafos explicativos CLIBEL -->
+        <div class="cat-hero-col cat-hero-col--right fade-up-delay-2">
+          <span class="cat-hero-kicker">Qué hace CLIBEL en faciales</span>
+
+          <p class="cat-hero-paragraph">
+            <strong>CLIBEL</strong> es una clínica de belleza con criterio
+            médico especializada en cuidado facial profesional en Ciudad
+            de México. Diseñamos cada protocolo facial tras una valoración
+            dermatológica que evalúa fototipo, sensibilidad, antecedentes y
+            objetivos, combinando técnicas clínicas con cosmecéuticos
+            certificados por COFEPRIS y supervisión médica directa.
+          </p>
+
+          <p class="cat-hero-paragraph">
+            En esta categoría <strong>CLIBEL</strong> reúne sus protocolos
+            faciales más solicitados: <strong>limpieza facial profunda</strong>,
+            <strong>rejuvenecimiento</strong>, <strong>peelings químicos</strong>
+            controlados y <strong>tratamiento antiacné</strong>. Cada sesión
+            queda documentada en expediente clínico digital con producto,
+            lote, dosis, técnica y respuesta cutánea — para que el plan se
+            afine sesión a sesión hasta el resultado.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ NAV TOP — otras categorías ============================ -->
+  <HeroNavBar
+    label="Otras categorías"
+    ariaLabel="Otras categorías de tratamientos CLIBEL"
+    variant="cream"
+    links={[
+      { label: 'Corporales',         href: catHref('corporal') },
+      { label: 'Depilación láser',   href: catHref('laser') },
+      { label: 'Medicina estética',  href: catHref('medicina-estetica') },
+      { label: 'Capilares',          href: catHref('capilar') },
+    ]}
+    cta={{ label: 'Volver al catálogo', href: '/servicios' }}
+  />
+
+  <!-- ============================ CATÁLOGO FACIAL ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker={`Catálogo · ${items.length} tratamientos`}
+        title="Tratamientos faciales en <em>CLIBEL</em>."
+        paragraphs={[
+          '<strong>CLIBEL</strong> realiza tratamientos faciales con grado clínico: cada protocolo se diseña a medida tras valoración médica, con productos certificados por COFEPRIS y técnicos capacitados bajo supervisión profesional. CLIBEL aborda piel grasa, mixta, sensible, con manchas, acné, signos de edad o todo lo anterior.',
+          'Cada tratamiento facial en <strong>CLIBEL</strong> documenta producto, lote, parámetros y respuesta cutánea en tu expediente digital. Esto permite a CLIBEL ajustar el plan sesión a sesión y validar resultados con fotografía clínica comparativa.',
+        ]}
+        cta={{ label: 'Solicitar valoración', href: '/contacto', variant: 'primary' }}
+      />
+
+      <div class="cat-grid">
+        {items.map((s) => (
+          <ServiceCard
+            href={`/servicios/${s.id}`}
+            title={s.data.title}
+            description={s.data.description}
+            category={s.data.category}
+            duration={s.data.duration}
+            sessions={s.data.sessions}
+            icon={s.data.icon}
+            featured={s.data.featured}
+            benefits={s.data.benefits}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CONCERNS ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Qué resolvemos"
+        title="Problemas faciales que atendemos en <em>CLIBEL</em>."
+        paragraphs={[
+          '<strong>CLIBEL</strong> trata las preocupaciones dermatológicas más comunes en piel mexicana: acné hormonal, melasma y manchas, signos de edad, poros dilatados, opacidad cutánea y rosácea. Cada motivo de consulta llega con su propio protocolo clínico — no aplicamos plantillas.',
+          'En <strong>CLIBEL</strong> la valoración define el plan: combinamos limpieza, peelings, radiofrecuencia, microneedling y rutina domiciliaria según lo que tu piel realmente necesita. Sin sobre-tratar, sin recetar lo que no aporta resultado.',
+        ]}
+      />
+
+      <div class="concern-grid">
+        {concerns.map((c, i) => (
+          <article class="concern reveal">
+            <span class="concern-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="concern-title">{c.title}</h3>
+            <p class="concern-text">{c.text}</p>
+            <span class="concern-line" aria-hidden="true"></span>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ TECNOLOGÍA Y PRODUCTOS ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Tecnología y productos"
+        title="Lo que <em>CLIBEL</em> usa en cada sesión facial."
+        paragraphs={[
+          '<strong>CLIBEL</strong> opera con plataformas clínicas de marcas certificadas y productos con registro sanitario COFEPRIS visible. Cada paciente puede consultar lote, fecha y trazabilidad de los insumos aplicados en su sesión — la transparencia es parte del protocolo.',
+          'En <strong>CLIBEL</strong> no improvisamos parámetros ni concentraciones: cada equipo se calibra antes de la sesión y cada producto se documenta en expediente. Esto convierte a CLIBEL en una alternativa segura frente a spas y salas de belleza sin respaldo médico.',
+        ]}
+      />
+
+      <div class="stack-grid">
+        {stack.map((item, i) => (
+          <article class="stack-item reveal">
+            <span class="stack-kicker">{item.kicker}</span>
+            <h3 class="stack-value">{item.value}</h3>
+            <p class="stack-detail">{item.detail}</p>
+            <span class="stack-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ DIAGNÓSTICO DERMATOLÓGICO ============================ -->
+  <section class="section svc-diag">
+    <div aria-hidden="true" class="svc-diag-bg"></div>
+
+    <div class="container-x relative">
+      <SectionHeader
+        kicker="Diagnóstico dermatológico"
+        title="4 pasos antes de tocar tu <em>piel</em>."
+        variant="dark"
+        paragraphs={[
+          'La diferencia entre <strong>CLIBEL</strong> y una clínica facial promedio empieza ANTES del tratamiento. Aplicar peeling o limpieza sin diagnóstico es como recetar antibiótico sin saber qué bacteria. CLIBEL no improvisa: primero diagnostica, después trata.',
+          'Este proceso de 4 pasos diagnósticos es <strong>obligatorio</strong> en CLIBEL para cualquier plan facial. Si una clínica te ofrece tratamiento sin pasar por esto, el resultado será mediocre y posiblemente contraindicado para tu tipo de piel.',
+        ]}
+      />
+
+      <ol class="diag-list">
+        {diagnosis.map((d) => (
+          <li class="diag-item reveal">
+            <span class="diag-num" aria-hidden="true">{d.n}</span>
+            <div class="diag-body">
+              <h3 class="diag-title">{d.title}</h3>
+              <p class="diag-text">{d.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ CASOS CLÍNICOS / PLANES ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Planes por objetivo"
+        title="Casos clínicos que aborda <em>CLIBEL</em>."
+        paragraphs={[
+          '<strong>CLIBEL</strong> diseña planes faciales según objetivo clínico específico: control de acné, atenuación de manchas, rejuvenecimiento progresivo o mantenimiento de piel sana. Cada plan combina técnicas, frecuencia y seguimiento ajustado al perfil del paciente.',
+          'Estos planes son <strong>orientativos</strong>. CLIBEL siempre personaliza tras diagnóstico dermatológico real — si tu caso no encaja en ninguno, diseñamos uno a medida basado en evidencia clínica y respuesta de tu piel.',
+        ]}
+      />
+
+      <div class="cases-grid">
+        {cases.map((c, i) => (
+          <article class={`case case--${c.accent} reveal`}>
+            <header class="case-head">
+              <span class="case-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <span class="case-kicker">Plan facial</span>
+                <h3 class="case-name">{c.name}</h3>
+                <span class="case-duration">{c.duration}</span>
+              </div>
+            </header>
+
+            <div class="case-profile">
+              <span class="case-profile-label">Perfil</span>
+              <span class="case-profile-value">{c.profile}</span>
+            </div>
+
+            <div class="case-combo">
+              <span class="case-combo-label">Incluye</span>
+              <ul>
+                {c.combo.map((proc) => (
+                  <li>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    {proc}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <p class="case-target">{c.target}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ PRE / POST PROTOCOLOS ============================ -->
+  <section class="section svc-protocols">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Protocolos pre / post sesión"
+        title="Lo que <em>CLIBEL</em> indica antes y después."
+        variant="dark"
+        paragraphs={[
+          '<strong>CLIBEL</strong> entrega protocolo pre y post sesión por escrito. Seguirlo no es opcional: la eficacia del tratamiento facial y tu seguridad cutánea dependen de cumplir estas indicaciones. CLIBEL prefiere reagendar antes que aplicar sobre piel mal preparada.',
+          'En <strong>CLIBEL</strong> tu médico revisa el cumplimiento antes de cada sesión. Si tu piel no está lista o tienes contraindicación temporal, reagendamos sin penalización — es responsabilidad clínica, no comercial.',
+        ]}
+      />
+
+      <div class="protocol-grid">
+        <article class="protocol reveal">
+          <header class="protocol-head">
+            <span class="protocol-tag protocol-tag--pre">Antes</span>
+            <h3 class="protocol-title">Pre-sesión</h3>
+          </header>
+          <ol class="protocol-list">
+            {protocols.pre.map((p, i) => (
+              <li>
+                <span class="protocol-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span>{p}</span>
+              </li>
+            ))}
+          </ol>
+        </article>
+
+        <article class="protocol reveal">
+          <header class="protocol-head">
+            <span class="protocol-tag protocol-tag--post">Después</span>
+            <h3 class="protocol-title">Post-sesión</h3>
+          </header>
+          <ol class="protocol-list">
+            {protocols.post.map((p, i) => (
+              <li>
+                <span class="protocol-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span>{p}</span>
+              </li>
+            ))}
+          </ol>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ AFTERCARE ============================ -->
+  <section class="section svc-aftercare">
+    <div aria-hidden="true" class="svc-aftercare-bg"></div>
+    <div aria-hidden="true" class="svc-aftercare-blob"></div>
+
+    <div class="container-x relative">
+      <SectionHeader
+        kicker="Aftercare clínico"
+        title="Cuidados domiciliarios que <em>CLIBEL</em> entrega por escrito."
+        variant="dark"
+        paragraphs={[
+          'Un tratamiento facial en <strong>CLIBEL</strong> no termina cuando sales del consultorio. CLIBEL entrega a cada paciente un protocolo aftercare documentado: productos, frecuencias, suspensiones y señales de alerta. La diferencia entre resultados duraderos y un cambio efímero está en este paso.',
+          'En <strong>CLIBEL</strong> activamos una línea de contacto directo con tu médico para resolver dudas durante el postratamiento. CLIBEL cree que la educación dermatológica es parte del servicio, no un extra.',
+        ]}
+      />
+
+      <ol class="after-list">
+        {aftercare.map((a) => (
+          <li class="after-item reveal">
+            <span class="after-num" aria-hidden="true">{a.n}</span>
+            <div class="after-body">
+              <h3 class="after-title">{a.title}</h3>
+              <p class="after-text">{a.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ FAQ + FORM ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Preguntas frecuentes y contacto"
+        title="Resuelve dudas sobre <em>faciales</em> o pide tu valoración."
+        paragraphs={[
+          'Las preguntas más recurrentes que recibe <strong>CLIBEL</strong> sobre cuidado facial profesional, resueltas con criterio clínico. A la derecha puedes enviarnos tus datos y un mensaje — llegan directo al WhatsApp clínico de CLIBEL en menos de 2 horas en horario consulta.',
+          'En <strong>CLIBEL</strong> entendemos que decidir un tratamiento facial implica preguntas legítimas: tiempos, recuperación, seguridad y compatibilidad con tu rutina. CLIBEL responde con honestidad y plan personalizado, no con guion de venta.',
+        ]}
+      />
+
+      <div class="faq-grid">
+        <!-- LEFT — FAQs -->
+        <div class="faq-col">
+          <span class="faq-col-label">Lo que más nos preguntan</span>
+          <div class="faq-list">
+            {faqs.map((f, i) => (
+              <details class="faq" open={i === 0}>
+                <summary class="faq-sum">
+                  <span class="faq-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="faq-q">{f.q}</span>
+                  <span class="faq-plus" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </span>
+                </summary>
+                <div class="faq-a">{f.a}</div>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        <!-- RIGHT — Form a WhatsApp -->
+        <aside class="faq-form-wrap">
+          <form
+            id="facialWaForm"
+            class="faq-form"
+            data-wa-base={`https://wa.me/${CONTACT.whatsapp}`}
+            novalidate
+          >
+            <span class="faq-form-kicker">Valoración facial sin costo</span>
+            <h3 class="faq-form-title">Escríbenos por <em>WhatsApp</em></h3>
+            <p class="faq-form-sub">
+              Llena el formulario y tu mensaje pre-armado se abre en WhatsApp.
+              Respuesta de <strong>CLIBEL</strong> en menos de 2 horas en horario clínica.
+            </p>
+
+            <div class="faq-form-row">
+              <label for="fac-nombre">Nombre completo <span aria-hidden="true">*</span></label>
+              <input id="fac-nombre" name="nombre" type="text" required autocomplete="name" />
+            </div>
+
+            <div class="faq-form-grid-2">
+              <div class="faq-form-row">
+                <label for="fac-tel">Teléfono <span aria-hidden="true">*</span></label>
+                <input id="fac-tel" name="telefono" type="tel" required autocomplete="tel" placeholder="55 1234 5678" />
+              </div>
+              <div class="faq-form-row">
+                <label for="fac-email">Email</label>
+                <input id="fac-email" name="email" type="email" autocomplete="email" />
+              </div>
+            </div>
+
+            <div class="faq-form-row">
+              <label for="fac-interes">¿Qué tratamiento facial te interesa?</label>
+              <select id="fac-interes" name="interes">
+                <option value="">Selecciona uno (opcional)</option>
+                {items.map((s) => (
+                  <option value={s.data.title}>{s.data.title}</option>
+                ))}
+                <option value="No estoy segura — quiero diagnóstico">No estoy segura — quiero diagnóstico</option>
+              </select>
+            </div>
+
+            <div class="faq-form-row">
+              <label for="fac-msg">Cuéntanos qué buscas (opcional)</label>
+              <textarea id="fac-msg" name="mensaje" rows="3" placeholder="Ej: tengo manchas, busco rejuvenecimiento, etc."></textarea>
+            </div>
+
+            <label class="faq-form-check">
+              <input type="checkbox" name="privacidad" required />
+              <span>Acepto el <a href="/aviso-de-privacidad">Aviso de Privacidad</a> y autorizo el contacto por WhatsApp.</span>
+            </label>
+
+            <button type="submit" class="faq-form-submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+              Enviar por WhatsApp
+            </button>
+
+            <p class="faq-form-foot">
+              Respuesta &lt; 2h · COFEPRIS · Sin compromiso
+            </p>
+          </form>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
+    (function () {
+      const form = document.getElementById('facialWaForm');
+      if (!form) return;
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        const nombre  = (data.get('nombre')   || '').toString().trim();
+        const tel     = (data.get('telefono') || '').toString().trim();
+        const email   = (data.get('email')    || '').toString().trim();
+        const interes = (data.get('interes')  || '').toString().trim();
+        const msg     = (data.get('mensaje')  || '').toString().trim();
+        const acepto  = data.get('privacidad') === 'on' || form.querySelector('[name="privacidad"]').checked;
+
+        if (!nombre || !tel || !acepto) {
+          form.classList.add('is-invalid');
+          return;
+        }
+        form.classList.remove('is-invalid');
+
+        const lines = [
+          'Hola CLIBEL, vengo desde la página de Tratamientos Faciales.',
+          '',
+          'Nombre: ' + nombre,
+          'Teléfono: ' + tel,
+        ];
+        if (email)   lines.push('Email: ' + email);
+        if (interes) lines.push('Me interesa: ' + interes);
+        if (msg)     lines.push('', 'Comentario: ' + msg);
+
+        const text = encodeURIComponent(lines.join('\n'));
+        const url = waBase + '?text=' + text;
+        window.open(url, '_blank', 'noopener');
+      });
+    })();
+  </script>
+
+  <!-- ============================ RELATED L3 ============================ -->
+  <RelatedCategories current="facial" variant="cream" />
+
+  <!-- ============================ NAV PRE-FOOTER ============================ -->
+  <HeroNavBar
+    label="Tratamientos faciales"
+    ariaLabel="Tratamientos faciales individuales"
+    variant="dark"
+    links={items.map((s) => ({ label: s.data.title, href: `/servicios/${s.id}` }))}
+    cta={{ label: 'Escríbenos por WhatsApp', href: wa }}
+  />
+</BaseLayout>
+
+<style>
+  /* ============= HERO ============= */
+  .cat-hero {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, var(--color-brand-100) 100%);
+    isolation: isolate;
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(201,169,97,0.18), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.16), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .cat-hero-blob {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(110px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+  .cat-hero-blob-1 {
+    width: 36rem; height: 36rem;
+    top: -10rem; right: -10rem;
+    background: var(--color-brand-300);
+  }
+  .cat-hero-blob-2 {
+    width: 32rem; height: 32rem;
+    bottom: -12rem; left: -8rem;
+    background: var(--color-mauve-300);
+  }
+  .cat-hero-grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(31,20,24,0.05) 1px, transparent 1px);
+    background-size: 3px 3px;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .cat-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem;
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    width: 100% !important;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .cat-hero-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: clamp(2rem, 4vw, 4.5rem);
+    }
+  }
+
+  .cat-hero-col {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .cat-hero-col--left {
+    container-type: inline-size;
+    container-name: catheroleft;
+  }
+
+  .cat-hero-headline {
+    font-family: var(--font-display);
+    font-weight: 450;
+    letter-spacing: -0.022em;
+    line-height: 1.02;
+    color: var(--color-ink-900);
+    font-size: clamp(2.5rem, 10.5cqi, 6.5rem);
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    width: 100%;
+    margin: 0.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05em;
+  }
+  .cat-hero-headline-line { display: block; width: 100%; }
+  .cat-hero-headline em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+  }
+  @media (max-width: 899px) {
+    .cat-hero-headline { font-size: clamp(2.5rem, 9.5vw, 4.5rem); }
+  }
+
+  .cat-hero-lede {
+    font-size: clamp(1rem, 1.1vw, 1.18rem);
+    line-height: 1.65;
+    color: var(--color-ink-700);
+    margin: 0;
+    width: 100%;
+  }
+  .cat-hero-lede strong { color: var(--color-ink-900); font-weight: 600; }
+
+  .cat-hero-trust {
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(201, 169, 97, 0.25);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem;
+    width: 100%;
+  }
+  .cat-hero-trust-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .cat-hero-trust-list {
+    display: inline-flex; flex-wrap: wrap; gap: 0.55rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--color-ink-700);
+  }
+  .cat-hero-trust-list span[aria-hidden] { color: var(--color-brand-400); }
+
+  .cat-hero-col--right { gap: 1.25rem; }
+  @media (min-width: 900px) {
+    .cat-hero-col--right {
+      padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+      border-left: 1px solid rgba(201, 169, 97, 0.25);
+    }
+  }
+
+  .cat-hero-kicker {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--color-brand-400);
+    align-self: flex-start;
+  }
+  .cat-hero-paragraph {
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.75;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .cat-hero-paragraph strong {
+    color: var(--color-ink-900);
+    font-weight: 600;
+  }
+  @media (max-width: 899px) {
+    .cat-hero-col { gap: 1.25rem; }
+  }
+
+  /* ============= Catálogo grid ============= */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .cat-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  }
+
+  /* ============= Concerns ============= */
+  .concern-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 640px) {
+    .concern-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .concern-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  }
+  .concern {
+    position: relative;
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.22);
+    border-radius: 1.1rem;
+    transition: all 0.45s cubic-bezier(.2,.8,.2,1) !important;
+    overflow: hidden;
+  }
+  .concern::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 60% at 100% 0%, rgba(201, 169, 97, 0.08), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.5s ease !important;
+    pointer-events: none;
+  }
+  .concern:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139, 90, 107, 0.45);
+    box-shadow: 0 28px 48px -22px rgba(31, 20, 24, 0.18);
+  }
+  .concern:hover::before { opacity: 1; }
+  .concern-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    opacity: 0.85;
+  }
+  .concern-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: var(--color-ink-900);
+    margin: 0 0 0.6rem;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .concern-text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .concern-line {
+    display: block;
+    margin-top: 1.1rem;
+    width: 24px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    transition: width 0.5s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  .concern:hover .concern-line { width: 60px; }
+
+  /* ============= Stack tecnología ============= */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid rgba(201, 169, 97, 0.25);
+  }
+  @media (min-width: 768px) {
+    .stack-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1100px) {
+    .stack-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .stack-item {
+    position: relative;
+    padding: 1.75rem clamp(1.25rem, 2vw, 1.75rem);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.25);
+    transition: background 0.3s ease !important;
+  }
+  @media (min-width: 768px) {
+    .stack-item:nth-child(2n) { border-left: 1px solid rgba(201, 169, 97, 0.25); }
+  }
+  @media (min-width: 1100px) {
+    .stack-item:nth-child(2n) { border-left: 0; }
+    .stack-item:not(:nth-child(3n+1)) { border-left: 1px solid rgba(201, 169, 97, 0.25); }
+  }
+  .stack-item:hover { background: var(--color-brand-50); }
+  .stack-kicker {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-bottom: 0.65rem;
+  }
+  .stack-value {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.2rem, 1.4vw, 1.45rem);
+    color: var(--color-ink-900);
+    margin: 0 0 0.4rem;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .stack-detail {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--color-ink-500);
+    margin: 0;
+  }
+  .stack-num {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.25rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--color-brand-400);
+    opacity: 0.6;
+    transition: opacity 0.3s ease !important;
+  }
+  .stack-item:hover .stack-num { opacity: 1; }
+
+  /* ============= NEW: Diagnóstico (dark) ============= */
+  .svc-diag {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .svc-diag-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 100% 0%, rgba(201,169,97,0.08), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.1), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .diag-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 768px) { .diag-list { grid-template-columns: repeat(2, 1fr); } }
+  .diag-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    padding: clamp(1.5rem, 2.5vw, 2.25rem) clamp(0.5rem, 1.5vw, 1.5rem);
+    border-top: 1px solid rgba(201, 169, 97, 0.22);
+    align-items: start;
+  }
+  @media (min-width: 768px) {
+    .diag-item:nth-child(odd)  { padding-right: clamp(1rem, 2vw, 2rem); border-right: 1px solid rgba(201, 169, 97, 0.18); }
+    .diag-item:nth-child(even) { padding-left:  clamp(1rem, 2vw, 2rem); }
+    .diag-item:nth-child(1), .diag-item:nth-child(2) { border-top: 0; padding-top: 0; }
+  }
+  .diag-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+    min-width: 2.5rem;
+  }
+  .diag-body { display: flex; flex-direction: column; gap: 0.5rem; max-width: 56ch; }
+  .diag-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.25rem, 1.8vw, 1.55rem);
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .diag-text {
+    font-size: clamp(0.92rem, 1vw, 1.02rem);
+    line-height: 1.65;
+    color: rgba(242, 235, 223, 0.78);
+    margin: 0;
+  }
+
+  /* ============= NEW: Cases / Planes ============= */
+  .cases-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 768px) { .cases-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } }
+  .case {
+    position: relative;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.28);
+    border-radius: 1.25rem;
+    padding: clamp(1.5rem, 2vw, 1.85rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1), box-shadow 0.5s ease, border-color 0.4s ease !important;
+  }
+  .case::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--accent-color, var(--color-brand-400));
+    transition: height 0.4s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  .case:hover {
+    transform: translateY(-6px);
+    border-color: rgba(139, 90, 107, 0.45);
+    box-shadow: 0 32px 56px -22px rgba(31,20,24,0.22);
+  }
+  .case:hover::before { height: 6px; }
+  .case--gold  { --accent-color: var(--color-brand-500); }
+  .case--mauve { --accent-color: var(--color-mauve-500); }
+  .case--rose  { --accent-color: var(--color-mauve-300); }
+  .case-head { display: flex; align-items: flex-start; gap: 1rem; }
+  .case-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    color: var(--accent-color, var(--color-brand-500));
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+  .case-kicker {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    opacity: 0.85;
+    margin-bottom: 0.2rem;
+  }
+  .case-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 1.8vw, 1.7rem);
+    color: var(--color-ink-900);
+    margin: 0 0 0.2rem;
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+  }
+  .case-duration {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--color-ink-500);
+  }
+  .case-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--color-brand-50);
+    border: 1px solid rgba(201, 169, 97, 0.25);
+    border-radius: 0.6rem;
+  }
+  .case-profile-label {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .case-profile-value {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--color-ink-800);
+    letter-spacing: -0.005em;
+  }
+  .case-combo { display: flex; flex-direction: column; gap: 0.5rem; padding-block: 0.85rem; border-block: 1px dashed rgba(201, 169, 97, 0.3); }
+  .case-combo-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .case-combo ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .case-combo li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--color-ink-700);
+  }
+  .case-combo li svg {
+    flex-shrink: 0;
+    margin-top: 0.18rem;
+    color: var(--accent-color, var(--color-mauve-500));
+  }
+  .case-target {
+    margin: 0;
+    padding: 0.85rem 0.95rem;
+    background: var(--color-brand-50);
+    border-left: 3px solid var(--accent-color, var(--color-brand-400));
+    border-radius: 0 0.55rem 0.55rem 0;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+    font-style: italic;
+  }
+
+  /* ============= NEW: Protocolos pre/post (dark) ============= */
+  .svc-protocols {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    position: relative;
+    isolation: isolate;
+  }
+  .protocol-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 900px) { .protocol-grid { grid-template-columns: 1fr 1fr; gap: 1.75rem; } }
+  .protocol {
+    padding: clamp(1.5rem, 2vw, 2rem);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1.25rem;
+    transition: all 0.4s ease !important;
+  }
+  .protocol:hover {
+    background: rgba(255,255,255,0.055);
+    border-color: rgba(201, 169, 97, 0.45);
+    transform: translateY(-4px);
+  }
+  .protocol-head { display: flex; align-items: baseline; gap: 0.9rem; margin-bottom: 1.25rem; }
+  .protocol-tag {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+  }
+  .protocol-tag--pre {
+    background: rgba(201, 169, 97, 0.15);
+    color: var(--color-brand-400);
+    border: 1px solid rgba(201, 169, 97, 0.4);
+  }
+  .protocol-tag--post {
+    background: rgba(139, 90, 107, 0.2);
+    color: var(--color-mauve-300);
+    border: 1px solid rgba(188, 142, 156, 0.45);
+  }
+  .protocol-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 1.8vw, 1.75rem);
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .protocol-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .protocol-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding-block: 0.65rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.18);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: rgba(242, 235, 223, 0.85);
+  }
+  .protocol-list li:first-child { border-top: 0; padding-top: 0; }
+  .protocol-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--color-brand-400);
+    line-height: 1.45;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    min-width: 24px;
+  }
+
+  /* ============= Aftercare ============= */
+  .svc-aftercare {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .svc-aftercare-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .svc-aftercare-blob {
+    position: absolute;
+    top: -10rem; right: -8rem;
+    width: 32rem; height: 32rem;
+    border-radius: 999px;
+    background: rgba(92, 57, 70, 0.35);
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .after-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .after-item {
+    display: grid;
+    grid-template-columns: clamp(70px, 12vw, 130px) 1fr;
+    gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    padding-block: clamp(1.5rem, 2.5vw, 2.25rem);
+    border-top: 1px dashed rgba(201, 169, 97, 0.22);
+    align-items: start;
+  }
+  .after-item:first-child { border-top: 0; padding-top: 0; }
+  .after-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.75rem, 5.5vw, 4.5rem);
+    line-height: 0.9;
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.015em;
+  }
+  .after-body { display: flex; flex-direction: column; gap: 0.5rem; max-width: 64ch; }
+  .after-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.25rem, 1.8vw, 1.65rem);
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .after-text {
+    font-size: clamp(0.92rem, 1vw, 1.02rem);
+    line-height: 1.7;
+    color: rgba(242, 235, 223, 0.78);
+    margin: 0;
+  }
+
+  /* ============= FAQ + Formulario WhatsApp (grid 2-col) ============= */
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 3vw, 2.75rem);
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .faq-grid {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: clamp(2.5rem, 4vw, 3.5rem);
+    }
+  }
+  .faq-col-label {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-bottom: 1.1rem;
+  }
+
+  /* ===== FAQ específica ===== */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .faq {
+    background: var(--color-brand-50);
+    border: 1px solid rgba(201, 169, 97, 0.22);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: border-color 0.3s ease, background 0.3s ease !important;
+  }
+  .faq[open] {
+    background: white;
+    border-color: var(--color-mauve-500);
+  }
+  .faq-sum {
+    list-style: none;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+  }
+  .faq-sum::-webkit-details-marker { display: none; }
+  .faq-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    opacity: 0.8;
+    min-width: 24px;
+  }
+  .faq-q {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1rem, 1.1vw, 1.12rem);
+    color: var(--color-ink-900);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .faq-plus {
+    width: 32px; height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--color-brand-100);
+    color: var(--color-mauve-500);
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1), background 0.3s ease, color 0.3s ease !important;
+  }
+  .faq[open] .faq-plus {
+    transform: rotate(45deg);
+    background: var(--color-mauve-500);
+    color: white;
+  }
+  .faq-a {
+    padding: 0 1.25rem 1.25rem clamp(3.5rem, 6vw, 4rem);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--color-ink-700);
+  }
+
+  /* ===== Formulario WhatsApp ===== */
+  .faq-form-wrap {
+    position: relative;
+  }
+  @media (min-width: 1024px) {
+    .faq-form-wrap {
+      position: sticky;
+      top: clamp(6rem, 10vh, 7.5rem);
+    }
+  }
+  .faq-form {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-brand-50) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.25rem;
+    padding: clamp(1.5rem, 2vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    box-shadow:
+      0 1px 2px rgba(31, 20, 24, 0.03),
+      0 24px 56px -28px rgba(31, 20, 24, 0.18);
+  }
+  .faq-form-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .faq-form-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.45rem, 2vw, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink-900);
+    margin: 0;
+  }
+  .faq-form-title em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+  }
+  .faq-form-sub {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-ink-500);
+    margin: 0 0 0.5rem;
+  }
+  .faq-form-sub strong { color: var(--color-ink-900); font-weight: 600; }
+
+  .faq-form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.32rem;
+  }
+  .faq-form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  @media (min-width: 520px) {
+    .faq-form-grid-2 { grid-template-columns: 1fr 1fr; }
+  }
+  .faq-form-row label {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-ink-700);
+    letter-spacing: 0.02em;
+  }
+  .faq-form-row label span[aria-hidden] {
+    color: var(--color-mauve-500);
+    margin-left: 2px;
+  }
+  .faq-form input,
+  .faq-form select,
+  .faq-form textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    color: var(--color-ink-900);
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    border-radius: 0.65rem;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+    appearance: none;
+    line-height: 1.4;
+  }
+  .faq-form select {
+    background-image: linear-gradient(45deg, transparent 50%, var(--color-mauve-500) 50%),
+                      linear-gradient(135deg, var(--color-mauve-500) 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 13px) calc(50% - 2px);
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2rem;
+    cursor: pointer;
+  }
+  .faq-form textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  .faq-form input:focus,
+  .faq-form select:focus,
+  .faq-form textarea:focus {
+    border-color: var(--color-mauve-500);
+    box-shadow: 0 0 0 3px rgba(139, 90, 107, 0.12);
+    background: var(--color-brand-50);
+  }
+  .faq-form.is-invalid input:required:invalid,
+  .faq-form.is-invalid input[type="checkbox"]:invalid + span {
+    border-color: #c62b3e;
+  }
+
+  .faq-form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--color-ink-500);
+    cursor: pointer;
+  }
+  .faq-form-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    accent-color: var(--color-mauve-500);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .faq-form-check a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .faq-form-check a:hover { color: var(--color-mauve-700); }
+
+  .faq-form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.95rem 1.25rem;
+    margin-top: 0.5rem;
+    background: #25D366;
+    color: white;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow:
+      0 10px 24px -10px rgba(37, 211, 102, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+  }
+  .faq-form-submit:hover {
+    background: #1FB855;
+    transform: translateY(-2px);
+    box-shadow:
+      0 16px 32px -10px rgba(37, 211, 102, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .faq-form-foot {
+    margin: 0;
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-500);
+    opacity: 0.85;
+  }
+
+  @media (max-width: 640px) {
+    .faq-form { padding: 1.25rem; }
+  }
+</style>

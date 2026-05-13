@@ -15,16 +15,27 @@ const { Content } = await render(entry);
 ---
 
 <ServiceLayout
+  slug={entry.id}
   title={entry.data.title}
   description={entry.data.description}
   category={entry.data.category}
   duration={entry.data.duration}
   sessions={entry.data.sessions}
+  price={entry.data.price}
   benefits={entry.data.benefits}
   indications={entry.data.indications}
   contraindications={entry.data.contraindications}
   icon={entry.data.icon}
   publishedAt={entry.data.publishedAt}
+  seoTitle={entry.data.seoTitle}
+  seoDescription={entry.data.seoDescription}
+  heroLede={entry.data.heroLede}
+  heroTagline={entry.data.heroTagline}
+  protocolSteps={entry.data.protocolSteps}
+  timeline={entry.data.timeline}
+  preCare={entry.data.preCare}
+  postCare={entry.data.postCare}
+  faqs={entry.data.faqs}
 >
   <Content />
 </ServiceLayout>
