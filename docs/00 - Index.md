@@ -1,7 +1,7 @@
 ---
 tags: [clibel, index, project-map]
 project: CLIBEL
-updated: 2026-05-12
+updated: 2026-05-13
 ---
 
 # CLIBEL — Mapa del Proyecto
@@ -17,7 +17,7 @@ Esta carpeta es un **vault de Obsidian listo para usar**. Si abres Obsidian y ap
 | **L1** | Home | `/` | ✅ |
 | **L2** | Catálogo / hub | `/servicios` | ✅ |
 | **L3** | Landing de categoría | `/servicios/tratamientos-faciales` | 1/5 |
-| **L4** | Servicio individual | `/servicios/limpieza-facial-profunda` | dinámico vía `[...slug]` |
+| **L4** | Servicio individual | `/servicios/limpieza-facial-profunda` | ✅ template editorial consolidado |
 
 ## Notas
 
@@ -32,6 +32,8 @@ Esta carpeta es un **vault de Obsidian listo para usar**. Si abres Obsidian y ap
 - [[09 - Pendientes y siguientes pasos]]
 - [[10 - Layout final servicios]] · L2 — capturado al 2026-05-12
 - [[11 - Layout L3 categoría]] · **L3** — patrón replicable para categorías, captura tratamientos-faciales
+- [[12 - Layout L4 servicio individual]] · **L4** — template editorial: 6 capítulos romanos I–VI, sticky TOC, sidebar 6 widgets, captura limpieza-facial-profunda
+- [[13 - Layout L3 evolucionado]] · **L3 evolucionado** — Profundiza spotlight + interlinking denso + humanización, evoluciones Stat strip/Calendario/Compromisos/Comparativa/Pull-quote, captura láser
 
 ## Resumen actual
 
@@ -41,7 +43,7 @@ Esta carpeta es un **vault de Obsidian listo para usar**. Si abres Obsidian y ap
 - **L1 — Home `/`**: Hero homologado, HeroButtons, CatalogShowcase, secciones de marketing.
 - **L2 — `/servicios`**: Breadcrumb, Hero homologado, 3 HeroNavBar, Destacados, Garantías (dark), 5 categorías con SectionHeader, Comparativa, Process timeline, FAQContact.
 - **L3 — `/servicios/tratamientos-faciales`**: Breadcrumb, Hero homologado, HeroNavBar top, Catálogo ServiceCards, Concerns, Tecnología/Stack, Aftercare dark timeline, FAQ + Form WhatsApp 2-col sticky, HeroNavBar pre-footer.
-- **L4 — `/servicios/[id]`**: ruta dinámica `[...slug].astro` que renderiza cada MD con `ServiceLayout.astro`.
+- **L4 — `/servicios/[id]`**: ruta dinámica `[...slug].astro` que renderiza cada MD con `ServiceLayout.astro`. Template editorial: Breadcrumb · Hero 2-col · HeroNavBar siblings · Sticky TOC (scroll-spy, top:76px) · Cap I Resumen (body 2-col [prose con drop cap + sidebar 6 widgets]) · Cap II Beneficios/Indicaciones/Contraindicaciones · Cap III Protocolo dark (grid cards) · Cap IV Resultados (stepper horizontal) · Cap V Pre/Post dark · Cap VI FAQ+Form · RelatedCategories · HeroNavBar pre-footer dark. Capítulos romanos I–VI con chapter-marks y stat strips clínicos.
 - **Footer redesigned**: editorial, sin iconos SVG, tipografía Fraunces italic, numeración 01-05.
 - **Menú móvil**: drawer fuera del `<header>`, sin CTAs, solo navegación.
 - **Mega-menú** con hit-area extendida y bridge (no se cierra al cruzar).

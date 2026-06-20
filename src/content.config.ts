@@ -47,6 +47,56 @@ const servicios = defineCollection({
       q: z.string(),
       a: z.string(),
     })).default([]),
+    /** Comparativa clínica (opcional) — render como tabla editorial CLIBEL vs alternativas */
+    comparison: z.array(z.object({
+      aspect: z.string(),
+      home: z.string().optional(),
+      spa: z.string().optional(),
+      clibel: z.string(),
+    })).default([]),
+    /** Modalidades / variantes del protocolo (opcional) — para tratamientos con múltiples versiones (tipos de peeling, niveles de láser, etc.) */
+    modalities: z.array(z.object({
+      name: z.string(),
+      kicker: z.string().optional(),
+      profile: z.string().optional(),
+      text: z.string(),
+      intensity: z.string().optional(),
+      downtime: z.string().optional(),
+    })).default([]),
+    /** Casos clínicos / perfiles de paciente (opcional) — qué perfiles se atienden y con qué plan */
+    clinicalCases: z.array(z.object({
+      name: z.string(),
+      profile: z.string(),
+      duration: z.string().optional(),
+      plan: z.array(z.string()).default([]),
+      target: z.string(),
+      accent: z.enum(['gold', 'mauve', 'rose']).optional(),
+    })).default([]),
+    /** Zonas de tratamiento (opcional) — para tratamientos corporales con áreas anatómicas específicas */
+    treatmentZones: z.array(z.object({
+      name: z.string(),
+      kicker: z.string().optional(),
+      sessions: z.string().optional(),
+      text: z.string(),
+      accent: z.enum(['gold', 'mauve', 'rose']).optional(),
+    })).default([]),
+    /** Mitos vs realidad (opcional) — desmontar misinformación común sobre el tratamiento */
+    myths: z.array(z.object({
+      myth: z.string(),
+      reality: z.string(),
+    })).default([]),
+    /** Compromisos del paciente (opcional) — qué tiene que cumplir el paciente para que el resultado se sostenga */
+    commitments: z.array(z.object({
+      title: z.string(),
+      text: z.string(),
+      weight: z.enum(['Imprescindible', 'Recomendado', 'Opcional']).optional(),
+    })).default([]),
+    /** Protocolo de seguridad clínica (opcional) — para tratamientos invasivos (medicina estética, hilos, PRP, etc) */
+    safetyProtocol: z.array(z.object({
+      title: z.string(),
+      text: z.string(),
+      kind: z.enum(['producto', 'protocolo', 'personal', 'reversibilidad']).optional(),
+    })).default([]),
   }),
 });
 

@@ -1,49 +1,276 @@
 ---
 title: "Plasma Rico en Plaquetas (PRP)"
-description: "Terapia regenerativa con tu propio plasma para revitalizar piel, mejorar cicatrices y estimular crecimiento capilar."
+description: "Terapia regenerativa con plasma autólogo (de tu propia sangre) procesado en cabina para revitalizar piel, atenuar cicatrices, estimular crecimiento capilar y potenciar otros tratamientos estéticos — biológicamente seguro porque viene de ti mismo."
 category: "medicina-estetica"
-duration: "60 min"
-sessions: "3 sesiones mensuales + mantenimiento"
+duration: "60–90 min con extracción + centrifugación + aplicación"
+sessions: "Plan 3 sesiones mensuales + mantenimiento semestral"
 icon: "🧬"
 order: 3
-featured: false
+featured: true
+seoTitle: "Plasma Rico en Plaquetas PRP en CDMX | CLIBEL"
+seoDescription: "PRP en CLIBEL CDMX: plasma rico en plaquetas autólogo procesado en cabina con kit estéril certificado. Aplicaciones facial, capilar, cicatrices y combinado con microneedling. Biológicamente seguro, sin riesgo de alergia ni rechazo — viene de tu propia sangre."
+heroTagline: "Regeneración autóloga CLIBEL"
+heroLede: "El PRP es el único inyectable de medicina estética que NO puede causar reacción alérgica ni rechazo: viene de tu propia sangre. CLIBEL extrae 10–20 ml, centrifuga en cabina con kit estéril certificado y aplica el plasma rico en factores de crecimiento autólogos (PDGF, VEGF, TGF-β) en zonas faciales, capilares o cicatrices. Biología regenerativa con tus propias plaquetas."
 benefits:
-  - "Estimula colágeno y elastina de manera natural"
-  - "Mejora textura, firmeza y luminosidad"
-  - "Atenúa cicatrices y marcas de acné"
-  - "Versión capilar combate caída y estimula nuevo crecimiento"
-  - "Bajo riesgo: usa tu propio material biológico"
+  - "Sin riesgo de alergia ni rechazo (es 100% autólogo)"
+  - "Estimula colágeno endógeno, elastina y angiogénesis tisular"
+  - "Revitaliza calidad cutánea (textura, luminosidad, firmeza)"
+  - "Atenúa cicatrices superficiales y marcas post-acné"
+  - "Estimula crecimiento capilar en alopecias androgenéticas iniciales"
+  - "Potencia resultados de otros tratamientos cuando se combina"
 indications:
-  - "Envejecimiento cutáneo en rostro, cuello y escote"
-  - "Cicatrices superficiales y marcas de acné"
-  - "Caída del cabello (alopecia androgénica)"
-  - "Pieles apagadas y deshidratadas"
+  - "Rejuvenecimiento facial integral en pacientes 30+"
+  - "Cicatrices superficiales post-acné o post-traumáticas"
+  - "Estrías recientes en formación (eritematosas)"
+  - "Alopecia androgenética masculina o femenina temprana"
+  - "Calidad cutánea deteriorada (deshidratación, opacidad, fotoenvejecimiento)"
+  - "Acompañamiento post-microneedling para potenciar resultado"
+  - "Recuperación post-procedimientos invasivos (peelings medios, fraccionado)"
 contraindications:
-  - "Embarazo y lactancia"
-  - "Enfermedades hematológicas"
-  - "Procesos oncológicos activos"
-  - "Tratamiento con anticoagulantes"
+  - "Trastornos hematológicos (trombocitopenia, anemia severa, leucemia)"
+  - "Tratamiento anticoagulante crónico sin control"
+  - "Cáncer activo sin autorización oncológica"
+  - "Sepsis o infección sistémica activa"
+  - "Hepatitis B/C virémica o VIH no controlado (precaución manejo personal)"
+  - "Embarazo y lactancia (sin evidencia de daño, principio de precaución)"
+  - "Uso reciente de AINEs (5 días antes — afectan función plaquetaria)"
+protocolSteps:
+  - n: "01"
+    title: "Valoración + análisis hematológico previo"
+    text: "El médico de CLIBEL evalúa indicación, descarta contraindicaciones (autoinmunes, oncológicos, hematológicos) y, si es necesario, solicita biometría hemática reciente. Pacientes con trombocitopenia o anemia severa NO son candidatos."
+  - n: "02"
+    title: "Extracción venosa estéril"
+    text: "Extracción de 10–20 ml de sangre venosa (vena braquial típicamente) con kit estéril certificado. CLIBEL usa tubos con anticoagulante (citrato sódico) para preservar plaquetas durante centrifugación. Personal médico realiza la extracción, no técnico."
+  - n: "03"
+    title: "Centrifugación en cabina · 2 fases"
+    text: "Primera centrifugación a 1500 rpm × 10 min separa plasma de eritrocitos. Segunda centrifugación a 3500 rpm × 5 min concentra plaquetas. CLIBEL emplea kits estériles single-use certificados (Regen Lab, Arthrex, Ycellbio) — no protocolo manual abierto."
+  - n: "04"
+    title: "Activación plaquetaria (si requiere protocolo)"
+    text: "Algunos protocolos activan las plaquetas con cloruro de calcio para liberación inmediata de factores de crecimiento; otros aplican PRP inactivado para liberación sostenida. CLIBEL elige según indicación clínica — capilar suele inactivado, facial suele activado."
+  - n: "05"
+    title: "Aplicación según zona objetivo"
+    text: "Mesoterapia con aguja en facial (microinyecciones múltiples), inyección en cuero cabelludo para capilar, infiltración en cicatrices, microneedling con PRP tópico. CLIBEL ajusta técnica según objetivo y protocolo."
+  - n: "06"
+    title: "Indicaciones inmediatas"
+    text: "Eritema y leve edema esperables 24–48 h. Evitar calor, sauna, vapor, ejercicio intenso 24 h. No lavado intenso del cuero cabelludo 12 h. Aplicación de calmante en zona facial. CLIBEL entrega protocolo escrito."
+  - n: "07"
+    title: "Plan de seguimiento"
+    text: "Plan estándar 3 sesiones mensuales (1 sesión cada 4 semanas) + mantenimiento semestral. CLIBEL ajusta calendario según respuesta — capilar puede requerir 4 sesiones iniciales, facial suele cerrar en 3."
+timeline:
+  - when: "Día 0–02"
+    label: "Eritema y edema esperables"
+    text: "Inflamación leve, eritema y posibles pequeñas equimosis en puntos de inyección. Se resuelven en 24–48 h. NO es señal de respuesta — la respuesta biológica empieza después."
+  - when: "Sesión 02"
+    label: "Primer cambio perceptible"
+    text: "Calidad cutánea mejorada visiblemente: textura más suave, mayor luminosidad. Para alopecia: reducción de caída y primer crecimiento de vello miniaturizado."
+  - when: "Sesión 03"
+    label: "Cierre de plan inicial"
+    text: "Resultado consolidado. CLIBEL documenta foto comparativa basal. Facial: piel más firme y luminosa, atenuación de líneas finas. Capilar: densidad capilar aumentada visiblemente."
+  - when: "Mes 06"
+    label: "Mantenimiento semestral"
+    text: "Sesión de mantenimiento para sostener efecto. Los factores de crecimiento siguen estimulando colágeno endógeno por 3–6 meses post-aplicación, pero el efecto se diluye sin refuerzo."
+preCare:
+  - "Hidratación abundante 48 h antes (2L+ agua diarios para facilitar extracción)"
+  - "Suspender AINEs (ibuprofeno, naproxeno) 5 días antes — afectan función plaquetaria"
+  - "Evitar alcohol 48 h antes"
+  - "No ir en ayunas — comida ligera 1–2 h antes para evitar mareo en extracción"
+  - "Avisar a CLIBEL si tienes trastornos hematológicos, anticoagulación, oncológicos o hepatitis virémicas"
+  - "Asistir con manga corta o blusa accesible para extracción de sangre braquial"
+postCare:
+  - "Eritema y edema 24–48 h son normales — NO son complicación"
+  - "Sin sauna, vapor, jacuzzi ni ejercicio intenso 24 h"
+  - "Sin lavado intenso del cuero cabelludo 12 h (PRP capilar)"
+  - "SPF 50+ obligatorio diario durante 14 días post-aplicación"
+  - "Calmante con aloe los primeros 2 días en zona facial"
+  - "Hidratación oral abundante 2–3L diarios los 3 días siguientes"
+  - "Reportar a CLIBEL fiebre, eritema intenso persistente, dolor desproporcionado o secreción"
+faqs:
+  - q: "¿Es seguro porque viene de mi propia sangre?"
+    a: "Sí — biológicamente es el inyectable más seguro de la medicina estética. No puede causar reacción alérgica ni rechazo porque es 100% autólogo (tu propia plaqueta, tu propio plasma). Los riesgos clínicos son únicamente los del proceso (técnica de extracción, asepsia, centrifugación) — no del producto en sí. CLIBEL minimiza esos riesgos con kit estéril certificado y personal médico."
+  - q: "¿Funciona para alopecia?"
+    a: "Sí, en alopecia androgenética temprana a moderada (Norwood I-IV en hombres, Ludwig I-II en mujeres). El PRP capilar estimula los folículos miniaturizados que aún tienen actividad. NO funciona en alopecia cicatrizal ni en zonas completamente calvas sin folículos viables. CLIBEL evalúa con tricoscopia previa antes de proponer plan capilar."
+  - q: "¿Cuántas sesiones necesito realmente?"
+    a: "Plan facial estándar: 3 sesiones mensuales. Plan capilar: 3–4 sesiones mensuales + mantenimiento semestral. Pacientes con cicatrices o estrías: 4–6 sesiones espaciadas según respuesta. CLIBEL no vende paquetes sobredimensionados — si en sesión 3 ya cerraste, no facturamos las que sobran."
+  - q: "¿Es doloroso?"
+    a: "La extracción venosa es como cualquier análisis de sangre — molestia mínima. La aplicación: facial es mesoterapia con aguja ultrafina (sensación de pinchazos breves); capilar es ligeramente más sensible por densidad de inyecciones en cuero cabelludo. CLIBEL aplica anestesia tópica 15 min antes si la tolerancia lo requiere."
+  - q: "¿Es compatible con otros tratamientos?"
+    a: "Sí, y a menudo es lo mejor. CLIBEL combina PRP con <strong>microneedling</strong> (potencia colágeno), con <strong>peelings</strong> (acelera recuperación), con <strong>radiofrecuencia</strong> facial (sinergia regenerativa) y con <strong>medicina estética</strong> avanzada (post-AH para integrar producto). El plan integral se diseña en valoración."
+  - q: "¿Por qué unas clínicas son más baratas que otras?"
+    a: "Diferencia principal: kit estéril certificado vs protocolo manual abierto. CLIBEL usa kits single-use de fabricantes certificados (Regen Lab, Arthrex, Ycellbio) — costo significativamente mayor que tubos genéricos manipulados manualmente. La diferencia clínica: concentración plaquetaria consistente vs variable, riesgo de contaminación vs estéril. Lo barato es peligroso en autólogo."
+  - q: "¿Tiene downtime?"
+    a: "Mínimo. Eritema y edema leves 24–48 h, posibles pequeñas equimosis en puntos de inyección. La mayoría de pacientes regresa a actividades normales el mismo día. CLIBEL recomienda evitar maquillaje denso 24 h y SPF estricto 14 días — pero no hay reposo obligatorio."
+modalities:
+  - name: "PRP Facial Rejuvenecimiento"
+    kicker: "Mesoterapia facial · Calidad cutánea"
+    profile: "Pacientes 30+ con calidad cutánea deteriorada"
+    text: "Microinyecciones múltiples con aguja 30G en toda la cara, cuello y escote. Plan 3 sesiones mensuales. Resultado: textura, luminosidad, firmeza y atenuación de líneas finas. CLIBEL la combina frecuentemente con microneedling para potenciar."
+    intensity: "Moderada"
+    downtime: "1–2 días eritema"
+  - name: "PRP Capilar Alopecia"
+    kicker: "Cuero cabelludo · Crecimiento"
+    profile: "Alopecia androgenética temprana a moderada"
+    text: "Inyecciones múltiples en zonas de miniaturización folicular según patrón. Plan 3–4 sesiones mensuales + mantenimiento semestral. CLIBEL evalúa con tricoscopia previa para confirmar candidatura y plantear expectativa realista."
+    intensity: "Localizada"
+    downtime: "12 h sin lavado"
+  - name: "PRP en Cicatrices"
+    kicker: "Cicatrices post-acné · Estrías recientes"
+    profile: "Cicatrices superficiales o estrías eritematosas"
+    text: "Aplicación local en cicatrices superficiales (post-acné rolling/boxcar) o estrías en fase eritematosa (formación). Plan 4–6 sesiones espaciadas. CLIBEL frecuentemente combina con microneedling para mejorar penetración."
+    intensity: "Localizada"
+    downtime: "2–3 días"
+  - name: "PRP + Microneedling combinado"
+    kicker: "Sinergia regenerativa"
+    profile: "Calidad cutánea + cicatrices + textura"
+    text: "Microneedling con dispositivo de pluma profesional + aplicación tópica de PRP que penetra a través de los micro-canales abiertos. Combinación con mejor evidencia clínica para rejuvenecimiento. Plan 3 sesiones mensuales."
+    intensity: "Intermedia"
+    downtime: "2–4 días"
+clinicalCases:
+  - name: "Rejuvenecimiento facial 35–55 años"
+    profile: "Pacientes con calidad cutánea deteriorada por edad"
+    duration: "3 sesiones mensuales + semestral"
+    plan:
+      - "Mesoterapia facial completa con PRP"
+      - "Combinación con microneedling sesión 02"
+      - "Refuerzo en zonas con líneas marcadas"
+      - "Mantenimiento semestral indefinido"
+    target: "Mejorar textura, luminosidad y firmeza cutánea con estimulación autóloga del colágeno endógeno. Resultado natural sin invasividad mayor."
+    accent: "gold"
+  - name: "Alopecia androgenética masculina temprana"
+    profile: "Hombres 25–45 con caída inicial Norwood I-III"
+    duration: "3–4 sesiones mensuales + semestral"
+    plan:
+      - "Tricoscopia previa para confirmar candidatura"
+      - "Inyecciones en zonas de miniaturización"
+      - "Coordinación con tratamiento médico (minoxidil/finasterida)"
+      - "Foto comparativa cada 3 meses"
+    target: "Frenar caída activa y reactivar folículos miniaturizados. PRP NO regenera folículos perdidos — sí mantiene los viables."
+    accent: "mauve"
+  - name: "Alopecia femenina patrón Ludwig"
+    profile: "Mujeres 35–60 con difusión centroparietal"
+    duration: "3 sesiones mensuales + semestral"
+    plan:
+      - "Tricoscopia + descarte de causas (tiroides, ferritina, hormonal)"
+      - "PRP en zona centroparietal y línea de implantación"
+      - "Combinación con mesoterapia capilar si aplica"
+      - "Mantenimiento semestral sostenido"
+    target: "Mejorar densidad capilar en patrón de Ludwig sin recurrir a transplante. Resultado parcial pero sostenido si se mantiene plan."
+    accent: "rose"
+  - name: "Cicatrices post-acné moderadas"
+    profile: "Pacientes 20–40 con cicatrices residuales acné"
+    duration: "4–6 sesiones espaciadas 4–6 semanas"
+    plan:
+      - "Combinación PRP + microneedling profundo"
+      - "Trabajo intensivo en cicatrices más visibles"
+      - "Coordinación con peelings despigmentantes si hay PIH"
+      - "Plan a largo plazo (resultado lento)"
+    target: "Mejorar textura de cicatrices superficiales rolling/boxcar. Los casos profundos (ice-pick) requieren protocolos combinados con láser fraccionado."
+    accent: "gold"
+myths:
+  - myth: "El PRP me hace bajar de peso o desintoxica."
+    reality: "Falso. El PRP estimula factores de crecimiento locales en zona inyectada — no tiene efecto sistémico de pérdida de peso ni 'desintoxicación' (el hígado y riñones desintoxican naturalmente). Cualquier promesa de 'PRP para adelgazar' es marketing falso."
+  - myth: "Es magia regenerativa que rejuvenece de inmediato."
+    reality: "Sin evidencia de regeneración mágica. El PRP estimula procesos biológicos normales (colágeno, angiogénesis) que tardan SEMANAS a meses en manifestarse. No verás cambios inmediatos al salir de cabina — la respuesta biológica ocurre con paciencia."
+  - myth: "Una sola sesión basta para resultados."
+    reality: "Falso. Plan estándar es 3 sesiones mensuales mínimo para respuesta clínica documentable. Pacientes que se aplican 1 sola sesión típicamente no ven cambio significativo. CLIBEL recomienda completar plan o no iniciar."
+  - myth: "Funciona para todas las calvicies."
+    reality: "Falso. PRP funciona en alopecia androgenética temprana con folículos miniaturizados aún viables. NO funciona en alopecia cicatrizal, alopecia areata avanzada, calvicie completa o zonas sin folículos. CLIBEL evalúa con tricoscopia antes de proponer plan capilar."
+  - myth: "Es lo mismo en todas las clínicas."
+    reality: "Diferencia importante: kit estéril certificado vs protocolo manual abierto. Kits Regen Lab, Arthrex, Ycellbio producen concentraciones plaquetarias consistentes; protocolo manual genera variabilidad y riesgo de contaminación. CLIBEL solo trabaja con kit certificado."
+commitments:
+  - title: "Hidratación abundante 48 h pre y post"
+    text: "Imprescindible. 2L+ de agua los 2 días previos facilita extracción venosa y los 3 días posteriores potencia la respuesta regenerativa. Sin hidratación, la extracción es difícil y la respuesta biológica se compromete."
+    weight: "Imprescindible"
+  - title: "Suspender AINEs 5 días antes"
+    text: "Imprescindible. Ibuprofeno, naproxeno, aspirina, paracetamol/aspirina combos afectan función plaquetaria y reducen calidad del PRP obtenido. Si tomas anticoagulante crónico, NO suspendas sin autorización médica."
+    weight: "Imprescindible"
+  - title: "Sin alcohol 48 h antes y 24 h después"
+    text: "Imprescindible. Afecta función plaquetaria pre-extracción y compromete respuesta biológica post-aplicación. Evita las 72 h alrededor de la sesión."
+    weight: "Imprescindible"
+  - title: "Completar el plan de 3 sesiones"
+    text: "Imprescindible. El PRP requiere acumulación de estímulos para respuesta documentable. Saltar sesiones o dejar plan incompleto da resultado parcial o nulo. Si financieramente no puedes completar, mejor esperar."
+    weight: "Imprescindible"
+  - title: "SPF 50+ diario 14 días post-sesión"
+    text: "Recomendado. La piel post-PRP es ligeramente más fotosensible durante 2 semanas. SPF estricto previene hiperpigmentación en puntos de inyección y potencia recuperación cutánea."
+    weight: "Recomendado"
+  - title: "Coordinación con otros tratamientos médicos"
+    text: "Opcional pero importante. Si tomas medicamentos sistémicos (anticoagulantes, hormonales, inmunosupresores), CLIBEL coordina con tu médico tratante para evaluar compatibilidad. La integralidad mejora resultado."
+    weight: "Opcional"
+safetyProtocol:
+  - title: "Kit estéril single-use certificado"
+    text: "CLIBEL emplea exclusivamente kits Regen Lab, Arthrex o Ycellbio — single-use con certificación regulatoria. Esto garantiza esterilidad, concentración plaquetaria consistente y trazabilidad. Te mostramos el kit cerrado antes de extraer."
+    kind: "producto"
+  - title: "Extracción venosa por personal médico"
+    text: "La extracción de sangre la realiza personal MÉDICO con certificación en venopunción — no técnico, no esteticista. Esto reduce riesgo de hematoma, lesión venosa o mala canalización."
+    kind: "personal"
+  - title: "Procesamiento en cabina · sin almacenamiento"
+    text: "El PRP se procesa y aplica en la MISMA sesión — nunca se almacena para uso posterior. Esto elimina riesgo de contaminación durante almacenamiento y garantiza viabilidad plaquetaria óptima."
+    kind: "protocolo"
+  - title: "Centrifugadora certificada · parámetros validados"
+    text: "CLIBEL usa centrifugadora certificada con parámetros calibrados (rpm × tiempo) por fabricante del kit. Cada kit tiene protocolo específico — usar centrifugadora genérica con parámetros aproximados genera PRP de calidad variable."
+    kind: "protocolo"
+  - title: "Análisis hematológico previo si requiere"
+    text: "Si tu historia sugiere trastorno hematológico (anemia severa, trombocitopenia, antecedente oncológico), CLIBEL solicita biometría hemática reciente antes de aplicar. Pacientes con plaquetas <100,000 no son candidatos al PRP estándar."
+    kind: "protocolo"
+  - title: "Manejo de pacientes con hepatitis o VIH"
+    text: "PRP NO transmite estos virus al paciente (es su propia sangre), pero CLIBEL aplica precaución universal en manejo de muestras: kit dedicado, procesamiento aislado, desecho biopeligroso protocolizado. Personal protegido durante todo el proceso."
+    kind: "personal"
+  - title: "Sin sustitutos · solo PRP autólogo"
+    text: "CLIBEL nunca usa 'PRP sintético', 'mezcla de plasma', o 'plasma combinado con producto X'. El PRP autólogo es la única forma con evidencia clínica documentada. Cualquier 'PRP+algo' es producto distinto sin la evidencia del PRP puro."
+    kind: "producto"
+  - title: "Documentación de cada sesión"
+    text: "Cada sesión documenta: ml extraídos, kit lote, parámetros centrifugación, ml aplicados, zona, técnica, respuesta basal. Foto comparativa pre y post-plan. Trazabilidad clínica total."
+    kind: "protocolo"
+comparison:
+  - aspect: "Tipo de kit"
+    home: "—"
+    spa: "Tubos genéricos sin certificación · protocolo manual"
+    clibel: "Kit single-use certificado (Regen Lab, Arthrex, Ycellbio) con trazabilidad"
+  - aspect: "Quién realiza extracción venosa"
+    home: "—"
+    spa: "Enfermera o técnico de cabina"
+    clibel: "Personal MÉDICO con certificación en venopunción"
+  - aspect: "Concentración plaquetaria"
+    home: "—"
+    spa: "Variable (depende de protocolo manual)"
+    clibel: "Consistente (kit certificado garantiza 4–6× concentración basal)"
+  - aspect: "Almacenamiento del producto"
+    home: "—"
+    spa: "Algunos almacenan para uso posterior (riesgoso)"
+    clibel: "Procesamiento y aplicación en misma sesión · sin almacenamiento"
+  - aspect: "Análisis hematológico previo"
+    home: "—"
+    spa: "Sin descarte de trastornos hematológicos"
+    clibel: "Biometría hemática solicitada si hay antecedente clínico relevante"
+  - aspect: "Tricoscopia previa (capilar)"
+    home: "—"
+    spa: "Sin evaluación folicular previa"
+    clibel: "Tricoscopia obligatoria antes de proponer plan capilar · descarte de cicatrizal"
+  - aspect: "Documentación clínica"
+    home: "—"
+    spa: "Sin foto comparativa ni expediente"
+    clibel: "Foto multi-ángulo pre y post-plan + parámetros centrifugación documentados"
 publishedAt: 2026-01-25
 ---
 
-## Tu cuerpo, tu mejor regenerador
+## PRP: la única medicina estética que no puede rechazarte
 
-El PRP utiliza un concentrado de plaquetas obtenido de tu propia sangre, rico en factores de crecimiento que estimulan los procesos naturales de regeneración tisular. Es una terapia bioidéntica de muy bajo riesgo y resultados progresivos.
+El plasma rico en plaquetas es probablemente el procedimiento de medicina estética con **mejor perfil de seguridad biológico** del catálogo, porque no puede causar reacción alérgica ni rechazo: es 100% autólogo. Es tu propia sangre, procesada en cabina, devuelta concentrada con sus factores de crecimiento naturales. Lo que CLIBEL hace no es introducir un producto extraño en tu cuerpo — es **potenciar tu propia biología regenerativa**.
 
-### Aplicaciones principales
+Lo que sí exige criterio clínico es el proceso: extracción venosa estéril, kit certificado para garantizar concentración plaquetaria consistente, centrifugación con parámetros validados y aplicación en la misma sesión. CLIBEL emplea kits single-use de fabricantes certificados (Regen Lab, Arthrex, Ycellbio) porque es la diferencia entre PRP con evidencia clínica y plasma manipulado en tubos genéricos.
 
-- **Facial:** rejuvenecimiento integral, luminosidad y firmeza.
-- **Capilar:** estimulación del folículo piloso para combatir caída.
-- **Cicatrices:** mejora marcas de acné y cicatrices superficiales.
-- **Combinado** con mesoterapia, microneedling o láser para potenciar resultados.
+> El PRP no es magia regenerativa — es **biología paciente**. Tu propio cuerpo respondiendo a un estímulo concentrado que tarda semanas en manifestarse.
+> <cite>Filosofía CLIBEL · PRP</cite>
 
-### Procedimiento
+### ¿Para quién es este protocolo?
 
-1. Extracción de una pequeña muestra de sangre.
-2. Centrifugación para concentrar las plaquetas.
-3. Aplicación mediante microinyecciones o microneedling.
-4. Sin recuperación significativa: puedes seguir tu rutina normal.
+Pacientes con **rejuvenecimiento facial** (30+, calidad cutánea deteriorada), **alopecia androgenética temprana** (Norwood I-IV en hombres, Ludwig I-II en mujeres), **cicatrices post-acné superficiales** o como **complemento de otros tratamientos** (microneedling, peelings, post-AH). Para casos avanzados de alopecia (cicatrizal, calvicie completa) o cicatrices profundas (ice-pick), el PRP no es suficiente — derivamos o combinamos con protocolos más invasivos.
 
-### Plan recomendado
+CLIBEL **no es buena opción** para pacientes con trastornos hematológicos serios (trombocitopenia <100,000, anemia severa), oncológicos activos sin autorización, sepsis, hepatitis virémicas no controladas o embarazo. Estos casos requieren evaluación específica antes de aplicar.
 
-Tres sesiones mensuales para iniciar, con mantenimiento cada 6-12 meses según objetivos.
+### Lo que SÍ esperar y lo que NO
+
+El PRP estimula procesos biológicos normales — **colágeno, elastina, angiogénesis** — que tardan semanas a meses en manifestarse. No verás cambios inmediatos al salir de cabina; la respuesta es paciente. Cualquier promesa de 'rejuvenecimiento mágico en una sesión' es marketing falso. CLIBEL recomienda **plan completo de 3 sesiones mensuales mínimo** para respuesta documentable.
+
+### Filosofía CLIBEL del PRP
+
+Biológica, paciente y honesta. Aplicamos exclusivamente PRP autólogo puro (sin mezclas con productos sintéticos), con kit certificado, por personal médico, con documentación de cada sesión. Si tu caso no es candidato (alopecia cicatrizal, cicatrices muy profundas, trastorno hematológico), te lo decimos en valoración antes de cobrar. La medicina regenerativa seria es la que reconoce sus propios límites.

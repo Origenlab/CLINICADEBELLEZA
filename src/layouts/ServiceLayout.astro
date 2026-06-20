@@ -3,6 +3,7 @@ import BaseLayout from './BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import HeroNavBar from '../components/HeroNavBar.astro';
 import RelatedCategories from '../components/RelatedCategories.astro';
+import SectionHeader from '../components/SectionHeader.astro';
 import { getCollection } from 'astro:content';
 import { CATEGORIES, CONTACT, SITE, catHref, type Category } from '../consts';
 
@@ -29,6 +30,13 @@ interface Props {
   preCare?: string[];
   postCare?: string[];
   faqs?: { q: string; a: string }[];
+  comparison?: { aspect: string; home?: string; spa?: string; clibel: string }[];
+  modalities?: { name: string; kicker?: string; profile?: string; text: string; intensity?: string; downtime?: string }[];
+  clinicalCases?: { name: string; profile: string; duration?: string; plan: string[]; target: string; accent?: 'gold' | 'mauve' | 'rose' }[];
+  treatmentZones?: { name: string; kicker?: string; sessions?: string; text: string; accent?: 'gold' | 'mauve' | 'rose' }[];
+  myths?: { myth: string; reality: string }[];
+  commitments?: { title: string; text: string; weight?: 'Imprescindible' | 'Recomendado' | 'Opcional' }[];
+  safetyProtocol?: { title: string; text: string; kind?: 'producto' | 'protocolo' | 'personal' | 'reversibilidad' }[];
 }
 
 const {
@@ -53,6 +61,13 @@ const {
   preCare = [],
   postCare = [],
   faqs = [],
+  comparison = [],
+  modalities = [],
+  clinicalCases = [],
+  treatmentZones = [],
+  myths = [],
+  commitments = [],
+  safetyProtocol = [],
 } = Astro.props;
 
 const cat = CATEGORIES[category];
@@ -64,6 +79,20 @@ const siblings = allServices
   .filter((s) => s.data.category === category && s.id !== slug)
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 5);
+
+// === Otras categorías para cross-linking ===
+const otherCategories = (Object.keys(CATEGORIES) as Category[])
+  .filter((key) => key !== category)
+  .map((key) => {
+    const c = CATEGORIES[key];
+    return {
+      key,
+      label: c.label,
+      short: c.short,
+      description: c.description,
+      href: catHref(key),
+    };
+  });
 
 // === Schemas SEO ===
 const breadcrumbSchema = {
@@ -102,6 +131,27 @@ const faqSchema = faqs.length > 0 ? {
 
 const finalSeoTitle = seoTitle ?? `${title} en CDMX | CLIBEL`;
 const finalSeoDesc = seoDescription ?? description;
+
+// === TOC: secciones disponibles en esta página ===
+const toc: { id: string; label: string; n: string }[] = [
+  { id: 'resumen', label: 'Resumen clínico', n: 'I' },
+  ...(benefits.length > 0 || indications.length > 0 || contraindications.length > 0
+    ? [{ id: 'beneficios', label: 'Beneficios e indicaciones', n: 'II' }]
+    : []),
+  ...(clinicalCases.length > 0 ? [{ id: 'casos', label: 'Casos clínicos', n: '★' }] : []),
+  ...(myths.length > 0 ? [{ id: 'mitos', label: 'Mitos vs realidad', n: '❖' }] : []),
+  ...(commitments.length > 0 ? [{ id: 'compromisos', label: 'Tu compromiso', n: '◐' }] : []),
+  ...(safetyProtocol.length > 0 ? [{ id: 'seguridad', label: 'Protocolo de seguridad', n: '⚕' }] : []),
+  ...(treatmentZones.length > 0 ? [{ id: 'zonas', label: 'Zonas de tratamiento', n: '▲' }] : []),
+  ...(modalities.length > 0 ? [{ id: 'modalidades', label: 'Modalidades del protocolo', n: '◆' }] : []),
+  ...(comparison.length > 0 ? [{ id: 'comparativa', label: 'Comparativa clínica', n: '•' }] : []),
+  ...(protocolSteps.length > 0 ? [{ id: 'protocolo', label: 'Protocolo paso a paso', n: 'III' }] : []),
+  ...(timeline.length > 0 ? [{ id: 'resultados', label: 'Línea de resultados', n: 'IV' }] : []),
+  ...(preCare.length > 0 || postCare.length > 0
+    ? [{ id: 'cuidados', label: 'Pre y post sesión', n: 'V' }]
+    : []),
+  ...(faqs.length > 0 ? [{ id: 'preguntas', label: 'Preguntas frecuentes', n: 'VI' }] : []),
+];
 ---
 
 <BaseLayout
@@ -208,21 +258,93 @@ const finalSeoDesc = seoDescription ?? description;
     />
   )}
 
+  <!-- ============================ TOC sticky (índice editorial de la página) ============================ -->
+  {toc.length > 1 && (
+    <nav class="svc-toc" aria-label="Índice de esta página" id="svcToc">
+      <div class="container-x svc-toc-inner">
+        <span class="svc-toc-label">
+          <span class="svc-toc-label-line" aria-hidden="true"></span>
+          <em>Índice</em> de la página
+        </span>
+        <ol class="svc-toc-list">
+          {toc.map((t) => (
+            <li>
+              <a href={`#${t.id}`} class="svc-toc-link" data-toc-id={t.id}>
+                <span class="svc-toc-num" aria-hidden="true">{t.n}</span>
+                <span class="svc-toc-text">{t.label}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+        <a href="/contacto" class="svc-toc-cta">
+          Agendar valoración
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </nav>
+  )}
+
   <!-- ============================ BODY MD + meta sticky 2-col ============================ -->
-  <section class="section bg-white">
+  <section class="section bg-white" id="resumen">
     <div class="container-x">
       <div class="svc-body-grid">
         <article class="svc-body prose-clibel reveal">
+          <div class="svc-chapter-mark svc-chapter-mark--inline">
+            <span class="svc-chapter-num"><em>I</em></span>
+            <span class="svc-chapter-line"></span>
+            <span class="svc-chapter-kicker">Capítulo · Resumen clínico</span>
+          </div>
+
+          <!-- Stat strip clínico editorial -->
+          <dl class="svc-stats">
+            {protocolSteps.length > 0 && (
+              <div class="svc-stats-item">
+                <dt>Pasos clínicos</dt>
+                <dd><em>{String(protocolSteps.length).padStart(2, '0')}</em></dd>
+              </div>
+            )}
+            {duration && (
+              <div class="svc-stats-item">
+                <dt>Duración</dt>
+                <dd><em>{duration.replace(/min/i, '').trim()}</em><span>min</span></dd>
+              </div>
+            )}
+            {sessions && (
+              <div class="svc-stats-item">
+                <dt>Frecuencia</dt>
+                <dd class="svc-stats-text">{sessions}</dd>
+              </div>
+            )}
+            <div class="svc-stats-item">
+              <dt>Aplica</dt>
+              <dd class="svc-stats-text">Personal médico CLIBEL</dd>
+            </div>
+          </dl>
+
           <slot />
 
           {benefits.length > 0 && (
-            <section class="svc-block">
-              <h2>Beneficios clínicos</h2>
+            <section class="svc-block" id="beneficios">
+              <span class="svc-chapter" aria-hidden="true">
+                <span class="svc-chapter-num"><em>II</em></span>
+                <span class="svc-chapter-line"></span>
+                <span class="svc-chapter-kicker">Capítulo · Beneficios e indicaciones</span>
+              </span>
+
+              <header class="svc-block-head">
+                <h2>Beneficios clínicos</h2>
+                <p class="svc-block-lede">
+                  Lo que <strong>CLIBEL</strong> entrega de forma medible y reproducible con cada sesión. Cada beneficio está validado en la práctica clínica diaria — no son promesas de marketing.
+                </p>
+              </header>
+
               <ul class="svc-benefits">
                 {benefits.map((b, i) => (
                   <li>
                     <span class="svc-benefits-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                    <span>{b}</span>
+                    <span class="svc-benefits-text">{b}</span>
                   </li>
                 ))}
               </ul>
@@ -231,13 +353,21 @@ const finalSeoDesc = seoDescription ?? description;
 
           {indications.length > 0 && (
             <section class="svc-block">
-              <h2>Indicado para</h2>
+              <header class="svc-block-head">
+                <h2>Indicado para</h2>
+                <p class="svc-block-lede">
+                  Perfiles cutáneos y motivos de consulta en los que <strong>CLIBEL</strong> recomienda este tratamiento. La valoración previa confirma si tu caso encaja.
+                </p>
+              </header>
+
               <ul class="svc-indic">
                 {indications.map((it) => (
                   <li>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
+                    <span class="svc-indic-icon" aria-hidden="true">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                    </span>
                     <span>{it}</span>
                   </li>
                 ))}
@@ -247,33 +377,47 @@ const finalSeoDesc = seoDescription ?? description;
 
           {contraindications.length > 0 && (
             <section class="svc-block svc-contra">
-              <header>
-                <span class="svc-contra-tag">Importante</span>
-                <h2>Contraindicaciones</h2>
-              </header>
-              <p>Este tratamiento puede no ser adecuado en los siguientes casos. <strong>CLIBEL</strong> valora cada paciente antes de aplicar:</p>
-              <ul>
-                {contraindications.map((c) => (
-                  <li>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              <div class="svc-contra-grid">
+                <header class="svc-contra-head">
+                  <span class="svc-contra-tag">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                     </svg>
-                    <span>{c}</span>
-                  </li>
-                ))}
-              </ul>
+                    Importante · Seguridad clínica
+                  </span>
+                  <h2>Contra-<br/>indicaciones</h2>
+                  <p class="svc-contra-lede">
+                    Este tratamiento puede no ser adecuado en los siguientes casos. <strong>CLIBEL</strong> valora cada paciente antes de aplicar — si te identificas con alguno, coméntalo en valoración para ajustar el protocolo o sustituirlo por uno más seguro para tu piel.
+                  </p>
+                  <div class="svc-contra-cta">
+                    <a href={wa} target="_blank" rel="noopener">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                      Pregunta por WhatsApp clínico
+                    </a>
+                  </div>
+                </header>
+                <ul class="svc-contra-list">
+                  {contraindications.map((c, i) => (
+                    <li>
+                      <span class="svc-contra-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                      <span class="svc-contra-text">{c}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </section>
           )}
         </article>
 
-        <!-- Sticky meta card -->
+        <!-- Sticky sidebar — widgets modulares (interlinking pro) -->
         <aside class="svc-side">
-          <div class="svc-side-card">
-            <span class="svc-side-icon" aria-hidden="true">{icon ?? '✦'}</span>
-            <span class="svc-side-kicker">{cat.label}</span>
-            <h3 class="svc-side-title">{title}</h3>
+          <!-- Widget 1: Ficha clínica del tratamiento -->
+          <div class="svc-widget svc-widget--main">
+            <span class="svc-widget-icon" aria-hidden="true">{icon ?? '✦'}</span>
+            <span class="svc-widget-kicker">Ficha clínica · {cat.short}</span>
+            <h3 class="svc-widget-title">{title}</h3>
 
-            <dl class="svc-side-meta">
+            <dl class="svc-widget-meta">
               {duration && (
                 <div>
                   <dt>Duración</dt>
@@ -286,52 +430,260 @@ const finalSeoDesc = seoDescription ?? description;
                   <dd>{sessions}</dd>
                 </div>
               )}
+              {price && (
+                <div>
+                  <dt>Inversión</dt>
+                  <dd>{price}</dd>
+                </div>
+              )}
               <div>
-                <dt>Aplicación</dt>
+                <dt>Aplica</dt>
                 <dd>Personal clínico CLIBEL</dd>
               </div>
               <div>
-                <dt>Trazabilidad</dt>
-                <dd>Expediente digital documentado</dd>
+                <dt>Expediente</dt>
+                <dd>Digital · sesión a sesión</dd>
               </div>
             </dl>
 
-            <div class="svc-side-actions">
-              <a href="/contacto" class="btn btn-primary svc-side-cta">Agendar valoración</a>
-              <a href={wa} target="_blank" rel="noopener" class="svc-side-wa">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-                <span>WhatsApp clínico</span>
+            <div class="svc-widget-actions">
+              <a href="/contacto" class="btn btn-primary svc-widget-cta">Agendar valoración</a>
+              <a href={wa} target="_blank" rel="noopener" class="svc-widget-wa">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                <span>WhatsApp clínico · &lt; 2h</span>
               </a>
             </div>
 
-            <p class="svc-side-foot">Valoración sin costo · Respuesta &lt; 2h · COFEPRIS</p>
+            <p class="svc-widget-foot">Valoración sin costo · COFEPRIS · {SITE.founded ? `${new Date().getFullYear() - parseInt(SITE.founded)} años` : 'Respaldo médico'}</p>
+          </div>
+
+          <!-- Widget 2: Qué incluye cada sesión (derivado del protocolo si existe) -->
+          {protocolSteps.length > 0 && (
+            <div class="svc-widget">
+              <span class="svc-widget-tag">Incluido</span>
+              <h4 class="svc-widget-h">Cada sesión incluye</h4>
+              <ul class="svc-widget-checks">
+                {protocolSteps.map((step) => (
+                  <li>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    <span>{step.title}</span>
+                  </li>
+                ))}
+              </ul>
+              <a href="#protocolo" class="svc-widget-link">Ver protocolo completo →</a>
+            </div>
+          )}
+
+          <!-- Widget 3: Respaldo clínico · trust block -->
+          <div class="svc-widget svc-widget--trust">
+            <span class="svc-widget-tag svc-widget-tag--gold">Respaldo clínico</span>
+            <h4 class="svc-widget-h">¿Por qué <em>CLIBEL</em>?</h4>
+            <dl class="svc-widget-trust-list">
+              <div>
+                <dt>COFEPRIS</dt>
+                <dd>Registro vigente y productos con trazabilidad por lote</dd>
+              </div>
+              <div>
+                <dt>Experiencia</dt>
+                <dd>{SITE.founded ? `${new Date().getFullYear() - parseInt(SITE.founded)} años atendiendo en CDMX` : 'Décadas en CDMX'}</dd>
+              </div>
+              <div>
+                <dt>Personal</dt>
+                <dd>Médico certificado · técnicas validadas internacionalmente</dd>
+              </div>
+              <div>
+                <dt>Expediente</dt>
+                <dd>Diagnóstico, protocolo y respuesta documentados por escrito</dd>
+              </div>
+            </dl>
+            <div class="svc-widget-link-row">
+              <a href="/nosotros" class="svc-widget-link">Sobre CLIBEL →</a>
+              <a href="/equipo" class="svc-widget-link">Equipo médico →</a>
+            </div>
+          </div>
+
+          <!-- Widget 4: Otros tratamientos de la categoría -->
+          {siblings.length > 0 && (
+            <div class="svc-widget">
+              <span class="svc-widget-tag">{cat.short} · Misma categoría</span>
+              <h4 class="svc-widget-h">Tratamientos relacionados</h4>
+              <ul class="svc-widget-related">
+                {siblings.map((s, i) => (
+                  <li>
+                    <a href={`/servicios/${s.id}`}>
+                      <span class="svc-widget-related-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                      <span class="svc-widget-related-body">
+                        <span class="svc-widget-related-name">{s.data.title}</span>
+                        <span class="svc-widget-related-desc">{s.data.description}</span>
+                      </span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                      </svg>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <a href={catHref(category)} class="svc-widget-link">Ver toda la categoría {cat.short.toLowerCase()} →</a>
+            </div>
+          )}
+
+          <!-- Widget 5: Cross-link a otras categorías CLIBEL -->
+          <div class="svc-widget svc-widget--cross">
+            <span class="svc-widget-tag">Cross-link · Servicios CLIBEL</span>
+            <h4 class="svc-widget-h">Complementa tu plan</h4>
+            <p class="svc-widget-p">
+              Este tratamiento se integra con el resto del catálogo <strong>CLIBEL</strong>. Explora otras áreas para construir un plan estético completo:
+            </p>
+            <ul class="svc-widget-cats">
+              {otherCategories.map((c) => (
+                <li>
+                  <a href={c.href}>
+                    <span class="svc-widget-cats-arrow" aria-hidden="true">→</span>
+                    <span class="svc-widget-cats-body">
+                      <span class="svc-widget-cats-name">{c.label}</span>
+                      <span class="svc-widget-cats-desc">{c.description}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Widget 6: Línea editorial — info de contacto rápido -->
+          <div class="svc-widget svc-widget--contact">
+            <span class="svc-widget-tag svc-widget-tag--dark">Contacto directo</span>
+            <h4 class="svc-widget-h svc-widget-h--dark">Habla con <em>CLIBEL</em></h4>
+            <dl class="svc-widget-contact-list">
+              <div>
+                <dt>WhatsApp</dt>
+                <dd><a href={wa} target="_blank" rel="noopener">{CONTACT.phoneDisplay}</a></dd>
+              </div>
+              <div>
+                <dt>Email</dt>
+                <dd><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></dd>
+              </div>
+              <div>
+                <dt>Horario</dt>
+                <dd>{CONTACT.hoursShort}</dd>
+              </div>
+              <div>
+                <dt>Ubicación</dt>
+                <dd>{CONTACT.address}</dd>
+              </div>
+            </dl>
+            <a href="/contacto" class="svc-widget-link svc-widget-link--gold">Ver sucursales y mapa →</a>
           </div>
         </aside>
       </div>
     </div>
   </section>
 
-  <!-- ============================ PROTOCOLO PASO A PASO (si frontmatter) ============================ -->
-  {protocolSteps.length > 0 && (
-    <section class="section svc-protocol-section">
-      <div aria-hidden="true" class="svc-protocol-bg"></div>
+  <!-- ============================ CASOS CLÍNICOS (sección opcional · entre Cap II y Modalidades) ============================ -->
+  {clinicalCases.length > 0 && (
+    <section class="section svc-cases" id="casos">
+      <div class="container-x">
+        <div class="svc-chapter-mark svc-chapter-mark--marker">
+          <span class="svc-chapter-num"><em>★</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Casos clínicos</span>
+        </div>
 
-      <div class="container-x relative">
-        <header class="svc-section-head">
-          <span class="kicker-line">Cómo es la sesión</span>
-          <h2 class="svc-section-title">Protocolo <em>CLIBEL</em> paso a paso.</h2>
-          <p class="svc-section-lede">
-            Lo que <strong>CLIBEL</strong> hace exactamente cuando vienes a este tratamiento. Sin saltos, sin improvisación — cada paso documentado en tu expediente clínico.
-          </p>
-        </header>
+        <SectionHeader
+          marginBottom="md"
+          kicker="Perfiles que atendemos"
+          title={`Cómo <em>CLIBEL</em> trata<br/>cada caso real.`}
+          paragraphs={[
+            `Estos son los perfiles de paciente más frecuentes que <strong>CLIBEL</strong> atiende para este tratamiento — y el plan clínico tipo para cada uno. No es venta de paquete: es ejemplo de cómo se diseña el protocolo según el caso concreto.`,
+            `Tu valoración inicial en <strong>CLIBEL</strong> identifica en qué perfil encajas (o cómo combinas varios) y se traduce en un plan personalizado por escrito antes de empezar.`,
+          ]}
+        />
 
-        <ol class="psteps">
-          {protocolSteps.map((step) => (
-            <li class="pstep reveal">
-              <span class="pstep-num" aria-hidden="true">{step.n}</span>
-              <div class="pstep-body">
-                <h3 class="pstep-title">{step.title}</h3>
-                <p class="pstep-text">{step.text}</p>
+        <ol class="svc-cases-grid" data-count={clinicalCases.length}>
+          {clinicalCases.map((c, i) => (
+            <li class:list={['svc-case', c.accent && `svc-case--${c.accent}`]}>
+              <header class="svc-case-head">
+                <span class="svc-case-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <div class="svc-case-titles">
+                  <span class="svc-case-profile">{c.profile}</span>
+                  <h3 class="svc-case-name">{c.name}</h3>
+                </div>
+              </header>
+
+              {c.duration && (
+                <span class="svc-case-duration">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  {c.duration}
+                </span>
+              )}
+
+              {c.plan.length > 0 && (
+                <div class="svc-case-plan">
+                  <span class="svc-case-plan-label">Plan tipo</span>
+                  <ul>
+                    {c.plan.map((p) => (
+                      <li>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <p class="svc-case-target"><strong>Objetivo:</strong> {c.target}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <!-- ============================ MITOS VS REALIDAD (sección opcional · misinformación común) ============================ -->
+  {myths.length > 0 && (
+    <section class="section svc-myths" id="mitos">
+      <div class="container-x">
+        <div class="svc-chapter-mark svc-chapter-mark--marker">
+          <span class="svc-chapter-num"><em>❖</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Mitos vs realidad</span>
+        </div>
+
+        <SectionHeader
+          marginBottom="md"
+          kicker="Lo que se dice vs lo que aplica"
+          title={`Misinformación común<br/>sobre <em>${title.toLowerCase()}</em>.`}
+          paragraphs={[
+            `Hay creencias populares que dominan la conversación sobre ${title.toLowerCase()} en redes sociales, foros y promociones de spa. <strong>CLIBEL</strong> aclara aquí lo que es real y lo que es marketing — sin endulzar, porque la información honesta es lo que te permite decidir con criterio.`,
+            `Si tu motivo de consulta nace de una promesa que escuchaste en otro lado, agenda valoración: <strong>CLIBEL</strong> te dice qué esperar de forma realista y qué herramienta clínica corresponde a tu caso.`,
+          ]}
+        />
+
+        <ol class="svc-myths-grid">
+          {myths.map((m, i) => (
+            <li class="svc-myth">
+              <div class="svc-myth-myth">
+                <span class="svc-myth-tag svc-myth-tag--myth">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                  Mito {String(i + 1).padStart(2, '0')}
+                </span>
+                <p class="svc-myth-text">{m.myth}</p>
+              </div>
+              <div class="svc-myth-reality">
+                <span class="svc-myth-tag svc-myth-tag--reality">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Realidad clínica
+                </span>
+                <p class="svc-myth-text">{m.reality}</p>
               </div>
             </li>
           ))}
@@ -340,26 +692,395 @@ const finalSeoDesc = seoDescription ?? description;
     </section>
   )}
 
+  <!-- ============================ COMPROMISOS DEL PACIENTE (sección opcional · qué tienes que aportar tú) ============================ -->
+  {commitments.length > 0 && (
+    <section class="section svc-commit" id="compromisos">
+      <div class="container-x">
+        <div class="svc-chapter-mark svc-chapter-mark--marker">
+          <span class="svc-chapter-num"><em>◐</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Tu compromiso clínico</span>
+        </div>
+
+        <SectionHeader
+          marginBottom="md"
+          kicker="Lo que aportas tú"
+          title={`El resultado<br/>no es solo de <em>CLIBEL</em>.`}
+          paragraphs={[
+            `Este tratamiento da resultados sostenidos cuando se combina con compromisos del paciente fuera de cabina. <strong>CLIBEL</strong> aplica la técnica clínica; tú aportas hidratación, hábitos y constancia — la mitad del plan ocurre en tu día a día.`,
+            `Estos son los compromisos que <strong>CLIBEL</strong> pide para optimizar tu resultado. No son sugerencias decorativas: cumplir los marcados como <em>imprescindible</em> es la diferencia entre obtener el resultado documentado y obtener un resultado parcial.`,
+          ]}
+        />
+
+        <ol class="svc-commit-grid">
+          {commitments.map((c, i) => (
+            <li class:list={['svc-commit-item', c.weight && `svc-commit-item--${c.weight.toLowerCase()}`]}>
+              <header class="svc-commit-head">
+                <span class="svc-commit-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                {c.weight && (
+                  <span class={`svc-commit-weight svc-commit-weight--${c.weight.toLowerCase()}`}>
+                    {c.weight}
+                  </span>
+                )}
+              </header>
+              <h3 class="svc-commit-title">{c.title}</h3>
+              <p class="svc-commit-text">{c.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <!-- ============================ PROTOCOLO DE SEGURIDAD CLÍNICA (sección opcional · tratamientos invasivos) ============================ -->
+  {safetyProtocol.length > 0 && (
+    <section class="section svc-safety" id="seguridad">
+      <div aria-hidden="true" class="svc-safety-bg"></div>
+      <div class="container-x relative">
+        <div class="svc-chapter-mark svc-chapter-mark--dark svc-chapter-mark--marker">
+          <span class="svc-chapter-num"><em>⚕</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Protocolo de seguridad clínica</span>
+        </div>
+
+        <SectionHeader
+          variant="dark"
+          marginBottom="md"
+          kicker="Seguridad antes que estética"
+          title={`Lo que <em>CLIBEL</em><br/>tiene listo si algo sale mal.`}
+          paragraphs={[
+            `Los tratamientos invasivos exigen infraestructura de seguridad real — no slogans. En <strong>CLIBEL</strong> mantenemos protocolo de manejo de complicaciones documentado, productos antagonistas disponibles en cabina, personal médico capacitado en emergencias y coordinación inter-especialidad si la situación lo requiere.`,
+            `Esto es lo que separa medicina estética seria de procedimiento estético: no es solo aplicar el producto correctamente — es <strong>tener listo todo lo que necesitarías</strong> en el caso poco probable de que algo no salga como esperado.`,
+          ]}
+        />
+
+        <ol class="svc-safety-grid">
+          {safetyProtocol.map((s, i) => (
+            <li class:list={['svc-safety-item', s.kind && `svc-safety-item--${s.kind}`]}>
+              <header class="svc-safety-head">
+                <span class="svc-safety-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                {s.kind && (
+                  <span class={`svc-safety-kind svc-safety-kind--${s.kind}`}>
+                    {s.kind}
+                  </span>
+                )}
+              </header>
+              <h3 class="svc-safety-title">{s.title}</h3>
+              <p class="svc-safety-text">{s.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <!-- ============================ ZONAS DE TRATAMIENTO (sección opcional · áreas anatómicas) ============================ -->
+  {treatmentZones.length > 0 && (
+    <section class="section svc-zones" id="zonas">
+      <div class="container-x">
+        <div class="svc-chapter-mark svc-chapter-mark--marker">
+          <span class="svc-chapter-num"><em>▲</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Zonas de tratamiento</span>
+        </div>
+
+        <SectionHeader
+          marginBottom="md"
+          kicker="Áreas anatómicas"
+          title={`Las zonas que <em>CLIBEL</em><br/>trata con este protocolo.`}
+          paragraphs={[
+            `<strong>CLIBEL</strong> aplica este tratamiento sobre las áreas anatómicas con mayor demanda clínica. Cada zona tiene su propio comportamiento adiposo, sensibilidad y número de sesiones recomendado — la valoración corporal define qué áreas se trabajan en tu plan.`,
+            `Si tu zona de interés no aparece aquí, agenda valoración: <strong>CLIBEL</strong> evalúa cada caso para confirmar si la técnica es la adecuada o si conviene combinar con otro protocolo corporal.`,
+          ]}
+        />
+
+        <ol class="svc-zones-grid" data-count={treatmentZones.length}>
+          {treatmentZones.map((z, i) => (
+            <li class:list={['svc-zone', z.accent && `svc-zone--${z.accent}`]}>
+              <header class="svc-zone-head">
+                <span class="svc-zone-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <div class="svc-zone-titles">
+                  {z.kicker && <span class="svc-zone-kicker">{z.kicker}</span>}
+                  <h3 class="svc-zone-name">{z.name}</h3>
+                </div>
+              </header>
+              <p class="svc-zone-text">{z.text}</p>
+              {z.sessions && (
+                <span class="svc-zone-sessions">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  {z.sessions}
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <!-- ============================ MODALIDADES / VARIANTES (sección opcional · entre Cap II y Comparativa) ============================ -->
+  {modalities.length > 0 && (
+    <section class="section svc-modalities" id="modalidades">
+      <div class="container-x">
+        <div class="svc-chapter-mark svc-chapter-mark--marker">
+          <span class="svc-chapter-num"><em>◆</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Modalidades del protocolo</span>
+        </div>
+
+        <SectionHeader
+          marginBottom="md"
+          kicker={`Variantes · ${title}`}
+          title={`Una técnica,<br/>varias <em>modalidades</em>.`}
+          paragraphs={[
+            `<strong>CLIBEL</strong> aplica este tratamiento en varias modalidades según tu diagnóstico cutáneo. Cada variante difiere en activo, profundidad y perfil de paciente — no es la misma solución para todas las pieles.`,
+            `La modalidad final se elige en valoración con <strong>CLIBEL</strong> y puede combinarse o alternarse a lo largo del plan según evolución. Aquí están las opciones disponibles para que conozcas el catálogo antes de tu cita.`,
+          ]}
+        />
+
+        <ol class="svc-mod-grid" data-count={modalities.length}>
+          {modalities.map((m, i) => (
+            <li class="svc-mod-card">
+              <header class="svc-mod-head">
+                <span class="svc-mod-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <div class="svc-mod-titles">
+                  {m.kicker && <span class="svc-mod-kicker">{m.kicker}</span>}
+                  <h3 class="svc-mod-name">{m.name}</h3>
+                </div>
+              </header>
+
+              {m.profile && (
+                <span class="svc-mod-profile">{m.profile}</span>
+              )}
+
+              <p class="svc-mod-text">{m.text}</p>
+
+              {(m.intensity || m.downtime) && (
+                <dl class="svc-mod-meta">
+                  {m.intensity && (
+                    <div>
+                      <dt>Intensidad</dt>
+                      <dd>{m.intensity}</dd>
+                    </div>
+                  )}
+                  {m.downtime && (
+                    <div>
+                      <dt>Downtime</dt>
+                      <dd>{m.downtime}</dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <!-- ============================ COMPARATIVA CLÍNICA (sección opcional · entre Cap II y Cap III) ============================ -->
+  {comparison.length > 0 && (
+    <section class="section svc-compare" id="comparativa">
+      <div class="container-x">
+        <div class="svc-chapter-mark svc-chapter-mark--marker">
+          <span class="svc-chapter-num"><em>·</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Comparativa clínica</span>
+        </div>
+
+        <SectionHeader
+          marginBottom="md"
+          kicker="Cómo lo hace CLIBEL"
+          title={`Lo que <em>CLIBEL</em> hace<br/>distinto.`}
+          paragraphs={[
+            `Comparativa honesta entre cuidado doméstico, spa estético y el protocolo clínico de <strong>CLIBEL</strong>. No es marketing — es lo que clínicamente distingue cada nivel de servicio cuando se trata de ${title.toLowerCase()}.`,
+            `Cada aspecto de la tabla está documentado en la práctica diaria de <strong>CLIBEL</strong>. Si dudas qué nivel necesitas, agenda valoración y te orientamos sin compromiso.`,
+          ]}
+        />
+
+        <!-- Tabla comparativa editorial · responsive (tabla en desktop, cards en mobile) -->
+        <div class="svc-compare-wrap">
+          <table class="svc-compare-table">
+            <thead>
+              <tr>
+                <th scope="col" class="svc-compare-aspect">Aspecto clínico</th>
+                <th scope="col">En casa</th>
+                <th scope="col">Spa estético</th>
+                <th scope="col" class="svc-compare-clibel">CLIBEL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparison.map((row, i) => (
+                <tr>
+                  <th scope="row" class="svc-compare-aspect">
+                    <span class="svc-compare-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                    <span>{row.aspect}</span>
+                  </th>
+                  <td>{row.home ?? '—'}</td>
+                  <td>{row.spa ?? '—'}</td>
+                  <td class="svc-compare-clibel">{row.clibel}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <!-- Versión mobile: stack de cards -->
+          <ol class="svc-compare-cards">
+            {comparison.map((row, i) => (
+              <li class="svc-compare-card">
+                <header>
+                  <span class="svc-compare-card-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <h3>{row.aspect}</h3>
+                </header>
+                <dl>
+                  {row.home && (
+                    <div>
+                      <dt>En casa</dt>
+                      <dd>{row.home}</dd>
+                    </div>
+                  )}
+                  {row.spa && (
+                    <div>
+                      <dt>Spa estético</dt>
+                      <dd>{row.spa}</dd>
+                    </div>
+                  )}
+                  <div class="svc-compare-card-clibel">
+                    <dt>CLIBEL</dt>
+                    <dd>{row.clibel}</dd>
+                  </div>
+                </dl>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ============================ PROTOCOLO PASO A PASO (si frontmatter) ============================ -->
+  {protocolSteps.length > 0 && (
+    <section class="section svc-protocol-section" id="protocolo">
+      <div aria-hidden="true" class="svc-protocol-bg"></div>
+
+      <div class="container-x relative">
+        <div class="svc-chapter-mark svc-chapter-mark--dark">
+          <span class="svc-chapter-num"><em>III</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Capítulo</span>
+        </div>
+
+        <SectionHeader
+          variant="dark"
+          marginBottom="md"
+          kicker="Cómo es la sesión"
+          title={`Protocolo <em>CLIBEL</em><br/>paso a paso.`}
+          paragraphs={[
+            `Lo que <strong>CLIBEL</strong> hace exactamente cuando vienes a este tratamiento. Sin saltos, sin improvisación — cada paso queda documentado en tu expediente clínico digital con producto, parámetros y respuesta cutánea.`,
+            `<strong>CLIBEL</strong> aplica este protocolo siempre en el mismo orden, ajustando dosis e intensidad a tu valoración previa. La trazabilidad no es marketing — es la base sobre la que afinamos sesión a sesión.`,
+          ]}
+        />
+
+        <!-- Stat strip protocolo -->
+        <dl class="psteps-meta">
+          <div>
+            <dt>Pasos</dt>
+            <dd><em>{String(protocolSteps.length).padStart(2, '0')}</em></dd>
+          </div>
+          {duration && (
+            <div>
+              <dt>Duración total</dt>
+              <dd class="psteps-meta-text">{duration}</dd>
+            </div>
+          )}
+          <div>
+            <dt>Documentación</dt>
+            <dd class="psteps-meta-text">Expediente digital</dd>
+          </div>
+          <div>
+            <dt>Productos</dt>
+            <dd class="psteps-meta-text">COFEPRIS · trazables</dd>
+          </div>
+        </dl>
+
+        <ol class="psteps">
+          {protocolSteps.map((step, i) => (
+            <li class="pstep reveal">
+              <span class="pstep-num" aria-hidden="true">{step.n}</span>
+              <div class="pstep-body">
+                <span class="pstep-kicker">Paso {String(i + 1).padStart(2, '0')} <span class="pstep-of">/ {String(protocolSteps.length).padStart(2, '0')}</span></span>
+                <h3 class="pstep-title">{step.title}</h3>
+                <p class="pstep-text">{step.text}</p>
+              </div>
+              {i < protocolSteps.length - 1 && (
+                <span class="pstep-arrow" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+
+      </div>
+    </section>
+  )}
+
   <!-- ============================ TIMELINE DE RESULTADOS (si frontmatter) ============================ -->
   {timeline.length > 0 && (
-    <section class="section bg-white">
+    <section class="section bg-white" id="resultados">
       <div class="container-x">
-        <header class="svc-section-head">
-          <span class="kicker-line">Resultados esperados</span>
-          <h2 class="svc-section-title">Cuándo verás cambios con <em>CLIBEL</em>.</h2>
-          <p class="svc-section-lede">
-            Línea de tiempo realista basada en evidencia clínica de pacientes de <strong>CLIBEL</strong>. Los tiempos biológicos no se aceleran — pero sí se documentan y comparan.
-          </p>
-        </header>
+        <div class="svc-chapter-mark">
+          <span class="svc-chapter-num"><em>IV</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Capítulo</span>
+        </div>
 
-        <ol class="tl-list">
-          {timeline.map((t) => (
+        <SectionHeader
+          marginBottom="md"
+          kicker="Resultados esperados"
+          title={`Cuándo verás cambios<br/>con <em>CLIBEL</em>.`}
+          paragraphs={[
+            `Línea de tiempo realista basada en evidencia clínica de pacientes de <strong>CLIBEL</strong>. Los tiempos biológicos no se aceleran — pero sí se documentan, se fotografían y se comparan con tu basal.`,
+            `Cada hito está validado en seguimiento real. <strong>CLIBEL</strong> registra tu evolución en expediente para que decidas mantenimiento con evidencia, no con percepción subjetiva.`,
+          ]}
+        />
+
+        <!-- Stat strip resultados -->
+        <dl class="tl-meta">
+          <div>
+            <dt>Hitos clínicos</dt>
+            <dd><em>{String(timeline.length).padStart(2, '0')}</em></dd>
+          </div>
+          <div>
+            <dt>Primer cambio</dt>
+            <dd class="tl-meta-text">Mismo día</dd>
+          </div>
+          <div>
+            <dt>Seguimiento</dt>
+            <dd class="tl-meta-text">Fotografía clínica</dd>
+          </div>
+          <div>
+            <dt>Validación</dt>
+            <dd class="tl-meta-text">Expediente digital</dd>
+          </div>
+        </dl>
+
+        <!-- Línea de tiempo horizontal (stepper) -->
+        <ol class="tl-list" style={`--tl-count: ${timeline.length};`}>
+          {timeline.map((t, i) => (
             <li class="tl-step reveal">
-              <div class="tl-step-mark">
-                <span class="tl-step-when">{t.when}</span>
-                <span class="tl-step-dot" aria-hidden="true"></span>
+              <div class="tl-step-track" aria-hidden="true">
+                <span class="tl-step-line tl-step-line--before"></span>
+                <span class="tl-step-dot"></span>
+                <span class="tl-step-line tl-step-line--after"></span>
               </div>
               <div class="tl-step-body">
+                <span class="tl-step-kicker">Hito {String(i + 1).padStart(2, '0')} <span class="tl-step-of">/ {String(timeline.length).padStart(2, '0')}</span></span>
+                <span class="tl-step-when">{t.when}</span>
                 <h3 class="tl-step-label">{t.label}</h3>
                 <p class="tl-step-text">{t.text}</p>
               </div>
@@ -372,15 +1093,24 @@ const finalSeoDesc = seoDescription ?? description;
 
   <!-- ============================ PRE / POST CARE (si frontmatter) ============================ -->
   {(preCare.length > 0 || postCare.length > 0) && (
-    <section class="section svc-protocols">
+    <section class="section svc-protocols" id="cuidados">
       <div class="container-x">
-        <header class="svc-section-head svc-section-head--dark">
-          <span class="kicker-line">Protocolos pre / post sesión</span>
-          <h2 class="svc-section-title">Lo que <em>CLIBEL</em> indica antes y después.</h2>
-          <p class="svc-section-lede">
-            <strong>CLIBEL</strong> entrega esto por escrito en tu valoración. Seguirlo no es opcional — la eficacia del tratamiento y la seguridad clínica dependen de cumplir estas indicaciones simples.
-          </p>
-        </header>
+        <div class="svc-chapter-mark svc-chapter-mark--dark">
+          <span class="svc-chapter-num"><em>V</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Capítulo</span>
+        </div>
+
+        <SectionHeader
+          variant="dark"
+          marginBottom="lg"
+          kicker="Protocolos pre / post sesión"
+          title={`Lo que <em>CLIBEL</em><br/>indica antes y después.`}
+          paragraphs={[
+            `<strong>CLIBEL</strong> entrega estas indicaciones por escrito en tu valoración. Seguirlas no es opcional — la eficacia del tratamiento y la seguridad clínica dependen de cumplir estos pasos simples antes y después de la sesión.`,
+            `El protocolo doméstico es tan importante como la técnica en cabina. <strong>CLIBEL</strong> resuelve dudas en tiempo real por WhatsApp clínico durante toda la ventana sensible post-tratamiento.`,
+          ]}
+        />
 
         <div class="protocol-grid">
           {preCare.length > 0 && (
@@ -423,15 +1153,23 @@ const finalSeoDesc = seoDescription ?? description;
 
   <!-- ============================ FAQ + FORM ============================ -->
   {(faqs.length > 0) && (
-    <section class="section bg-[color:var(--color-brand-50)]">
+    <section class="section bg-[color:var(--color-brand-50)]" id="preguntas">
       <div class="container-x">
-        <header class="svc-section-head">
-          <span class="kicker-line">Preguntas frecuentes y contacto</span>
-          <h2 class="svc-section-title">Dudas sobre <em>{title}</em>.</h2>
-          <p class="svc-section-lede">
-            Las preguntas más recurrentes que recibe <strong>CLIBEL</strong> sobre este tratamiento. A la derecha puedes enviarnos tu información — el mensaje llega al WhatsApp clínico pre-armado en menos de 2 horas en horario consulta.
-          </p>
-        </header>
+        <div class="svc-chapter-mark">
+          <span class="svc-chapter-num"><em>VI</em></span>
+          <span class="svc-chapter-line"></span>
+          <span class="svc-chapter-kicker">Capítulo</span>
+        </div>
+
+        <SectionHeader
+          marginBottom="lg"
+          kicker="Preguntas frecuentes y contacto"
+          title={`Dudas sobre <em>${title}</em>.`}
+          paragraphs={[
+            `Las preguntas más recurrentes que recibe <strong>CLIBEL</strong> sobre este tratamiento, respondidas por personal médico — no por copywriter. Si tu duda no aparece aquí, envíanos tu mensaje desde el formulario y te respondemos por WhatsApp clínico.`,
+            `<strong>CLIBEL</strong> contesta en menos de <strong>2 horas</strong> en horario de consulta. El mensaje llega pre-armado con tu nombre, teléfono y servicio de interés para que la valoración avance desde la primera respuesta.`,
+          ]}
+        />
 
         <div class="faq-grid">
           <div class="faq-col">
@@ -500,6 +1238,44 @@ const finalSeoDesc = seoDescription ?? description;
       </div>
     </section>
   )}
+
+  <!-- ============================ TOC scroll-spy ============================ -->
+  <script is:inline>
+    (function () {
+      const toc = document.getElementById('svcToc');
+      if (!toc) return;
+      const links = Array.from(toc.querySelectorAll('[data-toc-id]'));
+      const map = new Map();
+      links.forEach((a) => {
+        const id = a.getAttribute('data-toc-id');
+        const sec = id ? document.getElementById(id) : null;
+        if (sec) map.set(sec, a);
+      });
+      if (!map.size) return;
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              links.forEach((l) => l.classList.remove('is-active'));
+              const link = map.get(e.target);
+              if (link) link.classList.add('is-active');
+            }
+          });
+        },
+        { rootMargin: '-30% 0px -60% 0px', threshold: 0 }
+      );
+      map.forEach((_, sec) => io.observe(sec));
+
+      // Sticky shadow on scroll
+      const onScroll = () => {
+        const r = toc.getBoundingClientRect();
+        toc.classList.toggle('is-stuck', r.top <= 1);
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+  </script>
 
   <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
     (function () {
@@ -704,55 +1480,170 @@ const finalSeoDesc = seoDescription ?? description;
   }
   @media (min-width: 1024px) {
     .svc-body-grid {
-      grid-template-columns: 1.4fr 0.6fr;
-      gap: clamp(2.5rem, 4vw, 4rem);
+      grid-template-columns: minmax(0, 1fr) clamp(320px, 26vw, 400px);
+      gap: clamp(2.5rem, 4vw, 4.5rem);
     }
   }
 
   /* ===== Body article (MD slot + bloques) ===== */
   .svc-body {
-    max-width: 72ch;
+    max-width: none;
+    width: 100%;
+    min-width: 0;
   }
+  /* ===== Editorial prose (Cap I) ===== */
   .svc-body :global(h2) {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(1.65rem, 2.3vw, 2.1rem);
-    line-height: 1.2;
-    letter-spacing: -0.018em;
+    font-size: clamp(1.9rem, 2.8vw, 2.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.024em;
     color: var(--color-ink-900);
-    margin: 2.25rem 0 1rem;
+    margin: 2.75rem 0 1.25rem;
+    max-width: none;
+    position: relative;
+    padding-top: 1.75rem;
+  }
+  .svc-body :global(h2):first-child { margin-top: 0; }
+  .svc-body :global(h2)::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 64px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    border-radius: 2px;
   }
   .svc-body :global(h3) {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(1.2rem, 1.5vw, 1.4rem);
+    font-size: clamp(1.35rem, 1.75vw, 1.65rem);
     line-height: 1.25;
-    color: var(--color-mauve-700);
-    margin: 1.75rem 0 0.75rem;
-    letter-spacing: -0.012em;
+    color: var(--color-ink-900);
+    margin: 2.25rem 0 0.85rem;
+    letter-spacing: -0.018em;
+    max-width: none;
+    position: relative;
+    padding-left: 1.6rem;
+  }
+  .svc-body :global(h3)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 1rem;
+    height: 2px;
+    background: var(--color-brand-400);
+    border-radius: 2px;
   }
   .svc-body :global(p) {
-    font-size: clamp(0.98rem, 1.05vw, 1.08rem);
-    line-height: 1.75;
+    font-size: clamp(1rem, 1.08vw, 1.13rem);
+    line-height: 1.8;
     color: var(--color-ink-700);
-    margin: 0 0 1.1rem;
+    margin: 0 0 1.15rem;
+    max-width: none;
+    text-align: justify;
+    text-justify: inter-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+  }
+  /* Drop cap en primer párrafo después del primer h2 (sólo nivel directo del article) */
+  .svc-body > :global(h2) + :global(p)::first-letter {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    float: left;
+    font-size: 4.6em;
+    line-height: 0.85;
+    padding: 0.18em 0.16em 0 0;
+    margin-bottom: -0.05em;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-700));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--color-mauve-500);
   }
   .svc-body :global(strong) { color: var(--color-ink-900); font-weight: 600; }
-  .svc-body :global(ul),
-  .svc-body :global(ol) {
-    margin: 0.5rem 0 1.25rem;
-    padding-left: 1.5rem;
+
+  /* Editorial UL — checklist clínico (sólo ULs directos del MD slot) */
+  .svc-body > :global(ul),
+  .svc-body > :global(ol) {
+    margin: 1.75rem 0 2rem;
+    max-width: none;
     color: var(--color-ink-700);
     line-height: 1.75;
+    list-style: none;
+    padding: 0;
   }
-  .svc-body :global(ol) { padding-left: 0; counter-reset: olc; list-style: none; }
-  .svc-body :global(ol) :global(li) {
+  .svc-body > :global(ul) {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid rgba(201, 169, 97, 0.32);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.32);
+  }
+  @media (min-width: 720px) {
+    .svc-body > :global(ul) { grid-template-columns: 1fr 1fr; }
+  }
+  .svc-body > :global(ul) > :global(li) {
+    list-style: none;
+    position: relative;
+    padding: 1.05rem 0 1.05rem 2.6rem;
+    margin: 0;
+    font-size: 0.97rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+    border-bottom: 1px dashed rgba(201, 169, 97, 0.28);
+  }
+  @media (min-width: 720px) {
+    .svc-body > :global(ul) > :global(li):nth-child(odd) { padding-right: 1.5rem; }
+    .svc-body > :global(ul) > :global(li):nth-child(even) {
+      padding-left: 3.75rem;
+      border-left: 1px dashed rgba(201, 169, 97, 0.28);
+    }
+    .svc-body > :global(ul) > :global(li):nth-last-child(-n+2) { border-bottom: 0; }
+  }
+  .svc-body > :global(ul) > :global(li):last-child { border-bottom: 0; }
+  .svc-body > :global(ul) > :global(li)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.3rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: rgba(201, 169, 97, 0.16);
+    border: 1.5px solid var(--color-brand-400);
+  }
+  @media (min-width: 720px) {
+    .svc-body > :global(ul) > :global(li):nth-child(even)::before { left: 1.15rem; }
+  }
+  .svc-body > :global(ul) > :global(li)::after {
+    content: '';
+    position: absolute;
+    left: 0.42rem;
+    top: 1.62rem;
+    width: 0.55rem;
+    height: 0.3rem;
+    border-left: 2px solid var(--color-brand-500);
+    border-bottom: 2px solid var(--color-brand-500);
+    transform: rotate(-45deg);
+  }
+  @media (min-width: 720px) {
+    .svc-body > :global(ul) > :global(li):nth-child(even)::after { left: 1.57rem; }
+  }
+
+  /* OL editorial — numerado italic (sólo MD slot) */
+  .svc-body > :global(ol) { padding-left: 0; counter-reset: olc; }
+  .svc-body > :global(ol) > :global(li) {
     counter-increment: olc;
     position: relative;
     padding-left: 2.5rem;
     margin-bottom: 0.55rem;
+    list-style: none;
   }
-  .svc-body :global(ol) :global(li)::before {
+  .svc-body > :global(ol) > :global(li)::before {
     content: counter(olc, decimal-leading-zero);
     position: absolute;
     left: 0;
@@ -766,20 +1657,124 @@ const finalSeoDesc = seoDescription ?? description;
     letter-spacing: 0.04em;
   }
 
-  .svc-block {
-    margin-top: clamp(2.5rem, 4vw, 3.5rem);
-    padding-top: clamp(2rem, 3vw, 2.5rem);
-    border-top: 1px dashed rgba(201, 169, 97, 0.4);
+  /* Stat strip clínico (encima del slot MD) */
+  .svc-stats {
+    margin: 0 0 clamp(2rem, 3vw, 2.75rem);
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-block: 1px solid rgba(201, 169, 97, 0.3);
   }
+  @media (min-width: 720px) {
+    .svc-stats { grid-template-columns: repeat(4, 1fr); }
+  }
+  .svc-stats-item {
+    padding: 1rem 1.1rem 1.05rem;
+    border-right: 1px solid rgba(201, 169, 97, 0.22);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .svc-stats-item:last-child { border-right: 0; }
+  @media (min-width: 720px) {
+    .svc-stats-item { border-bottom: 0; }
+    .svc-stats-item:nth-child(4n) { border-right: 0; }
+  }
+  @media (max-width: 719px) {
+    .svc-stats-item:nth-child(2n) { border-right: 0; }
+    .svc-stats-item:nth-last-child(-n+2) { border-bottom: 0; }
+  }
+  .svc-stats-item:first-child { padding-left: 0; }
+  .svc-stats-item dt {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    margin-bottom: 0.35rem;
+  }
+  .svc-stats-item dd {
+    margin: 0;
+    font-family: var(--font-display);
+    line-height: 1;
+    color: var(--color-ink-900);
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    letter-spacing: -0.02em;
+  }
+  .svc-stats-item dd em {
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 3.2vw, 2.85rem);
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-700));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .svc-stats-item dd span {
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 0.78rem;
+    color: var(--color-ink-500);
+    letter-spacing: 0;
+  }
+  .svc-stats-item .svc-stats-text {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(0.92rem, 1vw, 1.05rem);
+    line-height: 1.25;
+    color: var(--color-ink-900);
+    letter-spacing: -0.01em;
+  }
+
+  .svc-block {
+    margin-top: clamp(3rem, 5vw, 4.5rem);
+    padding-top: clamp(2.5rem, 4vw, 3.5rem);
+    border-top: 0;
+    position: relative;
+  }
+  .svc-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 64px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    border-radius: 2px;
+  }
+  .svc-contra::before { display: none; }
   .svc-block h2 {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(1.65rem, 2.3vw, 2.1rem);
-    line-height: 1.2;
+    font-size: clamp(1.95rem, 2.8vw, 2.65rem);
+    line-height: 1.08;
     color: var(--color-ink-900);
-    margin: 0 0 1.25rem;
-    letter-spacing: -0.018em;
+    margin: 0;
+    letter-spacing: -0.024em;
+    padding-top: 0;
   }
+  .svc-block h2::before {
+    content: none;
+    display: none;
+  }
+  .svc-block-head {
+    margin-bottom: clamp(1.5rem, 2.5vw, 2.25rem);
+    max-width: 72ch;
+  }
+  .svc-block-lede {
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.7;
+    color: var(--color-ink-700);
+    margin: 0.85rem 0 0;
+    text-align: justify;
+    text-justify: inter-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  .svc-block-lede strong { color: var(--color-ink-900); font-weight: 600; }
 
   .svc-benefits {
     list-style: none;
@@ -787,196 +1782,315 @@ const finalSeoDesc = seoDescription ?? description;
     margin: 0;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0.6rem;
+    gap: 0.85rem;
   }
   @media (min-width: 640px) { .svc-benefits { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1280px) { .svc-benefits { grid-template-columns: repeat(3, 1fr); } }
   .svc-benefits li {
     display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.85rem 1rem;
-    background: var(--color-brand-50);
-    border: 1px solid rgba(201, 169, 97, 0.25);
-    border-radius: 0.7rem;
-    font-size: 0.92rem;
-    line-height: 1.5;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.4rem 1.35rem 1.35rem;
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-brand-50) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    border-radius: 1rem;
+    font-size: 0.94rem;
+    line-height: 1.55;
     color: var(--color-ink-700);
-    transition: all 0.25s ease !important;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1) !important;
+    position: relative;
+    overflow: hidden;
+  }
+  .svc-benefits li::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    height: 3px; width: 100%;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    opacity: 0;
+    transition: opacity 0.3s ease !important;
   }
   .svc-benefits li:hover {
     background: white;
     border-color: var(--color-mauve-500);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 36px -18px rgba(31, 20, 24, 0.18);
   }
+  .svc-benefits li:hover::before { opacity: 1; }
   .svc-benefits-num {
     font-family: var(--font-display);
     font-style: italic;
+    font-weight: 400;
+    font-size: 1.85rem;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.25rem;
+  }
+  .svc-benefits-text {
+    color: var(--color-ink-800);
+    font-weight: 500;
     font-size: 0.95rem;
-    color: var(--color-brand-500);
-    line-height: 1.4;
-    opacity: 0.85;
-    flex-shrink: 0;
-    min-width: 22px;
+    line-height: 1.55;
   }
 
+  /* Indicaciones — grid de cards */
   .svc-indic {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    border-top: 0;
   }
+  @media (min-width: 640px) { .svc-indic { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1280px) { .svc-indic { grid-template-columns: repeat(3, 1fr); } }
   .svc-indic li {
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
-    font-size: 0.95rem;
+    gap: 0.85rem;
+    font-size: 0.94rem;
     line-height: 1.55;
     color: var(--color-ink-700);
-    padding-block: 0.4rem;
+    padding: 1.1rem 1.15rem;
+    border: 1px solid rgba(201, 169, 97, 0.28);
+    background: white;
+    border-radius: 0.9rem;
+    transition: all 0.3s ease !important;
   }
-  .svc-indic li svg {
+  .svc-indic li:hover {
+    border-color: var(--color-mauve-500);
+    background: var(--color-brand-50);
+    transform: translateY(-2px);
+  }
+  .svc-indic-icon {
     flex-shrink: 0;
-    margin-top: 0.25rem;
-    color: var(--color-mauve-500);
+    width: 28px; height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--color-brand-400), var(--color-mauve-500));
+    color: white;
+    margin-top: 1px;
+    box-shadow: 0 4px 10px -4px rgba(139, 90, 107, 0.4);
   }
 
-  /* Contraindications */
+  /* Contraindications — 2-col editorial */
   .svc-contra {
-    padding: clamp(1.5rem, 2vw, 1.85rem);
-    background: rgba(198, 43, 62, 0.04);
-    border: 1px solid rgba(198, 43, 62, 0.2);
-    border-radius: 1rem;
-    border-top: 1px solid rgba(198, 43, 62, 0.2);
+    padding: 0;
+    background: linear-gradient(180deg, rgba(198, 43, 62, 0.05) 0%, rgba(198, 43, 62, 0.02) 100%);
+    border: 1px solid rgba(198, 43, 62, 0.22);
+    border-left: 4px solid #c62b3e;
+    border-radius: 1.1rem;
+    margin-top: clamp(3rem, 5vw, 4.5rem);
+    overflow: hidden;
   }
-  .svc-contra header {
+  .svc-contra-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 820px) {
+    .svc-contra-grid { grid-template-columns: 0.85fr 1.15fr; }
+  }
+  .svc-contra-head {
+    padding: clamp(1.75rem, 2.5vw, 2.25rem);
+    background: rgba(198, 43, 62, 0.04);
     display: flex;
-    align-items: baseline;
+    flex-direction: column;
     gap: 0.85rem;
-    margin-bottom: 0.5rem;
+    align-items: flex-start;
+  }
+  @media (min-width: 820px) {
+    .svc-contra-head { border-right: 1px solid rgba(198, 43, 62, 0.18); }
   }
   .svc-contra-tag {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
     font-family: var(--font-sans);
     font-size: 0.6rem;
     font-weight: 700;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    padding: 0.3rem 0.7rem;
+    padding: 0.45rem 0.9rem;
     border-radius: 999px;
     background: rgba(198, 43, 62, 0.1);
     color: #c62b3e;
-    border: 1px solid rgba(198, 43, 62, 0.3);
+    border: 1px solid rgba(198, 43, 62, 0.32);
   }
   .svc-contra h2 {
     margin: 0;
     color: var(--color-ink-900);
-    font-size: clamp(1.4rem, 1.8vw, 1.7rem);
+    font-size: clamp(1.75rem, 2.4vw, 2.35rem);
+    line-height: 1.05;
+    letter-spacing: -0.022em;
+    font-weight: 500;
+    font-family: var(--font-display);
   }
-  .svc-contra p {
-    margin: 0 0 1rem;
-    font-size: 0.92rem;
-    color: var(--color-ink-700);
-  }
-  .svc-contra ul {
-    list-style: none;
-    padding: 0;
+  .svc-contra-lede {
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-  .svc-contra ul li {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-size: 0.95rem;
+    line-height: 1.7;
     color: var(--color-ink-700);
+    text-align: left;
+    max-width: 36ch;
   }
-  .svc-contra ul li svg {
-    flex-shrink: 0;
-    margin-top: 0.25rem;
+  .svc-contra-lede strong { color: var(--color-ink-900); font-weight: 600; }
+  .svc-contra-cta {
+    margin-top: 0.5rem;
+  }
+  .svc-contra-cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    background: white;
     color: #c62b3e;
-    opacity: 0.7;
+    border: 1px solid rgba(198, 43, 62, 0.32);
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: all 0.25s ease !important;
+  }
+  .svc-contra-cta a:hover {
+    background: #c62b3e;
+    color: white;
+    border-color: #c62b3e;
+    transform: translateY(-1px);
+  }
+  .svc-contra-list {
+    list-style: none;
+    padding: clamp(1.25rem, 2vw, 1.85rem);
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    background: white;
+  }
+  .svc-contra-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem;
+    align-items: baseline;
+    padding: 0.85rem 0;
+    border-bottom: 1px dashed rgba(198, 43, 62, 0.2);
+  }
+  .svc-contra-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .svc-contra-list li:first-child { padding-top: 0; }
+  .svc-contra-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: #c62b3e;
+    opacity: 0.85;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    min-width: 1.5rem;
+  }
+  .svc-contra-text {
+    font-size: 0.94rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
   }
 
-  /* ===== Sticky meta card ===== */
-  .svc-side { position: relative; }
-  @media (min-width: 1024px) {
-    .svc-side { position: sticky; top: clamp(6rem, 10vh, 7.5rem); }
-  }
-  .svc-side-card {
-    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-brand-50) 100%);
-    border: 1px solid rgba(201, 169, 97, 0.32);
-    border-radius: 1.25rem;
-    padding: clamp(1.5rem, 2vw, 1.85rem);
+  /* ===== Sidebar — widgets modulares (flow con body, no sticky para permitir múltiples widgets) ===== */
+  .svc-side {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 1.1rem;
-    box-shadow:
-      0 1px 2px rgba(31, 20, 24, 0.03),
-      0 24px 56px -28px rgba(31, 20, 24, 0.18);
+    min-width: 0;
   }
-  .svc-side-icon {
-    font-size: clamp(2.5rem, 4vw, 3.25rem);
+
+  /* Widget base */
+  .svc-widget {
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.26);
+    border-radius: 1.1rem;
+    padding: clamp(1.25rem, 1.6vw, 1.6rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    box-shadow: 0 1px 2px rgba(31, 20, 24, 0.03), 0 12px 32px -22px rgba(31, 20, 24, 0.12);
+  }
+
+  /* Widget — main (ficha clínica) */
+  .svc-widget--main {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-brand-50) 100%);
+    border-color: rgba(201, 169, 97, 0.36);
+    padding: clamp(1.5rem, 2vw, 1.85rem);
+    gap: 1.1rem;
+    box-shadow: 0 1px 2px rgba(31, 20, 24, 0.03), 0 24px 56px -28px rgba(31, 20, 24, 0.18);
+  }
+  .svc-widget-icon {
+    font-size: clamp(2.25rem, 3.5vw, 2.85rem);
     line-height: 1;
     text-align: center;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0;
   }
-  .svc-side-kicker {
+  .svc-widget-kicker {
     font-family: var(--font-sans);
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--color-mauve-500);
     text-align: center;
   }
-  .svc-side-title {
+  .svc-widget-title {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(1.25rem, 1.5vw, 1.5rem);
-    line-height: 1.2;
+    font-size: clamp(1.2rem, 1.5vw, 1.45rem);
+    line-height: 1.18;
     color: var(--color-ink-900);
     margin: 0;
     text-align: center;
     letter-spacing: -0.015em;
   }
-  .svc-side-meta {
+  .svc-widget-meta {
     margin: 0;
     padding-block: 0.85rem;
-    border-block: 1px dashed rgba(201, 169, 97, 0.32);
+    border-block: 1px dashed rgba(201, 169, 97, 0.35);
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
+    gap: 0.7rem;
   }
-  .svc-side-meta > div {
+  .svc-widget-meta > div {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 0.85rem;
   }
-  .svc-side-meta dt {
-    font-size: 0.65rem;
+  .svc-widget-meta dt {
+    font-size: 0.6rem;
     font-weight: 700;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-brand-500);
   }
-  .svc-side-meta dd {
+  .svc-widget-meta dd {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     color: var(--color-ink-900);
     margin: 0;
     text-align: right;
     letter-spacing: -0.005em;
+    max-width: 60%;
+    line-height: 1.3;
   }
-  .svc-side-actions { display: flex; flex-direction: column; gap: 0.55rem; }
-  .svc-side-cta { width: 100%; justify-content: center; }
-  .svc-side-wa {
+  .svc-widget-actions { display: flex; flex-direction: column; gap: 0.55rem; }
+  .svc-widget-cta { width: 100%; justify-content: center; }
+  .svc-widget-wa {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -986,21 +2100,314 @@ const finalSeoDesc = seoDescription ?? description;
     color: #1B7A3F;
     border: 1px solid rgba(37, 211, 102, 0.3);
     border-radius: 999px;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.25s ease !important;
   }
-  .svc-side-wa:hover { background: #25D366; color: white; border-color: #25D366; }
-  .svc-side-foot {
+  .svc-widget-wa:hover { background: #25D366; color: white; border-color: #25D366; }
+  .svc-widget-foot {
     margin: 0;
     text-align: center;
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-ink-500);
-    opacity: 0.8;
+    opacity: 0.85;
+  }
+
+  /* Widget tag (label arriba del título) */
+  .svc-widget-tag {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(232, 213, 196, 0.45);
+    color: var(--color-mauve-700);
+    border: 1px solid rgba(201, 169, 97, 0.32);
+  }
+  .svc-widget-tag--gold {
+    background: rgba(201, 169, 97, 0.18);
+    color: var(--color-brand-600);
+    border-color: rgba(201, 169, 97, 0.45);
+  }
+  .svc-widget-tag--dark {
+    background: var(--color-ink-900);
+    color: var(--color-brand-400);
+    border-color: var(--color-ink-900);
+  }
+  .svc-widget-h {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.15rem, 1.4vw, 1.35rem);
+    line-height: 1.2;
+    color: var(--color-ink-900);
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
+  .svc-widget-h em { font-style: italic; color: var(--color-mauve-500); font-weight: 400; }
+  .svc-widget-h--dark { color: white; }
+  .svc-widget-h--dark em { color: var(--color-brand-400); }
+  .svc-widget-p {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .svc-widget-p strong { color: var(--color-ink-900); font-weight: 600; }
+  .svc-widget-link {
+    align-self: flex-start;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: color 0.25s ease !important;
+  }
+  .svc-widget-link:hover { color: var(--color-mauve-700); }
+  .svc-widget-link--gold { color: var(--color-brand-500); }
+  .svc-widget-link--gold:hover { color: var(--color-brand-600); }
+  .svc-widget-link-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem 1.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.3);
+  }
+
+  /* Widget — checks (incluido en cada sesión) */
+  .svc-widget-checks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .svc-widget-checks li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: var(--color-ink-700);
+  }
+  .svc-widget-checks svg {
+    flex-shrink: 0;
+    margin-top: 4px;
+    color: var(--color-brand-500);
+    background: rgba(201, 169, 97, 0.18);
+    border-radius: 999px;
+    padding: 2px;
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Widget — trust list */
+  .svc-widget-trust-list {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .svc-widget-trust-list > div {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0.85rem;
+    align-items: baseline;
+    padding-block: 0.55rem;
+    border-bottom: 1px dashed rgba(201, 169, 97, 0.28);
+  }
+  .svc-widget-trust-list > div:last-child { border-bottom: 0; padding-bottom: 0; }
+  .svc-widget-trust-list dt {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .svc-widget-trust-list dd {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    color: var(--color-ink-700);
+  }
+
+  /* Widget — related (siblings) */
+  .svc-widget-related {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .svc-widget-related li { border-top: 1px dashed rgba(201, 169, 97, 0.28); }
+  .svc-widget-related li:first-child { border-top: 0; }
+  .svc-widget-related a {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.85rem;
+    align-items: center;
+    padding: 0.85rem 0;
+    text-decoration: none;
+    color: var(--color-ink-700);
+    transition: color 0.25s ease !important;
+  }
+  .svc-widget-related a:hover { color: var(--color-ink-900); }
+  .svc-widget-related a:hover .svc-widget-related-name { color: var(--color-mauve-500); }
+  .svc-widget-related a:hover svg { transform: translateX(3px); color: var(--color-mauve-500); }
+  .svc-widget-related-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.03em;
+    opacity: 0.85;
+    line-height: 1;
+  }
+  .svc-widget-related-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    min-width: 0;
+  }
+  .svc-widget-related-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--color-ink-900);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    transition: color 0.25s ease !important;
+  }
+  .svc-widget-related-desc {
+    font-size: 0.74rem;
+    line-height: 1.4;
+    color: var(--color-ink-500);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .svc-widget-related svg {
+    color: var(--color-brand-500);
+    transition: transform 0.25s ease, color 0.25s ease !important;
+    flex-shrink: 0;
+  }
+
+  /* Widget — cross categories */
+  .svc-widget--cross {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, white 100%);
+  }
+  .svc-widget-cats {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .svc-widget-cats li { border-top: 1px dashed rgba(201, 169, 97, 0.3); }
+  .svc-widget-cats li:first-child { border-top: 0; }
+  .svc-widget-cats a {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.85rem;
+    align-items: center;
+    padding: 0.85rem 0;
+    text-decoration: none;
+  }
+  .svc-widget-cats a:hover .svc-widget-cats-name { color: var(--color-mauve-500); }
+  .svc-widget-cats a:hover .svc-widget-cats-arrow {
+    color: var(--color-mauve-500);
+    transform: translateX(3px);
+  }
+  .svc-widget-cats-arrow {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--color-brand-500);
+    transition: transform 0.25s ease, color 0.25s ease !important;
+    line-height: 1;
+  }
+  .svc-widget-cats-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    min-width: 0;
+  }
+  .svc-widget-cats-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--color-ink-900);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    transition: color 0.25s ease !important;
+  }
+  .svc-widget-cats-desc {
+    font-size: 0.74rem;
+    line-height: 1.4;
+    color: var(--color-ink-500);
+  }
+
+  /* Widget — contact (dark) */
+  .svc-widget--contact {
+    background: var(--color-ink-900);
+    border-color: var(--color-ink-900);
+    color: var(--color-brand-100);
+  }
+  .svc-widget-contact-list {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .svc-widget-contact-list > div {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0.85rem;
+    align-items: baseline;
+    padding-block: 0.7rem;
+    border-bottom: 1px dashed rgba(201, 169, 97, 0.22);
+  }
+  .svc-widget-contact-list > div:last-child { border-bottom: 0; padding-bottom: 0; }
+  .svc-widget-contact-list dt {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-brand-400);
+  }
+  .svc-widget-contact-list dd {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.4;
+    color: rgba(242, 235, 223, 0.88);
+  }
+  .svc-widget-contact-list dd a {
+    color: white;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(201, 169, 97, 0.55);
+  }
+  .svc-widget-contact-list dd a:hover {
+    color: var(--color-brand-400);
   }
 
   /* ============= Section heads (reusable) ============= */
@@ -1066,111 +2473,406 @@ const finalSeoDesc = seoDescription ?? description;
   .svc-protocol-section .kicker-line { color: var(--color-brand-400); }
   .svc-protocol-section .kicker-line::before { background: linear-gradient(90deg, var(--color-brand-400), white); }
 
+  /* ============= Protocolo — stat strip ============= */
+  .psteps-meta {
+    margin: 0 0 clamp(2rem, 3vw, 2.5rem);
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-block: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  @media (min-width: 720px) { .psteps-meta { grid-template-columns: repeat(4, 1fr); } }
+  .psteps-meta > div {
+    padding: 1rem 1.15rem;
+    border-right: 1px solid rgba(201, 169, 97, 0.18);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.18);
+  }
+  .psteps-meta > div:first-child { padding-left: 0; }
+  @media (min-width: 720px) {
+    .psteps-meta > div { border-bottom: 0; }
+    .psteps-meta > div:last-child { border-right: 0; }
+  }
+  @media (max-width: 719px) {
+    .psteps-meta > div:nth-child(2n) { border-right: 0; }
+    .psteps-meta > div:nth-last-child(-n+2) { border-bottom: 0; }
+  }
+  .psteps-meta dt {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-400);
+    margin-bottom: 0.35rem;
+  }
+  .psteps-meta dd {
+    margin: 0;
+    font-family: var(--font-display);
+    line-height: 1;
+    color: white;
+    letter-spacing: -0.02em;
+  }
+  .psteps-meta dd em {
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.85rem, 3vw, 2.65rem);
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .psteps-meta .psteps-meta-text {
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(0.9rem, 1vw, 1.05rem);
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+  }
+
+  /* ============= Protocolo — grid de cards densas ============= */
   .psteps {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  @media (min-width: 720px) { .psteps { grid-template-columns: 1fr 1fr; gap: 1rem; } }
+  @media (min-width: 1280px) { .psteps { grid-template-columns: repeat(3, 1fr); gap: 1.15rem; } }
+  .pstep {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 0.7rem;
+    padding: 1.5rem 1.5rem 1.4rem;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.1rem;
+    align-items: flex-start;
+    transition: all 0.35s cubic-bezier(.2,.8,.2,1) !important;
+    overflow: hidden;
   }
-  .pstep {
-    display: grid;
-    grid-template-columns: clamp(60px, 10vw, 100px) 1fr;
-    gap: clamp(1rem, 2.5vw, 2rem);
-    padding-block: clamp(1.5rem, 2.5vw, 2.25rem);
-    border-top: 1px dashed rgba(201, 169, 97, 0.22);
-    align-items: start;
+  .pstep::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-300));
+    opacity: 0;
+    transition: opacity 0.3s ease !important;
   }
-  .pstep:first-child { border-top: 0; padding-top: 0; }
+  .pstep:hover {
+    background: linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.025) 100%);
+    border-color: rgba(201, 169, 97, 0.42);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
+  }
+  .pstep:hover::before { opacity: 1; }
   .pstep-num {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 300;
-    font-size: clamp(2.75rem, 5.5vw, 4.5rem);
+    font-size: clamp(2.5rem, 3.8vw, 3.4rem);
     line-height: 0.85;
     background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-300));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.015em;
-    flex-shrink: 0;
+    margin-bottom: 0.2rem;
   }
-  .pstep-body { display: flex; flex-direction: column; gap: 0.55rem; max-width: 64ch; }
+  .pstep-body { display: flex; flex-direction: column; gap: 0.55rem; max-width: none; width: 100%; }
+  .pstep-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-brand-400);
+  }
+  .pstep-of {
+    color: rgba(201, 169, 97, 0.5);
+    letter-spacing: 0.18em;
+  }
   .pstep-title {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(1.25rem, 1.8vw, 1.65rem);
+    font-size: clamp(1.15rem, 1.45vw, 1.4rem);
     color: white;
     margin: 0;
     line-height: 1.2;
     letter-spacing: -0.015em;
   }
   .pstep-text {
-    font-size: clamp(0.92rem, 1vw, 1.02rem);
-    line-height: 1.7;
+    font-size: clamp(0.88rem, 0.95vw, 0.98rem);
+    line-height: 1.65;
     color: rgba(242, 235, 223, 0.78);
     margin: 0;
   }
+  .pstep-arrow {
+    display: none;
+  }
+  /* Flecha entre cards solo en desktop entre filas */
+  @media (min-width: 1280px) {
+    .pstep-arrow {
+      display: grid;
+      place-items: center;
+      position: absolute;
+      right: -0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: var(--color-ink-900);
+      border: 1px solid rgba(201, 169, 97, 0.42);
+      color: var(--color-brand-400);
+      z-index: 2;
+    }
+    /* Ocultar flecha en última columna de cada fila (3-col) */
+    .psteps .pstep:nth-child(3n) .pstep-arrow { display: none; }
+  }
 
-  /* ============= Timeline ============= */
+  /* ============= Protocolo — footer (trust + CTA) ============= */
+  .psteps-foot {
+    margin-top: clamp(2.5rem, 4vw, 3.5rem);
+    padding-top: clamp(1.75rem, 2.5vw, 2.25rem);
+    border-top: 1px solid rgba(201, 169, 97, 0.22);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .psteps-foot { grid-template-columns: 1.4fr auto; gap: clamp(2rem, 3vw, 3rem); }
+  }
+  .psteps-foot-text {
+    font-size: clamp(0.92rem, 1vw, 1.05rem);
+    line-height: 1.7;
+    color: rgba(242, 235, 223, 0.78);
+    margin: 0;
+    max-width: 64ch;
+  }
+  .psteps-foot-text strong { color: white; font-weight: 600; }
+  .psteps-foot-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    align-items: center;
+  }
+  .psteps-foot-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.1rem;
+    background: rgba(37, 211, 102, 0.12);
+    color: #6ce99c;
+    border: 1px solid rgba(37, 211, 102, 0.35);
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.84rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.25s ease !important;
+  }
+  .psteps-foot-wa:hover {
+    background: #25D366;
+    color: white;
+    border-color: #25D366;
+  }
+
+  /* ============= Timeline — stat strip ============= */
+  .tl-meta {
+    margin: 0 0 clamp(2rem, 3vw, 2.5rem);
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-block: 1px solid rgba(201, 169, 97, 0.3);
+  }
+  @media (min-width: 720px) { .tl-meta { grid-template-columns: repeat(4, 1fr); } }
+  .tl-meta > div {
+    padding: 1rem 1.15rem;
+    border-right: 1px solid rgba(201, 169, 97, 0.22);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .tl-meta > div:first-child { padding-left: 0; }
+  @media (min-width: 720px) {
+    .tl-meta > div { border-bottom: 0; }
+    .tl-meta > div:last-child { border-right: 0; }
+  }
+  @media (max-width: 719px) {
+    .tl-meta > div:nth-child(2n) { border-right: 0; }
+    .tl-meta > div:nth-last-child(-n+2) { border-bottom: 0; }
+  }
+  .tl-meta dt {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    margin-bottom: 0.35rem;
+  }
+  .tl-meta dd {
+    margin: 0;
+    font-family: var(--font-display);
+    line-height: 1;
+    color: var(--color-ink-900);
+    letter-spacing: -0.02em;
+  }
+  .tl-meta dd em {
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.85rem, 3vw, 2.65rem);
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .tl-meta .tl-meta-text {
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(0.9rem, 1vw, 1.05rem);
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+  }
+
+  /* ============= Timeline — stepper horizontal con dots conectados ============= */
   .tl-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    counter-reset: tlc;
+  }
+  @media (min-width: 720px) {
+    .tl-list { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+  }
+  @media (min-width: 1100px) {
+    .tl-list {
+      grid-template-columns: repeat(var(--tl-count, 4), 1fr);
+      gap: 0;
+    }
   }
   .tl-step {
-    display: grid;
-    grid-template-columns: clamp(110px, 18vw, 200px) 1fr;
-    gap: clamp(1.5rem, 3vw, 3rem);
-    padding-block: clamp(1.5rem, 2.5vw, 2.25rem);
-    border-top: 1px solid rgba(201, 169, 97, 0.22);
-    align-items: start;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: linear-gradient(180deg, white 0%, var(--color-brand-50) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.1rem;
+    transition: all 0.35s cubic-bezier(.2,.8,.2,1) !important;
+    overflow: visible;
   }
-  .tl-step:first-child { border-top: 0; padding-top: 0; }
-  .tl-step-mark {
+  @media (min-width: 1100px) {
+    .tl-step {
+      border-radius: 0;
+      border-right: 0;
+      background: transparent;
+      padding: 2rem 1.5rem 0;
+    }
+    .tl-step:first-child { border-left: 0; padding-left: 0; }
+    .tl-step:last-child { border-right: 0; padding-right: 0; }
+  }
+  .tl-step:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-mauve-500);
+    box-shadow: 0 16px 36px -18px rgba(31, 20, 24, 0.18);
+  }
+  @media (min-width: 1100px) {
+    .tl-step:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: rgba(201, 169, 97, 0.3);
+      background: var(--color-brand-50);
+    }
+    .tl-step:hover .tl-step-dot {
+      transform: scale(1.18);
+      box-shadow: 0 0 0 5px rgba(201, 169, 97, 0.3), 0 0 0 10px rgba(201, 169, 97, 0.12);
+    }
+  }
+
+  /* Track con dot + líneas conectoras (sólo desktop horizontal) */
+  .tl-step-track {
+    display: none;
+  }
+  @media (min-width: 1100px) {
+    .tl-step-track {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .tl-step-line {
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(201, 169, 97, 0.5), rgba(201, 169, 97, 0.5));
+    }
+    .tl-step-line--after { background: linear-gradient(90deg, rgba(201, 169, 97, 0.5), rgba(201, 169, 97, 0.5), transparent); }
+    .tl-step:first-child .tl-step-line--before { visibility: hidden; }
+    .tl-step:last-child .tl-step-line--after { visibility: hidden; }
+    .tl-step-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--color-brand-400);
+      box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.2), 0 0 0 8px rgba(201, 169, 97, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+      justify-self: center;
+    }
+  }
+
+  .tl-step-body {
     display: flex;
     flex-direction: column;
     gap: 0.55rem;
-    align-items: flex-start;
+    max-width: none;
+  }
+  .tl-step-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .tl-step-of {
+    color: rgba(139, 90, 107, 0.5);
+    letter-spacing: 0.18em;
   }
   .tl-step-when {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 300;
-    font-size: clamp(1.65rem, 2.5vw, 2.25rem);
-    color: var(--color-mauve-500);
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
     line-height: 1;
     letter-spacing: -0.018em;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
-  .tl-step-dot {
-    width: 10px; height: 10px;
-    border-radius: 999px;
-    background: var(--color-brand-400);
-    box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.18), 0 0 0 8px rgba(201, 169, 97, 0.07);
-  }
-  .tl-step-body { display: flex; flex-direction: column; gap: 0.55rem; max-width: 60ch; }
   .tl-step-label {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(1.25rem, 1.8vw, 1.65rem);
+    font-size: clamp(1.1rem, 1.4vw, 1.3rem);
     color: var(--color-ink-900);
     margin: 0;
-    line-height: 1.2;
+    line-height: 1.22;
     letter-spacing: -0.015em;
   }
   .tl-step-text {
-    font-size: clamp(0.92rem, 1vw, 1.02rem);
-    line-height: 1.7;
+    font-size: clamp(0.88rem, 0.95vw, 0.97rem);
+    line-height: 1.65;
     color: var(--color-ink-700);
     margin: 0;
-  }
-  @media (max-width: 640px) {
-    .tl-step { grid-template-columns: 1fr; gap: 0.75rem; }
-    .tl-step-mark { flex-direction: row; align-items: center; gap: 1rem; }
   }
 
   /* ============= Protocols pre/post (dark) ============= */
@@ -1476,4 +3178,1208 @@ const finalSeoDesc = seoDescription ?? description;
     opacity: 0.85;
   }
   @media (max-width: 640px) { .faq-form { padding: 1.25rem; } }
+
+  /* ============= TOC sticky compacto (índice editorial · single-line scroll) ============= */
+  .svc-toc {
+    position: sticky;
+    top: 76px; /* debajo del header sticky */
+    z-index: 30;
+    background: rgba(250, 247, 242, 0.96);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-block: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  @media (max-width: 900px) {
+    .svc-toc { top: 64px; }
+  }
+  .svc-toc.is-stuck {
+    box-shadow: 0 6px 18px -14px rgba(31, 20, 24, 0.2);
+    border-bottom-color: rgba(201, 169, 97, 0.38);
+  }
+  .svc-toc-inner {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.6rem, 1.2vw, 1rem);
+    padding-block: 0.4rem;
+    min-height: 38px;
+    flex-wrap: nowrap;
+  }
+  .svc-toc-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-sans);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    white-space: nowrap;
+    padding-right: 0.85rem;
+    border-right: 1px solid rgba(201, 169, 97, 0.32);
+    flex-shrink: 0;
+  }
+  .svc-toc-label em {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .svc-toc-label-line {
+    width: 16px;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+  }
+  .svc-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.55rem, 1vw, 1rem);
+    flex-wrap: nowrap;
+    flex: 1 1 auto;
+    overflow-x: auto;
+    scrollbar-width: none;
+    min-width: 0;
+    /* Fade laterales para indicar scroll */
+    mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 24px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 24px), transparent 100%);
+  }
+  .svc-toc-list::-webkit-scrollbar { display: none; }
+  .svc-toc-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    padding: 0.22rem 0;
+    color: var(--color-ink-500);
+    font-size: 0.74rem;
+    line-height: 1.2;
+    letter-spacing: 0.005em;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 1.5px solid transparent;
+    transition: color 0.25s ease, border-color 0.25s ease !important;
+  }
+  .svc-toc-link:hover {
+    color: var(--color-ink-900);
+    border-bottom-color: var(--color-brand-400);
+  }
+  .svc-toc-link.is-active {
+    color: var(--color-ink-900);
+    border-bottom-color: var(--color-mauve-500);
+  }
+  .svc-toc-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.82rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.02em;
+    line-height: 1;
+    opacity: 0.85;
+  }
+  .svc-toc-link.is-active .svc-toc-num { color: var(--color-mauve-500); opacity: 1; }
+  .svc-toc-text {
+    font-family: var(--font-sans);
+    font-weight: 500;
+  }
+  .svc-toc-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+    padding: 0.38rem 0.85rem;
+    border-radius: 999px;
+    background: var(--color-ink-900);
+    color: var(--color-brand-50);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background 0.25s ease, transform 0.25s ease !important;
+    flex-shrink: 0;
+  }
+  .svc-toc-cta:hover {
+    background: var(--color-mauve-700);
+    transform: translateY(-1px);
+  }
+  /* Tablet: ocultar texto descriptivo, mantener solo num + marker */
+  @media (max-width: 1100px) {
+    .svc-toc-text { display: none; }
+    .svc-toc-link { gap: 0; padding: 0.2rem 0.18rem; }
+    .svc-toc-num { font-size: 0.95rem; }
+  }
+  /* Mobile: aún más compacto */
+  @media (max-width: 900px) {
+    .svc-toc-label { display: none; }
+    .svc-toc-cta { display: none; }
+    .svc-toc-inner { padding-block: 0.35rem; min-height: 34px; gap: 0.5rem; }
+    .svc-toc-list { gap: 0.6rem; }
+    .svc-toc-num { font-size: 0.9rem; }
+  }
+
+  /* ============= Chapter marks (numeración editorial encima de cada sección) ============= */
+  .svc-chapter-mark,
+  .svc-chapter {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: clamp(1.25rem, 2vw, 2rem);
+  }
+  .svc-chapter { margin-top: clamp(2.5rem, 4vw, 3.5rem); }
+  .svc-chapter-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.4rem, 1.8vw, 1.65rem);
+    line-height: 1;
+    color: var(--color-brand-500);
+    letter-spacing: 0.03em;
+    min-width: 2.25rem;
+  }
+  .svc-chapter-num em {
+    font-style: italic;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .svc-chapter-line {
+    flex: 0 0 56px;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--color-brand-400) 0%, transparent 100%);
+  }
+  .svc-chapter-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .svc-chapter-mark--dark .svc-chapter-num em {
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .svc-chapter-mark--dark .svc-chapter-line {
+    background: linear-gradient(90deg, var(--color-brand-400) 0%, transparent 100%);
+  }
+  .svc-chapter-mark--dark .svc-chapter-kicker {
+    color: var(--color-brand-400);
+  }
+  .svc-chapter-mark--inline {
+    margin-top: 0;
+    margin-bottom: clamp(1rem, 1.5vw, 1.5rem);
+  }
+  .svc-chapter-mark--inline + :global(h2) {
+    margin-top: 0 !important;
+  }
+
+  /* Refinamiento espaciado sections (más editorial) */
+  .svc-protocol-section {
+    padding-block: clamp(4rem, 6vw, 6.5rem);
+  }
+  .svc-protocols {
+    padding-block: clamp(5rem, 8vw, 8.5rem);
+  }
+  #resultados.section {
+    padding-block: clamp(4rem, 6vw, 6.5rem);
+  }
+
+  /* Scroll offset para anchor links (header 76px + TOC compacto ~38px) */
+  #resumen, #beneficios, #casos, #mitos, #compromisos, #seguridad, #zonas, #modalidades, #comparativa, #protocolo, #resultados, #cuidados, #preguntas {
+    scroll-margin-top: 124px;
+  }
+  @media (max-width: 900px) {
+    #resumen, #beneficios, #casos, #mitos, #compromisos, #seguridad, #zonas, #modalidades, #comparativa, #protocolo, #resultados, #cuidados, #preguntas {
+      scroll-margin-top: 104px;
+    }
+  }
+
+  /* ============= Protocolo de seguridad clínica (sección dark · invasivos) ============= */
+  .svc-safety {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(4rem, 6vw, 6.5rem);
+  }
+  .svc-safety-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(198,43,62,0.06), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(201,169,97,0.10), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .svc-safety-grid {
+    list-style: none;
+    padding: 0;
+    margin: clamp(1.5rem, 2.5vw, 2.25rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 720px) { .svc-safety-grid { grid-template-columns: repeat(2, 1fr); gap: 1.15rem; } }
+  @media (min-width: 1100px) { .svc-safety-grid { grid-template-columns: repeat(4, 1fr); } }
+  .svc-safety-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1.5rem;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    transition: all 0.35s cubic-bezier(.2,.8,.2,1) !important;
+    overflow: hidden;
+  }
+  .svc-safety-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-300));
+    opacity: 0;
+    transition: opacity 0.3s ease !important;
+  }
+  .svc-safety-item:hover {
+    background: linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.025) 100%);
+    border-color: rgba(201, 169, 97, 0.42);
+    transform: translateY(-3px);
+  }
+  .svc-safety-item:hover::before { opacity: 1; }
+  .svc-safety-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .svc-safety-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.85rem;
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.015em;
+  }
+  .svc-safety-kind {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.32rem 0.75rem;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .svc-safety-kind--producto {
+    background: rgba(201, 169, 97, 0.15);
+    color: var(--color-brand-400);
+    border: 1px solid rgba(201, 169, 97, 0.4);
+  }
+  .svc-safety-kind--protocolo {
+    background: rgba(139, 90, 107, 0.18);
+    color: var(--color-mauve-300);
+    border: 1px solid rgba(188, 142, 156, 0.45);
+  }
+  .svc-safety-kind--personal {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-brand-200);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .svc-safety-kind--reversibilidad {
+    background: rgba(37, 134, 60, 0.15);
+    color: #6ce99c;
+    border: 1px solid rgba(37, 134, 60, 0.4);
+  }
+  .svc-safety-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .svc-safety-text {
+    margin: 0;
+    font-size: clamp(0.88rem, 0.95vw, 0.97rem);
+    line-height: 1.6;
+    color: rgba(242, 235, 223, 0.78);
+  }
+
+  /* ============= Compromisos del paciente (sección opcional · expectativa de adherencia) ============= */
+  .svc-commit {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, white 100%);
+    padding-block: clamp(4rem, 6vw, 6.5rem);
+  }
+  .svc-commit-grid {
+    list-style: none;
+    padding: 0;
+    margin: clamp(1.5rem, 2.5vw, 2.25rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 700px) { .svc-commit-grid { grid-template-columns: repeat(2, 1fr); gap: 1.15rem; } }
+  @media (min-width: 1100px) { .svc-commit-grid { grid-template-columns: repeat(3, 1fr); } }
+  .svc-commit-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.4rem 1.4rem 1.45rem;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1rem;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1) !important;
+    overflow: hidden;
+  }
+  .svc-commit-item--imprescindible {
+    border-left: 4px solid #c62b3e;
+  }
+  .svc-commit-item--recomendado {
+    border-left: 4px solid var(--color-brand-500);
+  }
+  .svc-commit-item--opcional {
+    border-left: 4px solid rgba(139, 90, 107, 0.45);
+  }
+  .svc-commit-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -18px rgba(31, 20, 24, 0.16);
+  }
+  .svc-commit-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .svc-commit-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.65rem;
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.015em;
+  }
+  .svc-commit-weight {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.32rem 0.7rem;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .svc-commit-weight--imprescindible {
+    background: rgba(198, 43, 62, 0.1);
+    color: #c62b3e;
+    border: 1px solid rgba(198, 43, 62, 0.3);
+  }
+  .svc-commit-weight--recomendado {
+    background: rgba(201, 169, 97, 0.14);
+    color: var(--color-brand-600);
+    border: 1px solid rgba(201, 169, 97, 0.32);
+  }
+  .svc-commit-weight--opcional {
+    background: rgba(139, 90, 107, 0.1);
+    color: var(--color-mauve-700);
+    border: 1px solid rgba(139, 90, 107, 0.3);
+  }
+  .svc-commit-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .svc-commit-text {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+  }
+
+  /* ============= Mitos vs Realidad (sección opcional · desmontar misinformación) ============= */
+  .svc-myths {
+    background: white;
+    padding-block: clamp(4rem, 6vw, 6.5rem);
+  }
+  .svc-myths-grid {
+    list-style: none;
+    padding: 0;
+    margin: clamp(1.5rem, 2.5vw, 2.25rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+  @media (min-width: 900px) { .svc-myths-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; } }
+  .svc-myth {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.3s ease !important;
+  }
+  .svc-myth:hover {
+    border-color: var(--color-mauve-500);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -18px rgba(31, 20, 24, 0.16);
+  }
+  .svc-myth-myth,
+  .svc-myth-reality {
+    padding: 1.4rem 1.4rem 1.45rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .svc-myth-myth {
+    background: linear-gradient(180deg, rgba(198, 43, 62, 0.05) 0%, rgba(198, 43, 62, 0.02) 100%);
+    border-bottom: 1px dashed rgba(201, 169, 97, 0.3);
+  }
+  .svc-myth-reality {
+    background: linear-gradient(180deg, rgba(37, 134, 60, 0.05) 0%, rgba(37, 134, 60, 0.02) 100%);
+  }
+  .svc-myth-tag {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 0.45rem;
+    padding: 0.42rem 0.85rem;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .svc-myth-tag--myth {
+    background: rgba(198, 43, 62, 0.1);
+    color: #c62b3e;
+    border: 1px solid rgba(198, 43, 62, 0.32);
+  }
+  .svc-myth-tag--reality {
+    background: rgba(37, 134, 60, 0.1);
+    color: #1b7a3f;
+    border: 1px solid rgba(37, 134, 60, 0.32);
+  }
+  .svc-myth-tag svg { flex-shrink: 0; }
+  .svc-myth-text {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-ink-800);
+  }
+  .svc-myth-myth .svc-myth-text {
+    font-style: italic;
+    color: var(--color-ink-700);
+  }
+  .svc-myth-reality .svc-myth-text {
+    font-weight: 500;
+  }
+
+  /* ============= Zonas de tratamiento (sección opcional · áreas anatómicas) ============= */
+  .svc-zones {
+    background: linear-gradient(180deg, white 0%, var(--color-brand-50) 100%);
+    padding-block: clamp(4rem, 6vw, 6.5rem);
+  }
+  .svc-zones-grid {
+    list-style: none;
+    padding: 0;
+    margin: clamp(1.5rem, 2.5vw, 2.25rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 700px) { .svc-zones-grid { grid-template-columns: repeat(2, 1fr); gap: 1.15rem; } }
+  @media (min-width: 1024px) { .svc-zones-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1400px) {
+    .svc-zones-grid[data-count="4"],
+    .svc-zones-grid[data-count="8"] { grid-template-columns: repeat(4, 1fr); }
+  }
+  .svc-zone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1.4rem 1.4rem 1.35rem;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1rem;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1) !important;
+    overflow: hidden;
+  }
+  .svc-zone::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+  }
+  .svc-zone--mauve::before { background: linear-gradient(90deg, var(--color-mauve-500), var(--color-mauve-700)); }
+  .svc-zone--rose::before { background: linear-gradient(90deg, #d4889a, var(--color-mauve-500)); }
+  .svc-zone:hover {
+    border-color: var(--color-mauve-500);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 36px -18px rgba(31, 20, 24, 0.16);
+  }
+  .svc-zone-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.85rem;
+  }
+  .svc-zone-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2rem, 2.8vw, 2.5rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.015em;
+  }
+  .svc-zone-titles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+  .svc-zone-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .svc-zone-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .svc-zone-text {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+  }
+  .svc-zone-sessions {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(201, 169, 97, 0.14);
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    color: var(--color-brand-600);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-top: auto;
+  }
+  .svc-zone-sessions svg { flex-shrink: 0; opacity: 0.85; }
+
+  /* ============= Casos clínicos / perfiles de paciente ============= */
+  .svc-cases {
+    background: linear-gradient(180deg, white 0%, var(--color-brand-50) 100%);
+    padding-block: clamp(4rem, 6vw, 6.5rem);
+  }
+  .svc-cases-grid {
+    list-style: none;
+    padding: 0;
+    margin: clamp(1.5rem, 2.5vw, 2.25rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+    counter-reset: cas;
+  }
+  @media (min-width: 720px) { .svc-cases-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; } }
+  @media (min-width: 1280px) {
+    .svc-cases-grid[data-count="3"] { grid-template-columns: repeat(3, 1fr); }
+    .svc-cases-grid[data-count="4"] { grid-template-columns: repeat(2, 1fr); }
+    .svc-cases-grid[data-count="5"],
+    .svc-cases-grid[data-count="6"] { grid-template-columns: repeat(3, 1fr); }
+  }
+  .svc-case {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: clamp(1.5rem, 2vw, 1.85rem);
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    border-radius: 1.1rem;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  .svc-case::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-500));
+    border-radius: 4px 0 0 4px;
+  }
+  .svc-case--mauve::before { background: linear-gradient(180deg, var(--color-mauve-500), var(--color-mauve-700)); }
+  .svc-case--rose::before { background: linear-gradient(180deg, #d4889a, var(--color-mauve-500)); }
+  .svc-case:hover {
+    border-color: var(--color-mauve-500);
+    transform: translateY(-4px);
+    box-shadow: 0 22px 44px -22px rgba(31, 20, 24, 0.2);
+  }
+  .svc-case-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 1rem;
+    padding-left: 0.5rem;
+  }
+  .svc-case-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.25rem, 3.5vw, 3rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.015em;
+  }
+  .svc-case--mauve .svc-case-num {
+    background: linear-gradient(180deg, var(--color-mauve-500), var(--color-mauve-700));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .svc-case-titles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+  .svc-case-profile {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .svc-case-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.2rem, 1.5vw, 1.45rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+  }
+  .svc-case-duration {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(201, 169, 97, 0.15);
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    color: var(--color-brand-600);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-left: 0.5rem;
+  }
+  .svc-case-duration svg {
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+  .svc-case-plan {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 0.95rem 1rem;
+    background: var(--color-brand-50);
+    border-radius: 0.75rem;
+  }
+  .svc-case-plan-label {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .svc-case-plan ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .svc-case-plan li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--color-ink-700);
+  }
+  .svc-case-plan li svg {
+    flex-shrink: 0;
+    margin-top: 4px;
+    color: var(--color-brand-500);
+  }
+  .svc-case-target {
+    margin: auto 0 0;
+    padding: 0.95rem 0 0;
+    border-top: 1px dashed rgba(201, 169, 97, 0.32);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(0.92rem, 1vw, 1rem);
+    line-height: 1.5;
+    color: var(--color-ink-800);
+    letter-spacing: -0.005em;
+  }
+  .svc-case-target strong {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-mauve-500);
+    margin-right: 0.35rem;
+    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    display: inline-block;
+    vertical-align: baseline;
+  }
+
+  /* ============= Modalidades / Variantes del protocolo (sección opcional) ============= */
+  .svc-modalities {
+    background: white;
+    padding-block: clamp(4rem, 6vw, 6.5rem);
+  }
+  .svc-mod-grid {
+    list-style: none;
+    padding: 0;
+    margin: clamp(1.5rem, 2.5vw, 2.25rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+  @media (min-width: 720px) { .svc-mod-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; } }
+  @media (min-width: 1280px) {
+    .svc-mod-grid[data-count="3"] { grid-template-columns: repeat(3, 1fr); }
+    .svc-mod-grid[data-count="4"] { grid-template-columns: repeat(2, 1fr); }
+    .svc-mod-grid[data-count="5"],
+    .svc-mod-grid[data-count="6"] { grid-template-columns: repeat(3, 1fr); }
+  }
+  .svc-mod-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    padding: clamp(1.5rem, 2vw, 1.85rem);
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-brand-50) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.1rem;
+    transition: all 0.35s cubic-bezier(.2,.8,.2,1) !important;
+    overflow: hidden;
+  }
+  .svc-mod-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    opacity: 0;
+    transition: opacity 0.3s ease !important;
+  }
+  .svc-mod-card:hover {
+    border-color: var(--color-mauve-500);
+    background: white;
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(31, 20, 24, 0.18);
+  }
+  .svc-mod-card:hover::before { opacity: 1; }
+  .svc-mod-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 1rem;
+  }
+  .svc-mod-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.25rem, 3.5vw, 3rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.015em;
+    align-self: start;
+  }
+  .svc-mod-titles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+  .svc-mod-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .svc-mod-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.2rem, 1.5vw, 1.45rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+  }
+  .svc-mod-profile {
+    align-self: flex-start;
+    display: inline-block;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(232, 213, 196, 0.45);
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    color: var(--color-mauve-700);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+  .svc-mod-text {
+    margin: 0;
+    font-size: 0.94rem;
+    line-height: 1.6;
+    color: var(--color-ink-700);
+  }
+  .svc-mod-meta {
+    margin: auto 0 0;
+    padding-top: 0.95rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.32);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .svc-mod-meta > div {
+    padding: 0.1rem 0;
+  }
+  .svc-mod-meta > div + div {
+    border-left: 1px dashed rgba(201, 169, 97, 0.3);
+    padding-left: 0.85rem;
+    margin-left: 0.85rem;
+  }
+  .svc-mod-meta dt {
+    font-family: var(--font-sans);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-bottom: 0.3rem;
+  }
+  .svc-mod-meta dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.92rem;
+    color: var(--color-ink-900);
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+  }
+
+  /* ============= Pull-quote editorial (blockquote en MD) ============= */
+  .svc-body :global(blockquote) {
+    margin: clamp(2rem, 3vw, 2.75rem) 0;
+    padding: clamp(1.5rem, 2.5vw, 2.25rem) clamp(1.5rem, 2.5vw, 2.75rem);
+    border-left: 3px solid var(--color-brand-400);
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, transparent 100%);
+    border-radius: 0 0.75rem 0.75rem 0;
+    position: relative;
+  }
+  .svc-body :global(blockquote)::before {
+    content: '\201C';
+    position: absolute;
+    top: -0.4em;
+    left: 0.65rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(3.5rem, 5vw, 5.5rem);
+    line-height: 1;
+    color: var(--color-brand-400);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .svc-body :global(blockquote) :global(p) {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.15rem, 1.5vw, 1.45rem);
+    line-height: 1.45;
+    color: var(--color-ink-900);
+    text-align: left;
+    hyphens: none;
+    letter-spacing: -0.012em;
+    max-width: 56ch;
+  }
+  .svc-body :global(blockquote) :global(p)::first-letter {
+    all: unset;
+    color: inherit;
+    background: none;
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: currentColor;
+  }
+  .svc-body :global(blockquote) :global(p) :global(strong) {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-mauve-700);
+  }
+  .svc-body :global(blockquote) :global(cite) {
+    display: block;
+    margin-top: 0.85rem;
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+
+  /* ============= Comparativa clínica (sección opcional entre Cap II y III) ============= */
+  .svc-compare {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, white 100%);
+    padding-block: clamp(4rem, 6vw, 6.5rem);
+  }
+  .svc-chapter-mark--marker .svc-chapter-num em {
+    font-style: normal;
+    font-size: 2rem;
+    line-height: 0;
+    position: relative;
+    top: -0.15em;
+  }
+  .svc-compare-wrap {
+    margin-top: clamp(1.5rem, 2.5vw, 2.25rem);
+  }
+  /* === Desktop tabla === */
+  .svc-compare-table {
+    display: none;
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  @media (min-width: 820px) {
+    .svc-compare-table { display: table; }
+    .svc-compare-cards { display: none; }
+  }
+  .svc-compare-table thead {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+  }
+  .svc-compare-table thead th {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-400);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    vertical-align: middle;
+  }
+  .svc-compare-table thead th:last-child { border-right: 0; }
+  .svc-compare-table thead .svc-compare-aspect {
+    color: var(--color-brand-200);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .svc-compare-table thead .svc-compare-clibel {
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-700));
+    color: white;
+    letter-spacing: 0.24em;
+  }
+  .svc-compare-table tbody tr {
+    border-top: 1px solid rgba(201, 169, 97, 0.22);
+    transition: background 0.25s ease !important;
+  }
+  .svc-compare-table tbody tr:hover {
+    background: var(--color-brand-50);
+  }
+  .svc-compare-table tbody th,
+  .svc-compare-table tbody td {
+    padding: 1.1rem 1.2rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+    vertical-align: top;
+    border-right: 1px dashed rgba(201, 169, 97, 0.22);
+  }
+  .svc-compare-table tbody td:last-child,
+  .svc-compare-table tbody th:last-child { border-right: 0; }
+  .svc-compare-table tbody .svc-compare-aspect {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    background: var(--color-brand-50);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.97rem;
+    color: var(--color-ink-900);
+    letter-spacing: -0.01em;
+    width: 24%;
+    text-align: left;
+  }
+  .svc-compare-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    opacity: 0.85;
+    min-width: 1.5rem;
+    line-height: 1.4;
+  }
+  .svc-compare-table tbody .svc-compare-clibel {
+    background: linear-gradient(180deg, rgba(201, 169, 97, 0.08), rgba(139, 90, 107, 0.05));
+    border-left: 2px solid var(--color-brand-400);
+    color: var(--color-ink-900);
+    font-weight: 500;
+  }
+
+  /* === Mobile cards === */
+  .svc-compare-cards {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 820px) {
+    .svc-compare-cards { display: none; }
+  }
+  .svc-compare-card {
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  .svc-compare-card header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--color-brand-50);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .svc-compare-card-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    opacity: 0.9;
+  }
+  .svc-compare-card header h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .svc-compare-card dl {
+    margin: 0;
+    padding: 0;
+  }
+  .svc-compare-card dl > div {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 0.85rem;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px dashed rgba(201, 169, 97, 0.22);
+  }
+  .svc-compare-card dl > div:last-child { border-bottom: 0; }
+  .svc-compare-card dl dt {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    align-self: baseline;
+  }
+  .svc-compare-card dl dd {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-ink-700);
+  }
+  .svc-compare-card-clibel {
+    background: linear-gradient(90deg, rgba(201, 169, 97, 0.08), rgba(139, 90, 107, 0.04));
+    border-left: 2px solid var(--color-brand-400);
+  }
+  .svc-compare-card-clibel dt {
+    color: var(--color-brand-500) !important;
+  }
+  .svc-compare-card-clibel dd {
+    color: var(--color-ink-900) !important;
+    font-weight: 500;
+  }
 </style>

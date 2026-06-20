@@ -47,6 +47,26 @@ const catalogSchema = {
   },
 };
 
+// === Editorial leads por L4 (humanizados, originales · usados en sección Profundiza) ===
+const editorialLedes: Record<string, { lede: string; readMore: string }> = {
+  'limpieza-facial-profunda': {
+    lede: 'El reset clínico que cualquier rostro pide al menos una vez al mes. No es servicio de spa: es el protocolo de siete pasos que mantiene tu piel funcional, sin la acumulación de comedones ni la sensación de "piel cargada" que se vuelve crónica en CDMX.',
+    readMore: 'Ver protocolo de 7 pasos',
+  },
+  'rejuvenecimiento-facial': {
+    lede: 'Para cuando la piel pide algo más que limpieza pero aún no quieres inyectables. Radiofrecuencia, mesoterapia con antioxidantes, peelings suaves y LED en un plan progresivo que respeta cómo el colágeno realmente madura — entre seis y doce semanas, no en una sesión milagrosa.',
+    readMore: 'Ver protocolo combinado',
+  },
+  'peelings-quimicos': {
+    lede: 'Renovación calibrada por fototipo. AHA para luminosidad, BHA para acné, despigmentantes para melasma, TCA superficial para cicatrices: la modalidad correcta no es la más fuerte, es la mínima eficaz aplicada con monitoreo en tiempo real.',
+    readMore: 'Ver las 4 modalidades',
+  },
+  'tratamiento-antiacne': {
+    lede: 'El acné se clasifica antes de tratarse. Grado I a IV, hormonal o no, con o sin marcas residuales — cada cuadro pide protocolo distinto. Peeling salicílico, mesoterapia seborreguladora, LED azul antibacteriano y rutina domiciliaria que se revisa cada cuatro semanas.',
+    readMore: 'Ver casos clínicos y grados',
+  },
+};
+
 // === Diagnóstico dermatológico previo (NUEVO — homologa con otros L3) ===
 const diagnosis = [
   {
@@ -71,39 +91,63 @@ const diagnosis = [
   },
 ];
 
-// === Casos clínicos / planes faciales por objetivo (NUEVO) ===
-const cases = [
+// === Casos clínicos / planes faciales por objetivo (combos linkados a L4) ===
+const cases: { name: string; duration: string; profile: string; combo: { label: string; href?: string }[]; target: string; accent: 'gold' | 'mauve' | 'rose'; primaryHref?: string }[] = [
   {
-    name: 'Plan piel grasa con acné',
+    name: 'Plan piel grasa con acné activo',
     duration: '4–6 sesiones · 3 meses',
-    profile: 'Pieles 18–35 años con brotes activos',
-    combo: ['Limpiezas profundas mensuales', 'Peeling salicílico fraccionado', 'Rutina domiciliaria con retinoides supervisados'],
-    target: 'Controlar brotes, regular sebo y prevenir cicatrices post-acné. CLIBEL combina técnica clínica + cosmecéuticos compatibles para resultado sostenido.',
+    profile: 'Pieles 18–35 años con brotes recurrentes',
+    combo: [
+      { label: 'Limpieza facial profunda mensual', href: '/servicios/limpieza-facial-profunda' },
+      { label: 'Peeling salicílico fraccionado', href: '/servicios/peelings-quimicos' },
+      { label: 'Mesoterapia seborreguladora', href: '/servicios/tratamiento-antiacne' },
+      { label: 'Rutina domiciliaria con BHA supervisada' },
+    ],
+    target: 'Controlar brotes activos, regular la producción de sebo y prevenir cicatrices post-acné. La rutina domiciliaria es la mitad del plan — sin ella, los resultados no se sostienen.',
     accent: 'gold',
+    primaryHref: '/servicios/tratamiento-antiacne',
   },
   {
-    name: 'Plan antimanchas y luminosidad',
+    name: 'Plan antimanchas y melasma',
     duration: '6 sesiones · 4 meses',
     profile: 'Pieles 30+ con melasma o fotoenvejecimiento',
-    combo: ['Peelings despigmentantes progresivos', 'Hidratación clínica intermedia', 'Protección solar y rutina domiciliaria estricta'],
-    target: 'Uniformar tono cutáneo, atenuar manchas y prevenir recidiva. CLIBEL trabaja con paciencia clínica — la pigmentación no responde al apuro.',
+    combo: [
+      { label: 'Peelings despigmentantes progresivos', href: '/servicios/peelings-quimicos' },
+      { label: 'Hidratación clínica intermedia' },
+      { label: 'Protección solar SPF 50+ estricta', href: '/servicios/peelings-quimicos' },
+      { label: 'Rutina domiciliaria con niacinamida + vitamina C' },
+    ],
+    target: 'Uniformar tono cutáneo, atenuar manchas y prevenir recidiva. La pigmentación responde con paciencia clínica — no con concentraciones agresivas aplicadas de golpe.',
     accent: 'mauve',
+    primaryHref: '/servicios/peelings-quimicos',
   },
   {
     name: 'Plan rejuvenecimiento integral',
-    duration: '5 sesiones · 3 meses',
-    profile: 'Pieles 35+ con primeras líneas',
-    combo: ['Rejuvenecimiento facial profesional', 'Microneedling con activos', 'Radiofrecuencia facial reafirmante'],
-    target: 'Mejorar textura, firmeza y luminosidad. CLIBEL diseña progresión sin invasividad y con resultados verificables en fotografía clínica.',
+    duration: '5 sesiones · 3 meses + mantenimiento',
+    profile: 'Pieles 35+ con primeras líneas y pérdida de firmeza',
+    combo: [
+      { label: 'Rejuvenecimiento facial combinado', href: '/servicios/rejuvenecimiento-facial' },
+      { label: 'Microneedling con activos' },
+      { label: 'Radiofrecuencia facial reafirmante', href: '/servicios/rejuvenecimiento-facial' },
+      { label: 'Cosmecéuticos profesionales' },
+    ],
+    target: 'Mejorar textura, firmeza y luminosidad. Progresión sin invasividad, con resultados verificables en fotografía clínica comparativa al mes 3.',
     accent: 'rose',
+    primaryHref: '/servicios/rejuvenecimiento-facial',
   },
   {
     name: 'Plan mantenimiento mensual',
     duration: 'Indefinido · 1 sesión / mes',
-    profile: 'Pacientes con plan consolidado',
-    combo: ['Limpieza facial profunda mensual', 'Hidratación enzimática', 'Revisión y ajuste de rutina'],
-    target: 'Sostener calidad cutánea como rutina clínica ligera. CLIBEL lo recomienda tras completar plan intensivo para mantener resultados.',
+    profile: 'Pacientes con plan ya consolidado',
+    combo: [
+      { label: 'Limpieza facial profunda mensual', href: '/servicios/limpieza-facial-profunda' },
+      { label: 'Hidratación enzimática' },
+      { label: 'Revisión y ajuste de rutina' },
+      { label: 'Fotografía clínica de control' },
+    ],
+    target: 'Sostener la calidad cutánea con rutina clínica ligera. Recomendado tras completar el plan intensivo para mantener resultados a largo plazo.',
     accent: 'gold',
+    primaryHref: '/servicios/limpieza-facial-profunda',
   },
 ];
 
@@ -125,31 +169,43 @@ const protocols = {
   ],
 };
 
-// === Qué resolvemos en faciales ===
+// === Qué resolvemos en faciales (cada concern enlaza al L4 que la atiende) ===
 const concerns = [
   {
     title: 'Acné y brotes hormonales',
-    text: 'CLIBEL diseña protocolos antiacné combinando peelings, fotomedicina y rutina domiciliaria personalizada para controlar brotes y prevenir cicatrices.',
+    text: 'Brotes activos, acné adulto hormonal, marcas residuales: cada cuadro responde a un protocolo distinto. Tu plan se construye sobre diagnóstico del grado clínico, no sobre limpieza facial genérica.',
+    href: '/servicios/tratamiento-antiacne',
+    linkLabel: 'Ver tratamiento antiacné',
   },
   {
     title: 'Manchas e hiperpigmentación',
-    text: 'En CLIBEL atendemos melasma, fotoenvejecimiento e hiperpigmentación posinflamatoria con peelings progresivos, despigmentantes médicos y protección solar clínica.',
+    text: 'Melasma, fotoenvejecimiento y pigmentación post-inflamatoria piden paciencia clínica. Trabajamos con peelings despigmentantes progresivos, SPF estricto y rutina domiciliaria — no atajos.',
+    href: '/servicios/peelings-quimicos',
+    linkLabel: 'Ver peelings químicos',
   },
   {
     title: 'Líneas de expresión y arrugas',
-    text: 'CLIBEL emplea radiofrecuencia facial, peelings de renovación, microneedling y bioestimuladores para suavizar líneas finas sin congelar la expresión.',
+    text: 'Para las primeras líneas y la pérdida de firmeza, antes de pensar en inyectables. Radiofrecuencia, mesoterapia con antioxidantes, peelings suaves y LED en un plan progresivo.',
+    href: '/servicios/rejuvenecimiento-facial',
+    linkLabel: 'Ver rejuvenecimiento facial',
   },
   {
     title: 'Poros dilatados y exceso de grasa',
-    text: 'Protocolos de limpieza profunda y peelings ácidos calibrados por CLIBEL para regular sebo, depurar poros y mejorar la textura visible.',
+    text: 'Comedones, sebo crónico y la sensación de "piel cargada" típica de Ciudad de México. La limpieza facial profunda es el punto de partida — siete pasos clínicos, no cosmética rápida.',
+    href: '/servicios/limpieza-facial-profunda',
+    linkLabel: 'Ver limpieza facial profunda',
   },
   {
     title: 'Piel apagada y deshidratada',
-    text: 'CLIBEL aplica hidratación profunda, exfoliación enzimática y vitaminas tópicas para devolver luminosidad sin agredir la barrera cutánea.',
+    text: 'Cuando la piel se ve cansada sin razón aparente: rutina rota, barrera deshidratada o falta de renovación celular. Combinación de limpieza profunda mensual con hidratación clínica y vitaminas tópicas.',
+    href: '/servicios/limpieza-facial-profunda',
+    linkLabel: 'Empezar con limpieza profunda',
   },
   {
     title: 'Rosácea y sensibilidad cutánea',
-    text: 'En CLIBEL trabajamos pieles reactivas con protocolos suaves, calmantes profesionales y diagnóstico dermatológico previo para evitar irritación.',
+    text: 'Pieles reactivas exigen criterio antes que técnica. Calmantes profesionales, protocolos suaves y, sobre todo, diagnóstico previo que descarte qué activos disparan tu reacción.',
+    href: '/contacto',
+    linkLabel: 'Solicitar valoración',
   },
 ];
 
@@ -168,32 +224,55 @@ const aftercare = [
   {
     n: '01',
     title: 'Protección solar diaria',
-    text: 'CLIBEL te entrega protocolo escrito: SPF 50+ aplicado cada mañana es la condición no negociable de cualquier tratamiento facial.',
+    text: 'SPF 50+ aplicado cada mañana es la condición no negociable de cualquier tratamiento facial — sin él, las manchas vuelven y el daño solar borra el avance clínico. CLIBEL entrega producto compatible con tu tipo de piel.',
   },
   {
     n: '02',
-    title: 'Hidratación clínica',
-    text: 'Rutina de hidratación y reparación de barrera diseñada por CLIBEL según tu tipo de piel y la fase del tratamiento.',
+    title: 'Hidratación clínica diaria',
+    text: 'Rutina de hidratación y reparación de barrera diseñada según tu tipo de piel y la fase del tratamiento. La barrera dérmica sana es la base de cualquier resultado facial sostenido.',
   },
   {
     n: '03',
     title: 'Suspensiones y precauciones',
-    text: 'CLIBEL indica por escrito qué activos suspender (retinoides, ácidos, exfoliantes) y por cuánto tiempo según el procedimiento.',
+    text: 'CLIBEL te indica por escrito qué activos suspender — retinoides, ácidos exfoliantes, retinol cosmético — y por cuánto tiempo según el procedimiento aplicado. Sin esa información, la sesión siguiente puede ser contraindicada.',
   },
   {
     n: '04',
     title: 'Seguimiento programado',
-    text: 'CLIBEL agenda revisiones a 7, 30 y 90 días con fotografía clínica comparativa para validar resultados y ajustar el plan.',
+    text: 'Agendamos revisiones a 7, 30 y 90 días con fotografía clínica comparativa. Validamos resultado con evidencia objetiva, no con percepción subjetiva, y ajustamos el plan si la piel no responde como esperábamos.',
   },
 ];
 
-// === FAQs específicas faciales ===
-const faqs = [
-  { q: '¿Con qué frecuencia debo hacerme una limpieza facial profunda?', a: 'En CLIBEL recomendamos una sesión mensual de mantenimiento para pieles sanas y cada 15-21 días si tu piel es grasa, mixta o tiene tendencia comedónica. La frecuencia exacta sale de tu valoración inicial.' },
-  { q: '¿Los peelings químicos descaman mucho?', a: 'Depende de la profundidad. Los peelings superficiales que aplicamos en CLIBEL provocan descamación leve y discreta. Para peelings medios entregamos protocolo de recuperación con cuidados específicos y línea telefónica directa con tu médico.' },
-  { q: '¿En cuántas sesiones desaparecen mis manchas?', a: 'El melasma y la hiperpigmentación responden gradualmente. CLIBEL trabaja en planes de 4-6 sesiones espaciadas, con activos domiciliarios y protección solar estricta. Los resultados se documentan con fotografía clínica.' },
-  { q: '¿Puedo combinar varios tratamientos faciales?', a: 'Sí, y normalmente es lo más eficaz. CLIBEL diseña planes combinados — limpieza + peeling + radiofrecuencia — respetando tiempos clínicos y la respuesta de tu piel sesión a sesión.' },
-  { q: '¿Los tratamientos faciales son seguros durante el embarazo?', a: 'Muchos sí (limpieza facial, hidratación, drenaje), otros no (peelings medios, retinoides, microneedling profundo). En CLIBEL valoramos cada caso por separado y adaptamos un plan seguro durante embarazo y lactancia.' },
+// === FAQs específicas faciales (humanizadas + interlinking a L4s vía answerHtml) ===
+const faqs: { q: string; answerHtml: string }[] = [
+  {
+    q: '¿Con qué frecuencia debo hacerme una limpieza facial profunda?',
+    answerHtml: 'Una sesión al mes es la base para piel sana; cada 15–21 días si tu piel es grasa, mixta o con tendencia comedónica activa. La frecuencia final sale de tu valoración, no de un calendario genérico. <a href="/servicios/limpieza-facial-profunda">Conoce el protocolo de 7 pasos →</a>',
+  },
+  {
+    q: '¿Los peelings químicos descaman mucho?',
+    answerHtml: 'Depende de la modalidad. Los AHA superficiales que usamos producen descamación fina, casi imperceptible. Los BHA y despigmentantes son medios — descamación visible 3 a 5 días. El TCA superficial se reserva para casos específicos con downtime documentado. <a href="/servicios/peelings-quimicos">Mira las 4 modalidades →</a>',
+  },
+  {
+    q: '¿En cuántas sesiones desaparecen mis manchas?',
+    answerHtml: 'El melasma y la pigmentación post-inflamatoria responden con paciencia clínica: 4 a 6 sesiones espaciadas, SPF 50+ obligatorio diario y rutina domiciliaria estricta. Documentamos con foto comparativa basal y cualquier promesa de "manchas borradas en 2 sesiones" es marketing, no medicina estética.',
+  },
+  {
+    q: '¿Puedo combinar varios tratamientos faciales en un plan?',
+    answerHtml: 'Sí — de hecho es la forma más eficaz para casos complejos. Combinamos <a href="/servicios/limpieza-facial-profunda">limpieza profunda</a> mensual + <a href="/servicios/peelings-quimicos">peeling</a> quincenal + <a href="/servicios/rejuvenecimiento-facial">rejuvenecimiento</a> según diagnóstico. El plan se diseña respetando ventanas de recuperación cutánea: nunca sobrecargamos la barrera dérmica.',
+  },
+  {
+    q: '¿Cuál es la diferencia entre un facial de spa y este protocolo?',
+    answerHtml: 'Diagnóstico previo, productos con registro COFEPRIS, técnica supervisada por personal capacitado, manejo clínico de la inflamación, expediente fotográfico y ajustes cada 4 semanas. Un spa cumple para mantenimiento cosmético rápido; CLIBEL trabaja para resultado clínico documentable.',
+  },
+  {
+    q: '¿Los tratamientos faciales son seguros durante el embarazo?',
+    answerHtml: 'La <a href="/servicios/limpieza-facial-profunda">limpieza facial</a> y la hidratación clínica son seguras en la mayoría de los casos. Los peelings con activos contraindicados (retinoides, salicílico medio, despigmentantes con hidroquinona) y la mesoterapia se posponen. Valoramos cada caso por separado y adaptamos un plan compatible con embarazo o lactancia.',
+  },
+  {
+    q: 'Tengo acné moderado, ¿por dónde empiezo?',
+    answerHtml: 'Por la valoración: lo primero es clasificar el grado clínico (I a IV) y descartar causa hormonal subyacente. El <a href="/servicios/tratamiento-antiacne">tratamiento antiacné CLIBEL</a> combina limpieza profunda, peeling salicílico, mesoterapia seborreguladora y LED azul antibacteriano — ajustado a tu cuadro real, no a un paquete promocional.',
+  },
 ];
 ---
 
@@ -259,19 +338,21 @@ const faqs = [
 
           <p class="cat-hero-paragraph">
             <strong>CLIBEL</strong> es una clínica de belleza con criterio
-            médico especializada en cuidado facial profesional en Ciudad
-            de México. Diseñamos cada protocolo facial tras una valoración
-            dermatológica que evalúa fototipo, sensibilidad, antecedentes y
-            objetivos, combinando técnicas clínicas con cosmecéuticos
-            certificados por COFEPRIS y supervisión médica directa.
+            médico, especializada en cuidado facial profesional en Ciudad
+            de México. Cada protocolo nace de una valoración real
+            — fototipo, sensibilidad, antecedentes hormonales, motivo
+            principal — y se construye con cosmecéuticos certificados por
+            COFEPRIS y supervisión médica directa. Sin paquetes prearmados
+            ni plantillas de cabina.
           </p>
 
           <p class="cat-hero-paragraph">
-            En esta categoría <strong>CLIBEL</strong> reúne sus protocolos
-            faciales más solicitados: <strong>limpieza facial profunda</strong>,
-            <strong>rejuvenecimiento</strong>, <strong>peelings químicos</strong>
-            controlados y <strong>tratamiento antiacné</strong>. Cada sesión
-            queda documentada en expediente clínico digital con producto,
+            En esta categoría reunimos los cuatro protocolos faciales más
+            solicitados: <a href="/servicios/limpieza-facial-profunda"><strong>limpieza facial profunda</strong></a>,
+            <a href="/servicios/rejuvenecimiento-facial"><strong>rejuvenecimiento</strong></a>,
+            <a href="/servicios/peelings-quimicos"><strong>peelings químicos</strong></a>
+            calibrados y <a href="/servicios/tratamiento-antiacne"><strong>tratamiento antiacné</strong></a>.
+            Cada sesión queda documentada en expediente digital con producto,
             lote, dosis, técnica y respuesta cutánea — para que el plan se
             afine sesión a sesión hasta el resultado.
           </p>
@@ -299,10 +380,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker={`Catálogo · ${items.length} tratamientos`}
-        title="Tratamientos faciales en <em>CLIBEL</em>."
+        title="Los protocolos faciales<br/>que aplica <em>CLIBEL</em>."
         paragraphs={[
-          '<strong>CLIBEL</strong> realiza tratamientos faciales con grado clínico: cada protocolo se diseña a medida tras valoración médica, con productos certificados por COFEPRIS y técnicos capacitados bajo supervisión profesional. CLIBEL aborda piel grasa, mixta, sensible, con manchas, acné, signos de edad o todo lo anterior.',
-          'Cada tratamiento facial en <strong>CLIBEL</strong> documenta producto, lote, parámetros y respuesta cutánea en tu expediente digital. Esto permite a CLIBEL ajustar el plan sesión a sesión y validar resultados con fotografía clínica comparativa.',
+          'Cada protocolo facial de <strong>CLIBEL</strong> nace de un diagnóstico real, no de una plantilla. Trabajamos piel grasa, mixta o sensible; manchas, acné, signos de edad o todo lo anterior — siempre con productos COFEPRIS y técnica supervisada por personal médico.',
+          'Cada sesión documenta producto, lote, parámetros y respuesta cutánea en tu expediente digital. Eso es lo que permite a <strong>CLIBEL</strong> ajustar el plan sesión a sesión y validar resultados con fotografía clínica comparativa — no con percepción subjetiva.',
         ]}
         cta={{ label: 'Solicitar valoración', href: '/contacto', variant: 'primary' }}
       />
@@ -325,15 +406,110 @@ const faqs = [
     </div>
   </section>
 
-  <!-- ============================ CONCERNS ============================ -->
+  <!-- ============================ PROFUNDIZA · interlinking L3 → L4 ============================ -->
   <section class="section bg-[color:var(--color-brand-50)]">
     <div class="container-x">
       <SectionHeader
-        kicker="Qué resolvemos"
-        title="Problemas faciales que atendemos en <em>CLIBEL</em>."
+        marginBottom="md"
+        kicker="Profundiza en cada protocolo"
+        title="Cada tratamiento facial<br/>en <em>CLIBEL</em>, en detalle."
         paragraphs={[
-          '<strong>CLIBEL</strong> trata las preocupaciones dermatológicas más comunes en piel mexicana: acné hormonal, melasma y manchas, signos de edad, poros dilatados, opacidad cutánea y rosácea. Cada motivo de consulta llega con su propio protocolo clínico — no aplicamos plantillas.',
-          'En <strong>CLIBEL</strong> la valoración define el plan: combinamos limpieza, peelings, radiofrecuencia, microneedling y rutina domiciliaria según lo que tu piel realmente necesita. Sin sobre-tratar, sin recetar lo que no aporta resultado.',
+          'Estos son los protocolos faciales que <strong>CLIBEL</strong> aplica como base de la categoría. Cada uno tiene su propia página clínica con pasos, modalidades, comparativas y casos reales — para que llegues a tu valoración con información completa, no con marketing.',
+          'Si no sabes por dónde empezar, la <strong>limpieza facial profunda</strong> mensual es la entrada lógica para casi cualquier perfil. Lo demás se construye encima en función de tu motivo de consulta.',
+        ]}
+      />
+
+      <ol class="spot-list">
+        {items.map((s, i) => {
+          const meta = editorialLedes[s.id];
+          const topBen = (s.data.benefits ?? []).slice(0, 2);
+          const waSvc = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`Hola CLIBEL, me interesa el tratamiento ${s.data.title}.`)}`;
+          return (
+            <li class="spot reveal">
+              <div class="spot-num-wrap" aria-hidden="true">
+                <span class="spot-num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="spot-num-line"></span>
+              </div>
+
+              <div class="spot-body">
+                <header class="spot-head">
+                  <span class="spot-kicker">{s.data.icon ?? '✦'} {cat.short} · Protocolo {String(i + 1).padStart(2, '0')}</span>
+                  <h3 class="spot-title">
+                    <a href={`/servicios/${s.id}`}>{s.data.title}</a>
+                  </h3>
+                </header>
+
+                <dl class="spot-meta">
+                  {s.data.duration && (
+                    <div>
+                      <dt>Duración</dt>
+                      <dd>{s.data.duration}</dd>
+                    </div>
+                  )}
+                  {s.data.sessions && (
+                    <div>
+                      <dt>Frecuencia</dt>
+                      <dd>{s.data.sessions.split('·')[0].trim()}</dd>
+                    </div>
+                  )}
+                  {(s.data.protocolSteps?.length ?? 0) > 0 && (
+                    <div>
+                      <dt>Pasos clínicos</dt>
+                      <dd>{s.data.protocolSteps?.length}</dd>
+                    </div>
+                  )}
+                  {(s.data.modalities?.length ?? 0) > 0 && (
+                    <div>
+                      <dt>Modalidades</dt>
+                      <dd>{s.data.modalities?.length}</dd>
+                    </div>
+                  )}
+                </dl>
+
+                <p class="spot-lede">{meta?.lede ?? s.data.description}</p>
+
+                {topBen.length > 0 && (
+                  <ul class="spot-benefits">
+                    {topBen.map((b) => (
+                      <li>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <div class="spot-actions">
+                  <a href={`/servicios/${s.id}`} class="spot-cta spot-cta--primary">
+                    {meta?.readMore ?? 'Conocer protocolo'}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                  </a>
+                  <a href={waSvc} target="_blank" rel="noopener" class="spot-cta spot-cta--wa">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                    Pregunta por WhatsApp
+                  </a>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ CONCERNS ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Qué resolvemos"
+        title="Las consultas faciales<br/>más frecuentes en <em>CLIBEL</em>."
+        paragraphs={[
+          'Acné hormonal, melasma, signos de edad temprana, poros dilatados, opacidad o piel reactiva: cada motivo de consulta llega con su propio protocolo. <strong>CLIBEL</strong> no aplica plantillas — cada cuadro pide herramientas distintas y tiempo de seguimiento propio.',
+          'Lo que define tu plan es la valoración, no el catálogo. Combinamos limpieza, peelings, radiofrecuencia, microneedling y rutina domiciliaria según lo que tu piel realmente necesita — sin sobre-tratar, sin agregar pasos que no aportan resultado.',
         ]}
       />
 
@@ -343,6 +519,14 @@ const faqs = [
             <span class="concern-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             <h3 class="concern-title">{c.title}</h3>
             <p class="concern-text">{c.text}</p>
+            {c.href && (
+              <a href={c.href} class="concern-link">
+                {c.linkLabel ?? 'Ver protocolo'}
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            )}
             <span class="concern-line" aria-hidden="true"></span>
           </article>
         ))}
@@ -355,10 +539,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Tecnología y productos"
-        title="Lo que <em>CLIBEL</em> usa en cada sesión facial."
+        title="Las herramientas<br/>detrás del protocolo."
         paragraphs={[
-          '<strong>CLIBEL</strong> opera con plataformas clínicas de marcas certificadas y productos con registro sanitario COFEPRIS visible. Cada paciente puede consultar lote, fecha y trazabilidad de los insumos aplicados en su sesión — la transparencia es parte del protocolo.',
-          'En <strong>CLIBEL</strong> no improvisamos parámetros ni concentraciones: cada equipo se calibra antes de la sesión y cada producto se documenta en expediente. Esto convierte a CLIBEL en una alternativa segura frente a spas y salas de belleza sin respaldo médico.',
+          '<strong>CLIBEL</strong> trabaja con plataformas clínicas certificadas y productos con registro sanitario COFEPRIS visible. Puedes consultar el lote, la fecha y la trazabilidad de cualquier insumo aplicado en tu sesión — la transparencia no es un extra, es parte del estándar.',
+          'Nada se aplica a ojo. Cada equipo se calibra antes de la sesión y cada producto se registra en tu expediente. Esa es la diferencia clínica frente al spa: parámetros documentados, no improvisación cosmética.',
         ]}
       />
 
@@ -382,11 +566,11 @@ const faqs = [
     <div class="container-x relative">
       <SectionHeader
         kicker="Diagnóstico dermatológico"
-        title="4 pasos antes de tocar tu <em>piel</em>."
+        title="Cuatro pasos antes<br/>de tocar tu <em>piel</em>."
         variant="dark"
         paragraphs={[
-          'La diferencia entre <strong>CLIBEL</strong> y una clínica facial promedio empieza ANTES del tratamiento. Aplicar peeling o limpieza sin diagnóstico es como recetar antibiótico sin saber qué bacteria. CLIBEL no improvisa: primero diagnostica, después trata.',
-          'Este proceso de 4 pasos diagnósticos es <strong>obligatorio</strong> en CLIBEL para cualquier plan facial. Si una clínica te ofrece tratamiento sin pasar por esto, el resultado será mediocre y posiblemente contraindicado para tu tipo de piel.',
+          'La diferencia entre <strong>CLIBEL</strong> y una clínica facial promedio se nota antes de aplicar nada. Recomendar peeling o limpieza sin diagnóstico es como recetar antibiótico sin saber qué bacteria — funciona por suerte o no funciona. Aquí primero diagnosticamos, después tratamos.',
+          'Estos cuatro pasos diagnósticos son obligatorios para cualquier plan facial en <strong>CLIBEL</strong>. Si una clínica te ofrece tratamiento facial sin pasar por valoración real, el resultado será mediocre — y, en pieles sensibles o fototipos altos, posiblemente contraindicado.',
         ]}
       />
 
@@ -409,10 +593,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Planes por objetivo"
-        title="Casos clínicos que aborda <em>CLIBEL</em>."
+        title="Cuatro casos reales<br/>que <em>CLIBEL</em> resuelve."
         paragraphs={[
-          '<strong>CLIBEL</strong> diseña planes faciales según objetivo clínico específico: control de acné, atenuación de manchas, rejuvenecimiento progresivo o mantenimiento de piel sana. Cada plan combina técnicas, frecuencia y seguimiento ajustado al perfil del paciente.',
-          'Estos planes son <strong>orientativos</strong>. CLIBEL siempre personaliza tras diagnóstico dermatológico real — si tu caso no encaja en ninguno, diseñamos uno a medida basado en evidencia clínica y respuesta de tu piel.',
+          'Estos son los cuatro perfiles clínicos más comunes en la consulta facial de <strong>CLIBEL</strong> — y el plan tipo para cada uno. Sirven como referencia editorial: no son paquetes cerrados ni se venden como tales.',
+          'Si tu caso no encaja exactamente en ninguno (suele pasar), diseñamos uno a medida. La valoración define la combinación final de técnicas, frecuencia y seguimiento — basada en evidencia clínica y en cómo responde tu piel sesión a sesión.',
         ]}
       />
 
@@ -441,13 +625,26 @@ const faqs = [
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <polyline points="20 6 9 17 4 12"/>
                     </svg>
-                    {proc}
+                    {proc.href ? (
+                      <a href={proc.href}>{proc.label}</a>
+                    ) : (
+                      <span>{proc.label}</span>
+                    )}
                   </li>
                 ))}
               </ul>
             </div>
 
             <p class="case-target">{c.target}</p>
+
+            {c.primaryHref && (
+              <a href={c.primaryHref} class="case-link">
+                Ver protocolo principal
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            )}
           </article>
         ))}
       </div>
@@ -459,11 +656,11 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Protocolos pre / post sesión"
-        title="Lo que <em>CLIBEL</em> indica antes y después."
+        title="Lo que <em>CLIBEL</em><br/>indica antes y después."
         variant="dark"
         paragraphs={[
-          '<strong>CLIBEL</strong> entrega protocolo pre y post sesión por escrito. Seguirlo no es opcional: la eficacia del tratamiento facial y tu seguridad cutánea dependen de cumplir estas indicaciones. CLIBEL prefiere reagendar antes que aplicar sobre piel mal preparada.',
-          'En <strong>CLIBEL</strong> tu médico revisa el cumplimiento antes de cada sesión. Si tu piel no está lista o tienes contraindicación temporal, reagendamos sin penalización — es responsabilidad clínica, no comercial.',
+          'El plan pre y post sesión se entrega por escrito en tu valoración. Seguirlo no es opcional — la eficacia del tratamiento y la seguridad clínica dependen de cumplir estas indicaciones simples. <strong>CLIBEL</strong> prefiere reagendar antes que aplicar sobre piel mal preparada.',
+          'Tu médico revisa el cumplimiento antes de cada sesión. Si la piel no está lista o tienes una contraindicación temporal, reagendamos sin penalización: es responsabilidad clínica, no decisión comercial.',
         ]}
       />
 
@@ -509,11 +706,11 @@ const faqs = [
     <div class="container-x relative">
       <SectionHeader
         kicker="Aftercare clínico"
-        title="Cuidados domiciliarios que <em>CLIBEL</em> entrega por escrito."
+        title="Los cuidados que sostienen<br/>el resultado <em>en casa</em>."
         variant="dark"
         paragraphs={[
-          'Un tratamiento facial en <strong>CLIBEL</strong> no termina cuando sales del consultorio. CLIBEL entrega a cada paciente un protocolo aftercare documentado: productos, frecuencias, suspensiones y señales de alerta. La diferencia entre resultados duraderos y un cambio efímero está en este paso.',
-          'En <strong>CLIBEL</strong> activamos una línea de contacto directo con tu médico para resolver dudas durante el postratamiento. CLIBEL cree que la educación dermatológica es parte del servicio, no un extra.',
+          'Un tratamiento facial no termina cuando sales del consultorio. Cada paciente de <strong>CLIBEL</strong> se va con un protocolo aftercare escrito: productos, frecuencias, suspensiones y señales de alerta. La diferencia entre resultados duraderos y un cambio efímero está en este paso, no en la cabina.',
+          'Activamos una línea directa con tu médico para resolver dudas durante el postratamiento. La educación dermatológica es parte del servicio — no un extra que se cobra aparte.',
         ]}
       />
 
@@ -536,10 +733,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Preguntas frecuentes y contacto"
-        title="Resuelve dudas sobre <em>faciales</em> o pide tu valoración."
+        title="Dudas sobre <em>tu plan</em><br/>facial, respondidas."
         paragraphs={[
-          'Las preguntas más recurrentes que recibe <strong>CLIBEL</strong> sobre cuidado facial profesional, resueltas con criterio clínico. A la derecha puedes enviarnos tus datos y un mensaje — llegan directo al WhatsApp clínico de CLIBEL en menos de 2 horas en horario consulta.',
-          'En <strong>CLIBEL</strong> entendemos que decidir un tratamiento facial implica preguntas legítimas: tiempos, recuperación, seguridad y compatibilidad con tu rutina. CLIBEL responde con honestidad y plan personalizado, no con guion de venta.',
+          'Las preguntas que más recibe <strong>CLIBEL</strong> sobre cuidado facial profesional, respondidas con criterio clínico — no con guion comercial. Si la tuya no aparece, llénanos el formulario: tu mensaje llega pre-armado al WhatsApp clínico en menos de 2 horas en horario consulta.',
+          'Decidir un tratamiento facial implica preguntas legítimas: tiempos, recuperación, seguridad, compatibilidad con tu rutina y, sobre todo, qué pasa si tu piel no responde como esperas. Aquí están las respuestas honestas.',
         ]}
       />
 
@@ -559,7 +756,7 @@ const faqs = [
                     </svg>
                   </span>
                 </summary>
-                <div class="faq-a">{f.a}</div>
+                <div class="faq-a" set:html={f.answerHtml}></div>
               </details>
             ))}
           </div>
@@ -811,6 +1008,16 @@ const faqs = [
     color: var(--color-ink-700);
   }
   .cat-hero-trust-list span[aria-hidden] { color: var(--color-brand-400); }
+
+  .cat-hero-paragraph a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 0.25s ease !important;
+  }
+  .cat-hero-paragraph a:hover { color: var(--color-mauve-700); }
+  .cat-hero-paragraph a strong { color: inherit; font-weight: 600; }
 
   .cat-hero-col--right { gap: 1.25rem; }
   @media (min-width: 900px) {
@@ -1186,6 +1393,37 @@ const faqs = [
     line-height: 1.45;
     color: var(--color-ink-700);
   }
+  .case-combo li a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.25s ease !important;
+  }
+  .case-combo li a:hover { color: var(--color-mauve-700); }
+  .case-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.32);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    text-decoration: none;
+    transition: gap 0.25s ease, color 0.25s ease !important;
+  }
+  .case-link:hover {
+    color: var(--color-mauve-700);
+    gap: 0.65rem;
+  }
+  .case-link svg { transition: transform 0.25s ease !important; }
+  .case-link:hover svg { transform: translateX(3px); }
   .case-combo li svg {
     flex-shrink: 0;
     margin-top: 0.18rem;
@@ -1454,6 +1692,15 @@ const faqs = [
     line-height: 1.65;
     color: var(--color-ink-700);
   }
+  .faq-a a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.25s ease !important;
+  }
+  .faq-a a:hover { color: var(--color-mauve-700); }
 
   /* ===== Formulario WhatsApp ===== */
   .faq-form-wrap {
@@ -1640,4 +1887,226 @@ const faqs = [
   @media (max-width: 640px) {
     .faq-form { padding: 1.25rem; }
   }
+
+  /* ============= PROFUNDIZA — editorial spotlight por L4 ============= */
+  .spot-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 3vw, 2.75rem) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .spot {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding-block: clamp(2rem, 3vw, 2.75rem);
+    border-top: 1px solid rgba(201, 169, 97, 0.32);
+    align-items: start;
+  }
+  .spot:first-child { border-top: 0; padding-top: 0; }
+  .spot:last-child { padding-bottom: 0; }
+  @media (min-width: 820px) {
+    .spot {
+      grid-template-columns: clamp(80px, 11vw, 130px) 1fr;
+      gap: clamp(1.5rem, 3vw, 3rem);
+    }
+  }
+  .spot-num-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+  }
+  @media (min-width: 820px) {
+    .spot-num-wrap { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding-top: 0.3rem; }
+  }
+  .spot-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+  }
+  .spot-num-line {
+    width: 32px;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    border-radius: 2px;
+  }
+  @media (max-width: 819px) {
+    .spot-num-line { display: none; }
+  }
+  .spot-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+  }
+  .spot-head { display: flex; flex-direction: column; gap: 0.5rem; }
+  .spot-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .spot-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 2.6vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.022em;
+    color: var(--color-ink-900);
+    margin: 0;
+    max-width: 26ch;
+  }
+  .spot-title a {
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    background-repeat: no-repeat;
+    background-size: 0 2px;
+    background-position: 0 100%;
+    transition: background-size 0.4s cubic-bezier(.2,.8,.2,1) !important;
+    padding-bottom: 2px;
+  }
+  .spot-title a:hover { background-size: 100% 2px; }
+  .spot-meta {
+    margin: 0;
+    padding: 0.85rem 0;
+    border-block: 1px dashed rgba(201, 169, 97, 0.3);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  @media (min-width: 700px) { .spot-meta { grid-template-columns: repeat(4, 1fr); } }
+  .spot-meta > div { padding: 0; }
+  .spot-meta > div + div {
+    padding-left: clamp(0.75rem, 1.5vw, 1.25rem);
+    border-left: 1px dashed rgba(201, 169, 97, 0.3);
+  }
+  .spot-meta dt {
+    font-family: var(--font-sans);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-bottom: 0.25rem;
+  }
+  .spot-meta dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(0.92rem, 1vw, 1.05rem);
+    line-height: 1.2;
+    color: var(--color-ink-900);
+    letter-spacing: -0.005em;
+  }
+  .spot-lede {
+    margin: 0;
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.7;
+    color: var(--color-ink-700);
+    max-width: 68ch;
+  }
+  .spot-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+  @media (min-width: 700px) { .spot-benefits { grid-template-columns: 1fr 1fr; gap: 0.65rem 1.5rem; } }
+  .spot-benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--color-ink-700);
+  }
+  .spot-benefits li svg {
+    flex-shrink: 0;
+    margin-top: 4px;
+    color: var(--color-brand-500);
+  }
+  .spot-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    align-items: center;
+    padding-top: 0.5rem;
+  }
+  .spot-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.2rem;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1) !important;
+    border: 1.5px solid transparent;
+  }
+  .spot-cta--primary {
+    background: var(--color-ink-900);
+    color: var(--color-brand-50);
+  }
+  .spot-cta--primary:hover {
+    background: var(--color-mauve-700);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -10px rgba(31, 20, 24, 0.4);
+  }
+  .spot-cta--primary svg { transition: transform 0.25s ease !important; }
+  .spot-cta--primary:hover svg { transform: translateX(3px); }
+  .spot-cta--wa {
+    background: rgba(37, 211, 102, 0.1);
+    color: #1B7A3F;
+    border: 1.5px solid rgba(37, 211, 102, 0.35);
+  }
+  .spot-cta--wa:hover {
+    background: #25D366;
+    color: white;
+    border-color: #25D366;
+    transform: translateY(-2px);
+  }
+
+  /* ============= Concern card link ============= */
+  .concern-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.3);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    text-decoration: none;
+    transition: color 0.25s ease, gap 0.25s ease !important;
+  }
+  .concern-link:hover {
+    color: var(--color-mauve-700);
+    gap: 0.75rem;
+  }
+  .concern-link svg {
+    transition: transform 0.25s ease !important;
+  }
+  .concern-link:hover svg { transform: translateX(3px); }
 </style>

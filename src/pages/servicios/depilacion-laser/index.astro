@@ -110,6 +110,125 @@ const cycle = [
   },
 ];
 
+// ============ Calendario visual del plan (8 sesiones · 6 meses) ============
+const calendar = [
+  { mes: 'Mes 01', sesion: '01', label: 'Inicio del plan', text: 'Primera sesión completa. Prueba de parche ya validada en valoración. Documentación basal: foto multi-ángulo, fluencia y respuesta inmediata.', accent: 'gold' },
+  { mes: 'Mes 02', sesion: '02', label: 'Confirmación de respuesta', text: 'Folículos en anágena del segundo lote. Reducción visible del 20–30% del vello total. Ajuste de fluencia si la zona lo permite.', accent: 'gold' },
+  { mes: 'Mes 03', sesion: '03', label: 'Reducción progresiva', text: 'Tercera sesión. Reducción acumulada típica del 40–50%. El folículo destruido no vuelve; los nuevos en anágena se tratan ahora.', accent: 'mauve' },
+  { mes: 'Mes 04', sesion: '04', label: 'Hito clínico medio', text: 'Punto formal de evaluación con foto comparativa. Si la respuesta es lenta, ajustamos fluencia o tecnología. Si va bien, mantenemos parámetros.', accent: 'mauve' },
+  { mes: 'Mes 05', sesion: '05', label: 'Folículos rebeldes', text: 'Trabajo de folículos más resistentes — bigote y brasileño suelen requerir fluencia ligeramente mayor en esta sesión. Reducción acumulada 65–75%.', accent: 'rose' },
+  { mes: 'Mes 06', sesion: '06', label: 'Consolidación del plan', text: 'Reducción acumulada típica del 80–90% en zonas estándar. Cierre del plan inicial. CLIBEL evalúa necesidad de sesiones 07–08 según zona.', accent: 'rose' },
+  { mes: 'Mes 08', sesion: '07', label: 'Sesión de cierre (si aplica)', text: 'Solo para zonas hormonales o de alta densidad folicular. Foco en folículos remanentes activados después del plan inicial.', accent: 'gold' },
+  { mes: 'Mes 10', sesion: '08', label: 'Última sesión (zonas hormonales)', text: 'Cierre completo para bigote, mentón o brasileño. Después, plan de mantenimiento bimestral solo si el folículo hormonal lo requiere.', accent: 'gold' },
+];
+
+// ============ Compromisos del paciente (lo que aportas tú) ============
+const commitments: { title: string; text: string; weight: 'Imprescindible' | 'Recomendado' | 'Opcional' }[] = [
+  {
+    title: 'Sin sol ni bronceado durante el plan',
+    text: 'El sol activa melanina y aumenta riesgo de hiperpigmentación post-láser. SPF 50+ diario obligatorio en las zonas tratadas. Si te bronceas, el plan se pausa hasta que la piel vuelva a su tono basal.',
+    weight: 'Imprescindible',
+  },
+  {
+    title: 'Rasurar 24 h antes de cada sesión',
+    text: 'La zona debe llegar rasurada — no con cera, no con pinzas, no con depilatorios químicos. El vello superficial absorbe energía y reduce eficacia; los métodos que arrancan eliminan el folículo (target del láser).',
+    weight: 'Imprescindible',
+  },
+  {
+    title: 'NO cera ni pinzas entre sesiones',
+    text: 'Cera y pinzas extraen el folículo entero, eliminando el target del láser para la siguiente sesión. Entre sesiones solo se permite rasurado. Si necesitas reducir vello visible, espera al día de la cita.',
+    weight: 'Imprescindible',
+  },
+  {
+    title: 'Constancia con el calendario',
+    text: 'Saltarse sesiones pierde sincronía con la fase anágena del folículo. El plan se puede alargar y retomar con criterio, pero la constancia acorta el resultado final y mejora la respuesta documentada.',
+    weight: 'Recomendado',
+  },
+  {
+    title: 'Cosmecéuticos calmantes en casa',
+    text: 'Aloe vera puro, geles con avena o pantenol los primeros 2 días post-sesión potencian la recuperación cutánea. CLIBEL los recomienda según tu tipo de piel — no son obligatorios, sí potencian.',
+    weight: 'Opcional',
+  },
+];
+
+// ============ Comparativa clínica (vs casa / spa / CLIBEL) ============
+const comparison: { aspect: string; home?: string; spa?: string; clibel: string }[] = [
+  {
+    aspect: 'Valoración previa',
+    home: 'Auto-evaluación sin clasificación de fototipo',
+    spa: 'Visual rápido sin prueba de parche',
+    clibel: 'Fototipo Fitzpatrick documentado + prueba de parche obligatoria + revisión de antecedentes',
+  },
+  {
+    aspect: 'Tecnología disponible',
+    home: 'Dispositivos IPL caseros (no son láser real)',
+    spa: 'Una sola tecnología por equipo, sin ajuste por fototipo',
+    clibel: 'Tres láseres (Alexandrita, Nd:YAG, Diodo) — se asigna por fototipo, no por disponibilidad',
+  },
+  {
+    aspect: 'Manejo de fototipos altos (IV–VI)',
+    home: 'Riesgo alto de hiperpigmentación',
+    spa: 'Sin ajuste de equipo, riesgo de quemadura',
+    clibel: 'Nd:YAG exclusivamente con fluencia conservadora inicial',
+  },
+  {
+    aspect: 'Sistema de enfriamiento',
+    home: 'Sin enfriamiento, sensación muy molesta',
+    spa: 'Enfriamiento por aire o gel intermitente',
+    clibel: 'Enfriamiento por contacto continuo en todo el cabezal',
+  },
+  {
+    aspect: 'Documentación del plan',
+    home: 'Sin métricas objetivas',
+    spa: 'Sin expediente clínico',
+    clibel: 'Fluencia, fototipo, zona, respuesta y % de reducción documentados sesión a sesión',
+  },
+  {
+    aspect: 'Manejo de complicaciones',
+    home: 'Sin recurso clínico',
+    spa: 'Derivación a dermatólogo externo',
+    clibel: 'Personal médico supervisa, WhatsApp clínico activo durante todo el plan',
+  },
+  {
+    aspect: 'Honestidad sobre limitaciones',
+    home: '—',
+    spa: 'Promesas de "piel sin vello para siempre"',
+    clibel: 'Honestidad sobre componente hormonal, vello rubio/cano y necesidad de mantenimiento en zonas específicas',
+  },
+];
+
+// ============ Complementa tu plan láser (cross-link a otras categorías) ============
+const complements: { title: string; text: string; href: string; linkLabel: string; cat: string }[] = [
+  {
+    title: 'Cuidado facial post-láser',
+    text: 'Después de zonas faciales (bigote, mentón, rostro completo), la piel agradece protocolos suaves de limpieza y reparación. Sin exfoliantes agresivos las primeras 48 h — y limpieza profunda mensual a partir del día 7.',
+    href: '/servicios/limpieza-facial-profunda',
+    linkLabel: 'Ver limpieza facial profunda',
+    cat: 'Facial',
+  },
+  {
+    title: 'Pigmentación residual',
+    text: 'Si te queda pigmentación post-inflamatoria después de algunas sesiones (especialmente fototipos altos), trabajamos peelings despigmentantes calibrados a tu piel — no concentraciones agresivas que empeoren el cuadro.',
+    href: '/servicios/peelings-quimicos',
+    linkLabel: 'Ver peelings despigmentantes',
+    cat: 'Facial',
+  },
+  {
+    title: 'Plan corporal integral',
+    text: 'Si tu plan láser cubre piernas, abdomen o espalda, la piel post-tratamiento puede beneficiarse de radiofrecuencia para tonicidad o drenaje para edema asociado al calor. CLIBEL coordina las sesiones sin conflicto entre tecnologías.',
+    href: '/servicios/radiofrecuencia-corporal',
+    linkLabel: 'Ver radiofrecuencia corporal',
+    cat: 'Corporal',
+  },
+  {
+    title: 'Vello hormonal de origen',
+    text: 'Si tu motivo es vello facial recurrente (bigote/mentón), brasileño que no termina de reducirse o cuadro tipo hirsutismo, la causa hormonal merece evaluación complementaria. Coordinamos derivación a ginecología/endocrinología si aplica.',
+    href: '/contacto',
+    linkLabel: 'Solicitar valoración integral',
+    cat: 'Cross-link',
+  },
+];
+
 // ============ PRE / POST sesión ============
 const prepProtocol = {
   pre: [
@@ -148,14 +267,36 @@ const myths = [
   },
 ];
 
-// ============ FAQs específicas láser ============
-const faqs = [
-  { q: '¿Es seguro el láser durante el embarazo o lactancia?', a: 'En CLIBEL no aplicamos láser durante embarazo por principio de precaución, aunque no hay evidencia de daño. En lactancia sí es seguro, pero los cambios hormonales pueden requerir más sesiones para resultados estables.' },
-  { q: '¿Cada cuánto tengo que ir a sesión?', a: 'Las sesiones se espacian según ciclo de crecimiento del vello en cada zona: rostro cada 4–5 semanas, axilas/inglés cada 6–8 semanas, piernas/espalda cada 8–10 semanas. CLIBEL ajusta el calendario según tu respuesta documentada.' },
-  { q: '¿Funciona con vello rubio, blanco o cano?', a: 'CLIBEL lo evalúa caso por caso. El láser requiere melanina en el folículo para funcionar — el vello blanco o cano no la tiene. El vello rubio claro responde de forma limitada. En valoración te confirmamos viabilidad.' },
-  { q: '¿Cuánto cuesta una sesión?', a: 'El precio depende de la zona (15–60 min) y de la tecnología necesaria según tu fototipo. CLIBEL ofrece valoración sin costo donde recibes presupuesto por escrito con el plan completo de sesiones.' },
-  { q: '¿Puedo broncearme mientras hago el tratamiento?', a: 'CLIBEL recomienda evitar bronceado durante todo el plan láser. El sol aumenta riesgo de hiperpigmentación y reduce eficacia. Si te broncearas accidentalmente, posponemos sesión 3–4 semanas.' },
-  { q: '¿Qué pasa si me salto una sesión?', a: 'No pasa nada grave pero pierdes la sincronía con el ciclo de crecimiento. CLIBEL replantifica para que la siguiente sesión coincida con la fase anágena de los folículos que iban tocando.' },
+// ============ FAQs específicas láser (humanizadas + interlinking) ============
+const faqs: { q: string; answerHtml: string }[] = [
+  {
+    q: '¿Es seguro el láser durante el embarazo o lactancia?',
+    answerHtml: 'En embarazo <strong>CLIBEL</strong> no aplica láser por principio de precaución, aunque no hay evidencia documentada de daño. En lactancia sí es seguro, pero los cambios hormonales pueden requerir más sesiones para resultados estables — pausa y retoma con tu ciclo hormonal regularizado para resultado más limpio.',
+  },
+  {
+    q: '¿Cada cuánto tengo que ir a sesión?',
+    answerHtml: 'Las sesiones se espacian según ciclo de crecimiento del vello en cada zona: <strong>rostro</strong> 4–5 semanas, <strong>axilas/inglés</strong> 6–8 semanas, <strong>piernas/espalda</strong> 8–10 semanas. <strong>CLIBEL</strong> ajusta tu calendario según respuesta documentada — no aplica protocolo rígido si tu folículo responde más lento o más rápido.',
+  },
+  {
+    q: '¿Funciona con vello rubio, blanco o cano?',
+    answerHtml: 'El láser requiere melanina en el folículo para funcionar. Vello blanco o cano: no tiene melanina, no responde. Vello rubio muy claro: respuesta limitada, evaluamos en parche. Vello rubio oscuro a castaño: responde bien. <strong>CLIBEL</strong> te confirma viabilidad en valoración antes de venderte plan que no funcionará.',
+  },
+  {
+    q: '¿Cuánto cuesta una sesión?',
+    answerHtml: 'El precio depende de la zona (15–60 min) y de la tecnología necesaria según tu fototipo. La valoración inicial en <strong>CLIBEL</strong> es sin costo y recibes presupuesto por escrito con el plan completo de sesiones. <a href="/contacto">Agenda tu valoración →</a>',
+  },
+  {
+    q: '¿Puedo broncearme mientras hago el tratamiento?',
+    answerHtml: 'Evita bronceado durante todo el plan láser. El sol aumenta el riesgo de hiperpigmentación post-tratamiento y reduce la eficacia del láser. Si te broncearas accidentalmente, <strong>CLIBEL</strong> pospone la sesión 3–4 semanas hasta que la piel regrese a su tono basal — no negociamos en eso, es seguridad clínica.',
+  },
+  {
+    q: '¿Qué pasa si me salto una sesión?',
+    answerHtml: 'No pasa nada grave, pero pierdes sincronía con el ciclo de crecimiento del folículo. <strong>CLIBEL</strong> replanifica para que la siguiente sesión coincida con la fase anágena de los folículos que tocaban — tu plan se alarga ligeramente pero el resultado final no se compromete.',
+  },
+  {
+    q: '¿A qué edad puedo empezar?',
+    answerHtml: 'A partir de los <strong>14 años con autorización de madre/padre</strong> y prueba de parche obligatoria. En adolescentes con cambios hormonales aún activos, el plan inicial puede requerir mantenimiento posterior — el láser elimina folículos existentes, no impide que cambios hormonales activen nuevos folículos durante la pubertad o embarazos futuros. <strong>CLIBEL</strong> plantea esto con honestidad antes de empezar.',
+  },
 ];
 ---
 
@@ -219,20 +360,23 @@ const faqs = [
           <p class="cat-hero-paragraph">
             <strong>CLIBEL</strong> es una clínica de belleza con respaldo
             médico especializada en depilación láser profesional en Ciudad
-            de México. Operamos con tres tecnologías láser
-            certificadas internacionalmente para cubrir todos los fototipos
-            (Fitzpatrick I-VI) con seguridad clínica. CLIBEL selecciona
-            la tecnología según tu piel, no según el equipo que esté libre
-            ese día.
+            de México. Operamos tres tecnologías —Alexandrita, Nd:YAG y
+            Diodo— para cubrir el espectro completo de fototipos
+            Fitzpatrick (I a VI). La diferencia entre quemar piel morena
+            y depilarla con seguridad es elegir el láser correcto, no el
+            que esté libre ese día.
           </p>
 
           <p class="cat-hero-paragraph">
-            En esta categoría <strong>CLIBEL</strong> ofrece más de 12 zonas
-            corporales con planes documentados, prueba de parche obligatoria
-            en primera cita y técnicos certificados supervisados por personal
-            médico. Cada sesión registra fluencia, fototipo, zona, respuesta
-            y porcentaje de reducción en expediente clínico digital — para
-            que el plan se afine sesión a sesión hasta resultado final.
+            Trabajamos más de 12 zonas corporales con planes documentados,
+            <strong>prueba de parche obligatoria</strong> en la primera cita
+            y técnicos certificados supervisados por personal médico. Cada
+            sesión registra fluencia, fototipo, zona, respuesta y porcentaje
+            de reducción en tu expediente digital — el plan se afina con
+            evidencia, no con conjeturas. Para complementar tu rutina,
+            <a href={catHref('facial')}>tratamientos faciales</a> y
+            <a href={catHref('corporal')}>corporales</a> se integran sin
+            conflicto entre sesiones láser.
           </p>
         </div>
       </div>
@@ -253,15 +397,39 @@ const faqs = [
     cta={{ label: 'Volver al catálogo', href: '/servicios' }}
   />
 
+  <!-- ============================ STAT STRIP CLÍNICO ============================ -->
+  <section class="svc-stat-strip">
+    <div class="container-x">
+      <dl class="laser-stats">
+        <div>
+          <dt>Zonas tratadas</dt>
+          <dd><em>12</em><span>+</span></dd>
+        </div>
+        <div>
+          <dt>Tecnologías láser</dt>
+          <dd><em>03</em></dd>
+        </div>
+        <div>
+          <dt>Fototipos cubiertos</dt>
+          <dd><em>I</em><span>–</span><em>VI</em></dd>
+        </div>
+        <div>
+          <dt>Reducción acumulada</dt>
+          <dd><em>80</em><span>–</span><em>90</em><span class="laser-stats-pct">%</span></dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
   <!-- ============================ CATÁLOGO DE SERVICIO ============================ -->
   <section class="section bg-white">
     <div class="container-x">
       <SectionHeader
         kicker={`Catálogo · ${items.length} ${items.length === 1 ? 'tratamiento base' : 'tratamientos'}`}
-        title="Depilación láser profesional en <em>CLIBEL</em>."
+        title="Depilación láser<br/>clínica en <em>CLIBEL</em>."
         paragraphs={[
-          '<strong>CLIBEL</strong> ofrece depilación láser como protocolo clínico, no como servicio express. Cada plan en CLIBEL parte de una valoración con prueba de parche, asignación de tecnología según tu fototipo y calendario de sesiones documentado por escrito antes de empezar.',
-          'El tratamiento base se adapta a cualquier zona corporal. <strong>CLIBEL</strong> documenta fluencia, parámetros, respuesta tisular y porcentaje de reducción visible sesión a sesión — para que tu plan se afine con evidencia, no con conjeturas.',
+          'El protocolo láser de <strong>CLIBEL</strong> empieza antes de la primera sesión: valoración del fototipo, prueba de parche obligatoria y calendario documentado por escrito. Sin esto, depilar es probar suerte — y la suerte deja hipopigmentación, quemaduras o sesiones perdidas.',
+          'El tratamiento base se adapta a cualquier zona del cuerpo. Cada sesión registra fluencia, parámetros del equipo y porcentaje de reducción visible — el plan se afina con evidencia clínica documentada, no con percepción subjetiva.',
         ]}
         cta={{ label: 'Solicitar valoración con prueba de parche', href: '/contacto', variant: 'primary' }}
       />
@@ -289,10 +457,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Zonas corporales · 12+"
-        title="Zonas que trata <em>CLIBEL</em> con láser."
+        title="Cada zona tiene<br/>su propia <em>fluencia</em>."
         paragraphs={[
-          'Todas las zonas anatómicas estándar y combinaciones más solicitadas. <strong>CLIBEL</strong> ofrece tratamiento individual por zona o paquetes combinados con descuento progresivo. Cada zona tiene un protocolo específico de fluencia, técnica y número de sesiones recomendadas.',
-          'Las sesiones mostradas son el <strong>rango promedio</strong> que CLIBEL maneja para una reducción del 80–90%. Zonas con componente hormonal (bigote, mentón, brasileño) pueden requerir sesiones extra de mantenimiento.',
+          'Todas las áreas anatómicas estándar y las combinaciones más solicitadas. <strong>CLIBEL</strong> ofrece tratamiento por zona individual o paquetes combinados con descuento progresivo. Cada zona tiene su protocolo específico — fluencia, técnica y número de sesiones recomendadas se ajustan por área, no se aplican parámetros genéricos.',
+          'Las sesiones mostradas son el rango promedio para una reducción del <strong>80–90%</strong>. Las zonas con componente hormonal (bigote, mentón, brasileño) suelen requerir sesiones extra y mantenimiento sostenido — la fisiología no se cambia, sí se controla.',
         ]}
       />
 
@@ -330,10 +498,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Tecnología láser"
-        title="Tres láseres, <em>una piel correcta</em> para cada uno."
+        title="Tres láseres, <em>una piel correcta</em><br/>para cada uno."
         paragraphs={[
-          '<strong>CLIBEL</strong> opera tres plataformas láser distintas porque la piel mexicana es heterogénea: clínicas que usan un solo equipo terminan quemando pieles morenas o aplicando láser ineficaz en pieles claras. En CLIBEL la tecnología se elige según tu fototipo Fitzpatrick, no según disponibilidad.',
-          'Las longitudes de onda determinan profundidad de penetración y selectividad por melanina. <strong>CLIBEL</strong> documenta en tu expediente qué tecnología aplicó en cada zona y por qué — trazabilidad real para tu seguridad clínica.',
+          '<strong>CLIBEL</strong> opera tres plataformas distintas porque la piel mexicana es heterogénea: clínicas que usan un solo equipo terminan quemando pieles morenas o aplicando láser ineficaz en pieles claras. Aquí la tecnología se elige por fototipo Fitzpatrick, no por disponibilidad de máquina.',
+          'Las longitudes de onda determinan profundidad de penetración y selectividad por melanina. Cada zona y cada sesión documentan en tu expediente qué tecnología aplicó <strong>CLIBEL</strong> y por qué — trazabilidad real para tu seguridad.',
         ]}
       />
 
@@ -367,15 +535,30 @@ const faqs = [
     </div>
   </section>
 
+  <!-- ============================ PULL-QUOTE EDITORIAL ============================ -->
+  <section class="svc-pullquote">
+    <div class="container-x">
+      <blockquote class="laser-quote">
+        <span class="laser-quote-mark" aria-hidden="true">&ldquo;</span>
+        <p class="laser-quote-text">
+          El láser correcto para tu piel <em>ya existe</em> en CLIBEL.
+          La diferencia entre <strong>quemar y depilar</strong> es elegirlo bien
+          — no aplicar el que esté libre ese día.
+        </p>
+        <cite class="laser-quote-cite">Filosofía CLIBEL · Láser</cite>
+      </blockquote>
+    </div>
+  </section>
+
   <!-- ============================ FOTOTIPOS GUIDE ============================ -->
   <section class="section bg-[color:var(--color-brand-50)]">
     <div class="container-x">
       <SectionHeader
         kicker="Guía Fitzpatrick"
-        title="Tu fototipo define el <em>láser correcto</em>."
+        title="Tu fototipo define<br/>el <em>láser correcto</em>."
         paragraphs={[
-          'La escala Fitzpatrick clasifica la piel según su respuesta al sol — del I (muy clara, siempre se quema) al VI (muy oscura, nunca se quema). <strong>CLIBEL</strong> determina tu fototipo en la valoración inicial mediante examen clínico y prueba de parche para asignar la tecnología láser apropiada.',
-          'Aplicar la tecnología equivocada a un fototipo no compatible es la causa principal de quemaduras y hipopigmentación en depilación láser. Por eso <strong>CLIBEL</strong> nunca empieza sin esta clasificación documentada.',
+          'La escala Fitzpatrick clasifica la piel según su respuesta al sol — del I (muy clara, siempre se quema) al VI (muy oscura, nunca se quema). <strong>CLIBEL</strong> determina tu fototipo en valoración mediante examen clínico y prueba de parche obligatoria, antes de asignar tecnología láser.',
+          'Aplicar el láser equivocado a un fototipo incompatible es la causa principal de quemaduras e hipopigmentación. Por eso nunca empezamos sin esta clasificación documentada — la seguridad clínica empieza antes de encender el equipo.',
         ]}
       />
 
@@ -402,10 +585,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Ciclo de crecimiento capilar"
-        title="Por qué <em>CLIBEL</em> espacia tus sesiones."
+        title="La razón biológica<br/>de los <em>tiempos</em>."
         paragraphs={[
-          'El cabello crece en tres fases. <strong>CLIBEL</strong> espacia las sesiones porque el láser solo destruye folículos en fase activa (anágena) — y en cualquier momento solo el 30% del vello está ahí. Sesiones muy seguidas no aceleran resultados, solo gastan tu tiempo y dinero.',
-          'Esta es la razón biológica de por qué <strong>CLIBEL</strong> necesita 6–8 sesiones para cubrir todos los folículos en cada zona. Cualquier clínica que prometa "depilación permanente en 2 sesiones" está mintiendo.',
+          'El vello crece en tres fases. El láser solo destruye folículos en fase activa (anágena) — y en cualquier momento dado, sólo el 30% del vello está ahí. Por eso <strong>CLIBEL</strong> espacia las sesiones de 5 a 8 semanas: sesiones más seguidas no aceleran resultados, solo gastan tiempo y dinero.',
+          'Esta es la razón biológica de por qué se necesitan 6 a 8 sesiones para cubrir todos los folículos en cada zona. Cualquier clínica que prometa "depilación permanente en 2 sesiones" está vendiendo expectativa, no fisiología.',
         ]}
       />
 
@@ -431,16 +614,89 @@ const faqs = [
     </div>
   </section>
 
+  <!-- ============================ CALENDARIO VISUAL DEL PLAN ============================ -->
+  <section class="section svc-calendar">
+    <div aria-hidden="true" class="svc-calendar-bg"></div>
+    <div class="container-x relative">
+      <SectionHeader
+        kicker="Calendario clínico"
+        title="Cómo se ve tu plan láser<br/>en <em>tiempo real</em>."
+        variant="dark"
+        paragraphs={[
+          'Una sesión cada 5 a 8 semanas según zona — esto es lo que el ciclo del folículo permite biológicamente. Acelerarlo no aumenta resultado, solo gasta tu tiempo. <strong>CLIBEL</strong> distribuye tu plan para que cada sesión coincida con la fase anágena del lote correspondiente.',
+          'Esta línea de tiempo está calibrada para zonas estándar (axilas, piernas, bikini). Las zonas hormonales (bigote, mentón, brasileño) extienden el plan a sesiones 07–08 con sesiones de cierre y, después, mantenimiento bimestral si el folículo hormonal lo requiere.',
+        ]}
+      />
+
+      <ol class="calendar-list">
+        {calendar.map((c, i) => (
+          <li class:list={['calendar-step', `calendar-step--${c.accent}`]}>
+            <div class="calendar-track" aria-hidden="true">
+              <span class="calendar-line calendar-line--before"></span>
+              <span class="calendar-dot"></span>
+              <span class="calendar-line calendar-line--after"></span>
+            </div>
+            <div class="calendar-body">
+              <span class="calendar-mes">{c.mes}</span>
+              <span class="calendar-sesion">Sesión <em>{c.sesion}</em></span>
+              <h3 class="calendar-label">{c.label}</h3>
+              <p class="calendar-text">{c.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <p class="calendar-foot reveal">
+        <strong>CLIBEL</strong> documenta cada sesión con fluencia, parámetros del equipo, fototipo, foto comparativa y porcentaje de reducción medido. El calendario final se ajusta a tu respuesta clínica, no se sigue ciegamente.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================ COMPLEMENTA TU PLAN · cross-link a otras categorías ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Complementa tu plan"
+        title="Lo que <em>CLIBEL</em> integra<br/>antes y después del láser."
+        paragraphs={[
+          'La depilación láser no funciona en aislamiento: el cuidado cutáneo previo y posterior es la mitad del resultado. Estas son las combinaciones más frecuentes que <strong>CLIBEL</strong> integra en planes láser — no como upsell, sino como criterio clínico para sostener la calidad de la piel durante el plan.',
+          'Si llegas a <strong>CLIBEL</strong> por láser y tu valoración revela necesidad de otro protocolo (pigmentación residual, vello hormonal, flacidez asociada), te lo planteamos por escrito. Ninguna recomendación es obligatoria — sólo es información clínica para que decidas con criterio.',
+        ]}
+      />
+
+      <ol class="complements-grid">
+        {complements.map((c, i) => (
+          <li class="complement reveal">
+            <header class="complement-head">
+              <span class="complement-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <span class="complement-cat">{c.cat}</span>
+                <h3 class="complement-title">{c.title}</h3>
+              </div>
+            </header>
+            <p class="complement-text">{c.text}</p>
+            <a href={c.href} class="complement-link">
+              {c.linkLabel}
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
   <!-- ============================ PRE / POST PROTOCOLOS ============================ -->
   <section class="section svc-protocols">
     <div class="container-x">
       <SectionHeader
         kicker="Protocolos pre / post sesión"
-        title="Lo que <em>CLIBEL</em> indica antes y después."
+        title="Lo que <em>CLIBEL</em><br/>indica antes y después."
         variant="dark"
         paragraphs={[
-          '<strong>CLIBEL</strong> entrega protocolo pre y post sesión por escrito. Seguirlo no es opcional: la eficacia del láser y tu seguridad clínica dependen directamente de cumplir estas indicaciones simples. CLIBEL prefiere reagendar antes que aplicar láser sobre piel mal preparada.',
-          'En <strong>CLIBEL</strong> tu técnica certificada revisa el cumplimiento antes de cada sesión. Si no preparaste la zona o estás bronceada, reagendamos sin penalización — es responsabilidad clínica, no comercial.',
+          'El plan pre y post sesión se entrega por escrito en valoración. Seguirlo no es opcional: la eficacia del láser y la seguridad clínica dependen de cumplirlo. <strong>CLIBEL</strong> prefiere reagendar antes que aplicar sobre piel mal preparada o bronceada.',
+          'Tu técnica revisa el cumplimiento antes de cada sesión. Si no preparaste la zona o tienes bronceado reciente, reagendamos sin penalización — es responsabilidad clínica, no decisión comercial.',
         ]}
       />
 
@@ -478,15 +734,113 @@ const faqs = [
     </div>
   </section>
 
+  <!-- ============================ COMPROMISOS DEL PACIENTE ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Tu compromiso clínico"
+        title="El resultado<br/>no es solo de <em>CLIBEL</em>."
+        paragraphs={[
+          'La depilación láser da resultados sostenidos cuando se combina con compromisos del paciente fuera de cabina. <strong>CLIBEL</strong> aplica la tecnología; tú aportas constancia, protección solar y los hábitos básicos — la mitad del plan ocurre en tu día a día.',
+          'Cumplir los marcados como <em>imprescindible</em> es la diferencia entre obtener una reducción documentada del 80–90% y obtener un resultado parcial con piel comprometida. No son sugerencias decorativas — son seguridad clínica.',
+        ]}
+      />
+
+      <ol class="laser-commit-grid">
+        {commitments.map((c, i) => (
+          <li class:list={['laser-commit', `laser-commit--${c.weight.toLowerCase()}`]}>
+            <header class="laser-commit-head">
+              <span class="laser-commit-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class={`laser-commit-weight laser-commit-weight--${c.weight.toLowerCase()}`}>
+                {c.weight}
+              </span>
+            </header>
+            <h3 class="laser-commit-title">{c.title}</h3>
+            <p class="laser-commit-text">{c.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ COMPARATIVA CLÍNICA ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Comparativa clínica"
+        title="Lo que <em>CLIBEL</em><br/>hace distinto."
+        paragraphs={[
+          'Comparativa honesta entre dispositivos caseros IPL, spas con un solo equipo y el protocolo clínico de <strong>CLIBEL</strong>. No es marketing — es lo que clínicamente distingue cada nivel de servicio cuando se trata de depilación láser real.',
+          'Cada aspecto de la tabla está documentado en práctica diaria. Si dudas qué nivel necesita tu piel, agenda valoración: te orientamos sin compromiso comercial.',
+        ]}
+      />
+
+      <div class="laser-compare-wrap">
+        <table class="laser-compare-table">
+          <thead>
+            <tr>
+              <th scope="col" class="laser-compare-aspect">Aspecto clínico</th>
+              <th scope="col">En casa</th>
+              <th scope="col">Spa estético</th>
+              <th scope="col" class="laser-compare-clibel">CLIBEL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {comparison.map((row, i) => (
+              <tr>
+                <th scope="row" class="laser-compare-aspect">
+                  <span class="laser-compare-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <span>{row.aspect}</span>
+                </th>
+                <td>{row.home ?? '—'}</td>
+                <td>{row.spa ?? '—'}</td>
+                <td class="laser-compare-clibel">{row.clibel}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <ol class="laser-compare-cards">
+          {comparison.map((row, i) => (
+            <li class="laser-compare-card">
+              <header>
+                <span class="laser-compare-card-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{row.aspect}</h3>
+              </header>
+              <dl>
+                {row.home && (
+                  <div>
+                    <dt>En casa</dt>
+                    <dd>{row.home}</dd>
+                  </div>
+                )}
+                {row.spa && (
+                  <div>
+                    <dt>Spa estético</dt>
+                    <dd>{row.spa}</dd>
+                  </div>
+                )}
+                <div class="laser-compare-card-clibel">
+                  <dt>CLIBEL</dt>
+                  <dd>{row.clibel}</dd>
+                </div>
+              </dl>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <!-- ============================ MITOS vs REALIDAD ============================ -->
   <section class="section bg-white">
     <div class="container-x">
       <SectionHeader
         kicker="Mitos vs realidad"
-        title="Lo que <em>NO</em> es cierto sobre depilación láser."
+        title="Lo que <em>NO</em> es cierto<br/>sobre depilación láser."
         paragraphs={[
-          '<strong>CLIBEL</strong> escucha estos mitos en cada valoración inicial. Algunos vienen de información obsoleta, otros de spas sin respaldo médico que aplicaron mal el tratamiento. Aquí están desmontados con evidencia clínica.',
-          'En <strong>CLIBEL</strong> creemos que un paciente bien informado toma mejores decisiones clínicas y obtiene mejores resultados. Por eso preferimos educarte antes que venderte.',
+          'Los escuchamos en cada valoración inicial: algunos vienen de información obsoleta, otros de spas sin respaldo médico que aplicaron mal el tratamiento. Aquí están desmontados con evidencia clínica — sin endulzar.',
+          'Un paciente bien informado toma mejores decisiones y obtiene mejores resultados. Por eso <strong>CLIBEL</strong> prefiere educarte antes que venderte — porque la decisión clínica debería partir de fisiología, no de marketing.',
         ]}
       />
 
@@ -512,10 +866,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Preguntas frecuentes y contacto"
-        title="Resuelve dudas o pide tu <em>prueba de parche</em>."
+        title="Dudas sobre tu plan láser,<br/>respondidas con <em>criterio</em>."
         paragraphs={[
-          'Las dudas más frecuentes sobre depilación láser que recibe <strong>CLIBEL</strong> resueltas con criterio clínico. A la derecha puedes enviarnos zona y fototipo: el mensaje llega al WhatsApp clínico de CLIBEL con tu información pre-armada.',
-          'En <strong>CLIBEL</strong> la primera consulta incluye <strong>prueba de parche gratuita</strong> para validar tecnología y respuesta de tu piel antes de cualquier plan completo. Sin compromiso, sin presión comercial.',
+          'Las preguntas que más recibe <strong>CLIBEL</strong> sobre depilación láser respondidas con criterio clínico — no con guion comercial. Si la tuya no aparece, llena el formulario: tu mensaje llega pre-armado al WhatsApp clínico en menos de 2 horas en horario consulta.',
+          'La primera consulta incluye <strong>prueba de parche sin costo</strong> para validar tecnología y respuesta de tu piel antes de cualquier plan completo. Sin compromiso, sin presión comercial.',
         ]}
       />
 
@@ -534,7 +888,7 @@ const faqs = [
                     </svg>
                   </span>
                 </summary>
-                <div class="faq-a">{f.a}</div>
+                <div class="faq-a" set:html={f.answerHtml}></div>
               </details>
             ))}
           </div>
@@ -1591,4 +1945,665 @@ const faqs = [
     opacity: 0.85;
   }
   @media (max-width: 640px) { .faq-form { padding: 1.25rem; } }
+
+  /* ============= Hero links inline ============= */
+  .cat-hero-paragraph a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 0.25s ease !important;
+  }
+  .cat-hero-paragraph a:hover { color: var(--color-mauve-700); }
+
+  /* ============= FAQ answers con links ============= */
+  .faq-a a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.25s ease !important;
+  }
+  .faq-a a:hover { color: var(--color-mauve-700); }
+
+  /* ============= COMPLEMENTA TU PLAN — cross-link cards ============= */
+  .complements-grid {
+    list-style: none;
+    padding: 0;
+    margin: clamp(1.5rem, 2.5vw, 2.25rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 720px) { .complements-grid { grid-template-columns: repeat(2, 1fr); gap: 1.15rem; } }
+  .complement {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1.5rem 1.5rem 1.4rem;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  .complement::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    opacity: 0;
+    transition: opacity 0.3s ease !important;
+  }
+  .complement:hover {
+    border-color: var(--color-mauve-500);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(31, 20, 24, 0.18);
+  }
+  .complement:hover::before { opacity: 1; }
+  .complement-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 1rem;
+  }
+  .complement-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.25rem, 3.5vw, 2.85rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.015em;
+  }
+  .complement-cat {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    margin-bottom: 0.3rem;
+  }
+  .complement-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.2rem, 1.5vw, 1.45rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .complement-text {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--color-ink-700);
+  }
+  .complement-link {
+    align-self: flex-start;
+    margin-top: auto;
+    padding-top: 0.9rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.32);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    text-decoration: none;
+    transition: color 0.25s ease, gap 0.25s ease !important;
+  }
+  .complement-link:hover {
+    color: var(--color-mauve-700);
+    gap: 0.7rem;
+  }
+  .complement-link svg { transition: transform 0.25s ease !important; }
+  .complement-link:hover svg { transform: translateX(3px); }
+
+  /* ============= CALENDARIO VISUAL — stepper dark ============= */
+  .svc-calendar {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-block: clamp(4rem, 6vw, 6.5rem);
+  }
+  .svc-calendar-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(201,169,97,0.10), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.12), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .calendar-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 3vw, 2.75rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 720px) { .calendar-list { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; } }
+  @media (min-width: 1100px) { .calendar-list { grid-template-columns: repeat(4, 1fr); gap: 0; } }
+  .calendar-step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1.5rem;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    transition: all 0.35s cubic-bezier(.2,.8,.2,1) !important;
+  }
+  @media (min-width: 1100px) {
+    .calendar-step {
+      border-radius: 0;
+      border: 0;
+      background: transparent;
+      padding: 2rem 1.25rem 0;
+    }
+  }
+  .calendar-step:hover {
+    background: linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.025) 100%);
+    border-color: rgba(201, 169, 97, 0.42);
+    transform: translateY(-3px);
+  }
+  @media (min-width: 1100px) {
+    .calendar-step:hover {
+      transform: none;
+      background: rgba(255,255,255,0.03);
+      border: 0;
+    }
+    .calendar-step:hover .calendar-dot {
+      transform: scale(1.2);
+      box-shadow: 0 0 0 5px rgba(201, 169, 97, 0.32), 0 0 0 10px rgba(201, 169, 97, 0.14);
+    }
+  }
+  .calendar-track {
+    display: none;
+  }
+  @media (min-width: 1100px) {
+    .calendar-track {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .calendar-line {
+      height: 1.5px;
+      background: linear-gradient(90deg, rgba(201, 169, 97, 0.4), rgba(201, 169, 97, 0.4));
+    }
+    .calendar-step:first-child .calendar-line--before { visibility: hidden; }
+    .calendar-step:last-child .calendar-line--after { visibility: hidden; }
+    .calendar-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--color-brand-400);
+      box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.22), 0 0 0 8px rgba(201, 169, 97, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+      justify-self: center;
+    }
+    .calendar-step--mauve .calendar-dot { background: var(--color-mauve-300); }
+    .calendar-step--rose .calendar-dot { background: #d4889a; }
+  }
+  .calendar-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .calendar-mes {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-brand-400);
+  }
+  .calendar-sesion {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1;
+    color: rgba(242, 235, 223, 0.65);
+    letter-spacing: -0.005em;
+  }
+  .calendar-sesion em {
+    font-style: italic;
+    font-weight: 300;
+    font-size: 2.2rem;
+    line-height: 0.85;
+    color: white;
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-right: 0.2rem;
+    letter-spacing: -0.02em;
+  }
+  .calendar-label {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.05rem, 1.3vw, 1.2rem);
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+  .calendar-text {
+    margin: 0;
+    font-size: clamp(0.85rem, 0.92vw, 0.95rem);
+    line-height: 1.55;
+    color: rgba(242, 235, 223, 0.7);
+  }
+  .calendar-foot {
+    margin: clamp(2rem, 3vw, 2.5rem) 0 0;
+    padding-top: clamp(1.5rem, 2vw, 1.85rem);
+    border-top: 1px solid rgba(201, 169, 97, 0.22);
+    font-size: clamp(0.88rem, 1vw, 1rem);
+    line-height: 1.6;
+    color: rgba(242, 235, 223, 0.78);
+    max-width: 72ch;
+  }
+  .calendar-foot strong { color: white; font-weight: 600; }
+
+  /* ============= STAT STRIP CLÍNICO (bajo hero) ============= */
+  .svc-stat-strip {
+    background: var(--color-brand-50);
+    padding-block: clamp(2rem, 3.5vw, 3rem);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .laser-stats {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  @media (min-width: 720px) { .laser-stats { grid-template-columns: repeat(4, 1fr); } }
+  .laser-stats > div {
+    padding: 1rem 1.25rem;
+    border-right: 1px solid rgba(201, 169, 97, 0.22);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .laser-stats > div:first-child { padding-left: 0; }
+  @media (min-width: 720px) {
+    .laser-stats > div { border-bottom: 0; }
+    .laser-stats > div:last-child { border-right: 0; }
+  }
+  @media (max-width: 719px) {
+    .laser-stats > div:nth-child(2n) { border-right: 0; }
+    .laser-stats > div:nth-last-child(-n+2) { border-bottom: 0; }
+  }
+  .laser-stats dt {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    margin-bottom: 0.4rem;
+  }
+  .laser-stats dd {
+    margin: 0;
+    font-family: var(--font-display);
+    line-height: 1;
+    color: var(--color-ink-900);
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: baseline;
+    gap: 0.15rem;
+  }
+  .laser-stats dd em {
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 3.5vw, 3.25rem);
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-700));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .laser-stats dd span {
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 0.78rem;
+    color: var(--color-ink-500);
+    letter-spacing: 0;
+  }
+  .laser-stats-pct {
+    font-family: var(--font-display) !important;
+    font-style: italic !important;
+    font-size: clamp(1.5rem, 2vw, 2rem) !important;
+    color: var(--color-brand-500) !important;
+    margin-left: 0.15rem !important;
+  }
+
+  /* ============= PULL-QUOTE EDITORIAL ============= */
+  .svc-pullquote {
+    background: white;
+    padding-block: clamp(3rem, 5vw, 5rem);
+    border-block: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .laser-quote {
+    position: relative;
+    margin: 0 auto;
+    max-width: 880px;
+    padding: clamp(1.5rem, 2.5vw, 2.5rem) clamp(1.5rem, 3vw, 3rem);
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, transparent 100%);
+    border-left: 3px solid var(--color-brand-400);
+    border-radius: 0 1rem 1rem 0;
+  }
+  .laser-quote-mark {
+    position: absolute;
+    top: -0.45em;
+    left: 0.85rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(4rem, 6vw, 6.5rem);
+    line-height: 1;
+    color: var(--color-brand-400);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .laser-quote-text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.35rem, 2.2vw, 2rem);
+    line-height: 1.35;
+    color: var(--color-ink-900);
+    letter-spacing: -0.015em;
+    max-width: 56ch;
+  }
+  .laser-quote-text em {
+    color: var(--color-mauve-500);
+    font-style: italic;
+  }
+  .laser-quote-text strong {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-mauve-700);
+  }
+  .laser-quote-cite {
+    display: block;
+    margin-top: 1.1rem;
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+
+  /* ============= COMPROMISOS DEL PACIENTE ============= */
+  .laser-commit-grid {
+    list-style: none;
+    padding: 0;
+    margin: clamp(1.5rem, 2.5vw, 2.25rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 700px) { .laser-commit-grid { grid-template-columns: repeat(2, 1fr); gap: 1.15rem; } }
+  @media (min-width: 1100px) { .laser-commit-grid { grid-template-columns: repeat(3, 1fr); } }
+  .laser-commit {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.4rem 1.4rem 1.45rem;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1rem;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1) !important;
+    overflow: hidden;
+  }
+  .laser-commit--imprescindible { border-left: 4px solid #c62b3e; }
+  .laser-commit--recomendado { border-left: 4px solid var(--color-brand-500); }
+  .laser-commit--opcional { border-left: 4px solid rgba(139, 90, 107, 0.45); }
+  .laser-commit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -18px rgba(31, 20, 24, 0.16);
+  }
+  .laser-commit-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .laser-commit-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.65rem;
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.015em;
+  }
+  .laser-commit-weight {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.32rem 0.7rem;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .laser-commit-weight--imprescindible {
+    background: rgba(198, 43, 62, 0.1);
+    color: #c62b3e;
+    border: 1px solid rgba(198, 43, 62, 0.3);
+  }
+  .laser-commit-weight--recomendado {
+    background: rgba(201, 169, 97, 0.14);
+    color: var(--color-brand-600);
+    border: 1px solid rgba(201, 169, 97, 0.32);
+  }
+  .laser-commit-weight--opcional {
+    background: rgba(139, 90, 107, 0.1);
+    color: var(--color-mauve-700);
+    border: 1px solid rgba(139, 90, 107, 0.3);
+  }
+  .laser-commit-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .laser-commit-text {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+  }
+
+  /* ============= COMPARATIVA CLÍNICA ============= */
+  .laser-compare-wrap {
+    margin-top: clamp(1.5rem, 2.5vw, 2.25rem);
+  }
+  .laser-compare-table {
+    display: none;
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  @media (min-width: 820px) {
+    .laser-compare-table { display: table; }
+    .laser-compare-cards { display: none; }
+  }
+  .laser-compare-table thead {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+  }
+  .laser-compare-table thead th {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-400);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    vertical-align: middle;
+  }
+  .laser-compare-table thead th:last-child { border-right: 0; }
+  .laser-compare-table thead .laser-compare-aspect {
+    color: var(--color-brand-200);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .laser-compare-table thead .laser-compare-clibel {
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-700));
+    color: white;
+    letter-spacing: 0.24em;
+  }
+  .laser-compare-table tbody tr {
+    border-top: 1px solid rgba(201, 169, 97, 0.22);
+    transition: background 0.25s ease !important;
+  }
+  .laser-compare-table tbody tr:hover {
+    background: var(--color-brand-50);
+  }
+  .laser-compare-table tbody th,
+  .laser-compare-table tbody td {
+    padding: 1.1rem 1.2rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+    vertical-align: top;
+    border-right: 1px dashed rgba(201, 169, 97, 0.22);
+  }
+  .laser-compare-table tbody td:last-child,
+  .laser-compare-table tbody th:last-child { border-right: 0; }
+  .laser-compare-table tbody .laser-compare-aspect {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    background: var(--color-brand-50);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.97rem;
+    color: var(--color-ink-900);
+    letter-spacing: -0.01em;
+    width: 24%;
+  }
+  .laser-compare-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    opacity: 0.85;
+    min-width: 1.5rem;
+    line-height: 1.4;
+  }
+  .laser-compare-table tbody .laser-compare-clibel {
+    background: linear-gradient(180deg, rgba(201, 169, 97, 0.08), rgba(139, 90, 107, 0.05));
+    border-left: 2px solid var(--color-brand-400);
+    color: var(--color-ink-900);
+    font-weight: 500;
+  }
+  /* Mobile cards */
+  .laser-compare-cards {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 820px) {
+    .laser-compare-cards { display: none; }
+  }
+  .laser-compare-card {
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  .laser-compare-card header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--color-brand-50);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .laser-compare-card-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    opacity: 0.9;
+  }
+  .laser-compare-card header h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .laser-compare-card dl { margin: 0; padding: 0; }
+  .laser-compare-card dl > div {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 0.85rem;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px dashed rgba(201, 169, 97, 0.22);
+  }
+  .laser-compare-card dl > div:last-child { border-bottom: 0; }
+  .laser-compare-card dl dt {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    align-self: baseline;
+  }
+  .laser-compare-card dl dd {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-ink-700);
+  }
+  .laser-compare-card-clibel {
+    background: linear-gradient(90deg, rgba(201, 169, 97, 0.08), rgba(139, 90, 107, 0.04));
+    border-left: 2px solid var(--color-brand-400);
+  }
+  .laser-compare-card-clibel dt { color: var(--color-brand-500) !important; }
+  .laser-compare-card-clibel dd { color: var(--color-ink-900) !important; font-weight: 500; }
 </style>
