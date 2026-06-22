@@ -47,31 +47,63 @@ const catalogSchema = {
   },
 };
 
-// ============ CONCERNS — qué resolvemos ============
-const concerns = [
+// ============ Editorial leds por L4 (humanizados · sección Profundiza) ============
+const editorialLedes: Record<string, { lede: string; readMore: string }> = {
+  'radiofrecuencia-corporal': {
+    lede: 'El protocolo silencioso que produce colágeno nuevo. Sin moretones espectaculares ni cambios visibles al salir de cabina — solo estímulo térmico monitoreado al fibroblasto profundo y respuesta biológica real entre la sesión 3 y la semana 12.',
+    readMore: 'Ver protocolo térmico',
+  },
+  'reduccion-grasa-localizada': {
+    lede: 'No es lipo sin lipo y no es perder peso: es esculpir cúmulos rebeldes en peso estable. Combinamos criolipólisis, HIFU, radiofrecuencia y cavitación según tu diagnóstico — ninguna técnica única funciona para todos los casos.',
+    readMore: 'Ver las 4 tecnologías',
+  },
+  'drenaje-linfatico': {
+    lede: 'No es masaje relajante. Es técnica médica con presión muy ligera y dirección anatómica precisa, certificada por las escuelas Vodder y Leduc. Aplica en post-cirugía, edema crónico, post-parto y linfedema — no como remedio universal de spa.',
+    readMore: 'Ver técnica clínica',
+  },
+  'masaje-anticelulitis': {
+    lede: 'La celulitis tiene cuatro grados clínicos y tres tipos histológicos. Antes de tratarla, la clasificamos. Después la trabajamos con técnica manual + vacumterapia + radiofrecuencia, y te decimos honestamente que el 50% del resultado depende de tu compromiso fuera de cabina.',
+    readMore: 'Ver grados clínicos',
+  },
+};
+
+// ============ CONCERNS — qué resolvemos (cada concern enlaza al L4) ============
+const concerns: { title: string; text: string; href?: string; linkLabel?: string }[] = [
   {
     title: 'Flacidez corporal',
-    text: 'CLIBEL combina radiofrecuencia bipolar, ultrasonido focalizado y trabajo manual para estimular colágeno nuevo y reafirmar piel en abdomen, brazos, glúteos y piernas — sin cirugía y con resultados graduales.',
+    text: 'Piel que perdió tono por pérdida de peso, embarazo o edad. La solución es estímulo térmico al fibroblasto profundo — radiofrecuencia bipolar o multipolar según zona, con paciencia biológica de 6 a 12 semanas para ver colágeno nuevo maduro.',
+    href: '/servicios/radiofrecuencia-corporal',
+    linkLabel: 'Ver radiofrecuencia corporal',
   },
   {
-    title: 'Grasa localizada',
-    text: 'En CLIBEL diseñamos planes de reducción no invasiva combinando técnicas térmicas y mecánicas para zonas resistentes al ejercicio: abdomen bajo, flancos, espalda baja y muslos internos.',
+    title: 'Grasa localizada rebelde',
+    text: 'Los cúmulos que dieta y ejercicio no terminan de resolver. Criolipólisis para grasa subcutánea fría, HIFU para profunda, radiofrecuencia para flacidez asociada. No es pérdida de peso — es remodelación de silueta en peso estable.',
+    href: '/servicios/reduccion-grasa-localizada',
+    linkLabel: 'Ver reducción de grasa',
   },
   {
-    title: 'Celulitis y piel de naranja',
-    text: 'CLIBEL atiende celulitis adiposa, edematosa y fibrosa con protocolos diferenciados. Combinamos drenaje, presoterapia, masaje reductivo y radiofrecuencia para mejorar textura y firmeza.',
+    title: 'Celulitis grado I a IV',
+    text: 'La celulitis tiene clasificación clínica y tipos histológicos distintos. Antes de tratarla la clasificamos; después combinamos masaje + vacumterapia + radiofrecuencia. Honestidad clínica incluida: no se borra, se atenúa y se mantiene a raya.',
+    href: '/servicios/masaje-anticelulitis',
+    linkLabel: 'Ver tratamiento anticelulitis',
   },
   {
-    title: 'Retención de líquidos',
-    text: 'Drenaje linfático manual y mecánico aplicado por especialistas formados en CLIBEL para activar circulación, descongestionar tejidos y reducir hinchazón crónica o circunstancial.',
+    title: 'Retención y piernas pesadas',
+    text: 'Hinchazón crónica de tobillos, sensación de piernas cansadas, retención perimenstrual o por bipedestación prolongada. Drenaje linfático manual real (no masaje cambiado de etiqueta) con técnica Vodder o Leduc.',
+    href: '/servicios/drenaje-linfatico',
+    linkLabel: 'Ver drenaje linfático',
   },
   {
     title: 'Recuperación posparto',
-    text: 'CLIBEL diseña protocolos posparto seguros para mamás —respetando lactancia y diástasis— con drenaje, radiofrecuencia controlada y reactivación muscular gradual.',
+    text: 'Después de cuarentena médica y con autorización ginecológica. Drenaje linfático para reducir edema, radiofrecuencia para reafirmar abdomen y, si aplica, plan integral coordinado con tu ginecólogo. Compatible con lactancia en la mayoría de casos.',
+    href: '/servicios/drenaje-linfatico',
+    linkLabel: 'Empezar con drenaje',
   },
   {
     title: 'Recuperación post-quirúrgica',
-    text: 'Acompañamiento clínico en CLIBEL para drenaje post-liposucción, abdominoplastía o cirugía estética con coordinación directa con tu cirujano y seguimiento documentado.',
+    text: 'Post-lipoescultura, abdominoplastia o cirugía estética. Drenaje linfático método Leduc desde el día 3–5 según indicación de tu cirujano. Reduce edema, equimosis y previene fibrosis. CLIBEL coordina directamente con tu cirujano.',
+    href: '/servicios/drenaje-linfatico',
+    linkLabel: 'Ver drenaje post-quirúrgico',
   },
 ];
 
@@ -85,31 +117,46 @@ const stack = [
   { kicker: 'Productos', value: 'Activos profesionales', detail: 'Lipolíticos, reafirmantes y descongestivos COFEPRIS' },
 ];
 
-// ============ PLANES INTEGRALES — nuevo en L3 corporal ============
-const plans = [
+// ============ PLANES INTEGRALES (combos linkados a L4) ============
+const plans: { name: string; sessions: string; frequency: string; includes: { label: string; href?: string }[]; target: string; accent: 'gold' | 'mauve' | 'rose'; primaryHref?: string }[] = [
   {
     name: 'Plan Reafirmación',
     sessions: '8–12 sesiones',
     frequency: '2 por semana · 6 semanas',
-    includes: ['Radiofrecuencia corporal', 'Masaje reductivo dirigido', 'Activos reafirmantes profesionales'],
-    target: 'Flacidez visible post-pérdida de peso, post-embarazo o por edad. Zonas: abdomen, brazos, muslos internos.',
+    includes: [
+      { label: 'Radiofrecuencia corporal multipolar', href: '/servicios/radiofrecuencia-corporal' },
+      { label: 'Masaje reductivo dirigido', href: '/servicios/masaje-anticelulitis' },
+      { label: 'Activos reafirmantes profesionales' },
+    ],
+    target: 'Para flacidez visible post-pérdida de peso, post-embarazo o por edad. Abdomen, brazos, muslos internos. Resultado documentado al mes 3 con foto comparativa.',
     accent: 'mauve',
+    primaryHref: '/servicios/radiofrecuencia-corporal',
   },
   {
     name: 'Plan Reducción',
     sessions: '6–10 sesiones',
     frequency: '1–2 por semana · 4–6 semanas',
-    includes: ['Ultrasonido focalizado', 'Radiofrecuencia bipolar', 'Drenaje complementario'],
-    target: 'Grasa localizada resistente al ejercicio en flancos, abdomen bajo, espalda y muslos. Sin cirugía.',
+    includes: [
+      { label: 'Criolipólisis o HIFU según zona', href: '/servicios/reduccion-grasa-localizada' },
+      { label: 'Radiofrecuencia complementaria', href: '/servicios/radiofrecuencia-corporal' },
+      { label: 'Drenaje linfático entre sesiones', href: '/servicios/drenaje-linfatico' },
+    ],
+    target: 'Grasa localizada rebelde a dieta y ejercicio en flancos, abdomen bajo, espalda y muslos. Remodelación en peso estable — no pérdida de peso.',
     accent: 'gold',
+    primaryHref: '/servicios/reduccion-grasa-localizada',
   },
   {
-    name: 'Plan Posparto / Recuperación',
+    name: 'Plan Posparto · Recuperación',
     sessions: '10–15 sesiones',
     frequency: 'A partir de las 6 semanas posparto',
-    includes: ['Drenaje linfático manual', 'Trabajo abdominal supervisado', 'Reafirmación gradual con RF'],
-    target: 'Mamás que buscan recuperar tono y reducir hinchazón posparto, respetando lactancia y diástasis abdominal.',
+    includes: [
+      { label: 'Drenaje linfático manual Vodder', href: '/servicios/drenaje-linfatico' },
+      { label: 'Reafirmación gradual con radiofrecuencia', href: '/servicios/radiofrecuencia-corporal' },
+      { label: 'Coordinación con ginecólogo' },
+    ],
+    target: 'Para mamás que buscan recuperar tono y reducir hinchazón posparto. Respeta lactancia y diástasis abdominal. Inicio con autorización ginecológica.',
     accent: 'rose',
+    primaryHref: '/servicios/drenaje-linfatico',
   },
 ];
 
@@ -161,14 +208,36 @@ const aftercare = [
   },
 ];
 
-// ============ FAQS específicas corporales ============
-const faqs = [
-  { q: '¿Cuántas sesiones de radiofrecuencia necesito para ver firmeza?', a: 'En CLIBEL el cambio en textura se nota desde la sesión 3 con un protocolo de 1–2 por semana. La reafirmación clínica completa se documenta entre las sesiones 6 y 10, dependiendo del estado basal de tu piel y tu edad. Cada plan se diseña a medida.' },
-  { q: '¿La reducción de grasa localizada es definitiva?', a: 'CLIBEL aplica técnicas no invasivas (ultrasonido focalizado, RF) que destruyen adipocitos en zonas específicas. La grasa eliminada no regresa si mantienes tu peso, pero células remanentes pueden crecer si subes mucho. Por eso CLIBEL incluye plan nutricional sugerido y mantenimiento.' },
-  { q: '¿Es seguro hacer tratamientos corporales en lactancia o posparto temprano?', a: 'En CLIBEL trabajamos posparto a partir de las 6 semanas, con protocolos seguros para lactancia: drenaje manual, masaje reductivo y RF controlada sin activos sistémicos. Coordinamos con tu ginecóloga si hay diástasis abdominal o cesárea reciente.' },
-  { q: '¿Duele algún tratamiento corporal?', a: 'CLIBEL trabaja con técnicas no invasivas: radiofrecuencia y ultrasonido producen calor confortable, el drenaje es suave y el masaje reductivo puede ser intenso pero nunca doloroso. Si algún protocolo te resulta incómodo, ajustamos intensidad en tiempo real.' },
-  { q: '¿Puedo combinar varios tratamientos corporales?', a: 'Sí, y es lo que CLIBEL recomienda. Los planes integrales (Reafirmación, Reducción, Posparto) combinan 2–3 técnicas complementarias para resultados superiores. Cada combinación se diseña según diagnóstico, no como paquete prearmado.' },
-  { q: '¿Necesito dieta o ejercicio durante el tratamiento?', a: 'CLIBEL recomienda mantener alimentación equilibrada y actividad física moderada para potenciar resultados, pero NO exigimos dietas extremas ni rutinas de gimnasio. Si quieres, podemos coordinarnos con tu nutriólogo o entrenador.' },
+// ============ FAQS específicas corporales (humanizadas + interlinking) ============
+const faqs: { q: string; answerHtml: string }[] = [
+  {
+    q: '¿Cuántas sesiones de radiofrecuencia necesito para ver firmeza?',
+    answerHtml: 'El cambio en textura se nota desde la sesión 3 con un protocolo de 1–2 por semana. La reafirmación clínica completa se documenta entre las sesiones 6 y 10 — los tiempos biológicos del colágeno no se aceleran, son 6 a 12 semanas para madurar. <a href="/servicios/radiofrecuencia-corporal">Conoce el protocolo térmico completo →</a>',
+  },
+  {
+    q: '¿La reducción de grasa localizada es definitiva?',
+    answerHtml: 'Las técnicas no invasivas (criolipólisis, HIFU) destruyen adipocitos en zonas específicas — los eliminados no regresan. Las células remanentes pueden volver a llenarse si subes de peso significativamente. Por eso es importante que sea en peso estable + mantenimiento bimestral. <a href="/servicios/reduccion-grasa-localizada">Conoce las 4 modalidades →</a>',
+  },
+  {
+    q: '¿Es seguro hacer tratamientos corporales en lactancia o posparto temprano?',
+    answerHtml: 'Después de las 6 semanas posparto y cuarentena médica cumplida, sí: <a href="/servicios/drenaje-linfatico">drenaje linfático manual</a>, masaje reductivo suave y <a href="/servicios/radiofrecuencia-corporal">radiofrecuencia</a> controlada son seguros. Coordinamos con tu ginecóloga si hay diástasis abdominal o cesárea reciente.',
+  },
+  {
+    q: '¿Duele algún tratamiento corporal?',
+    answerHtml: 'Nada de lo que aplicamos es doloroso. La radiofrecuencia y el HIFU producen calor confortable; el drenaje es muy suave (presión 15–40 mmHg); el masaje reductivo puede ser intenso pero nunca llega a dolor. Si en algún momento te resulta incómodo, ajustamos intensidad en tiempo real.',
+  },
+  {
+    q: '¿Puedo combinar varios tratamientos corporales?',
+    answerHtml: 'Sí, y es lo más eficaz para casos complejos. Combinamos <a href="/servicios/reduccion-grasa-localizada">criolipólisis</a> + <a href="/servicios/radiofrecuencia-corporal">radiofrecuencia</a> para reducción + reafirmación; añadimos <a href="/servicios/drenaje-linfatico">drenaje linfático</a> para acelerar eliminación; integramos <a href="/servicios/masaje-anticelulitis">masaje anticelulitis</a> cuando hay celulitis estructural. El plan se diseña en valoración, no se vende como paquete cerrado.',
+  },
+  {
+    q: '¿Necesito dieta o ejercicio durante el tratamiento?',
+    answerHtml: 'Recomendamos alimentación equilibrada y actividad cardiovascular moderada para potenciar resultados — sobre todo en planes de reducción de grasa y anticelulitis donde el componente conductual es crítico. No exigimos dietas extremas ni rutinas de gimnasio. Si quieres, coordinamos con tu nutriólogo.',
+  },
+  {
+    q: '¿Qué pasa si tengo várices o cirugías previas?',
+    answerHtml: 'Várices severas o trombosis activa/reciente: contraindicación absoluta para drenaje y masaje reductivo. Várices leves: caso a caso con valoración. Cirugías estéticas previas: seguras después de 3 meses post-operatorios con autorización del cirujano. Implantes mamarios de silicona: contraindica RF en zona torácica, otras zonas sí.',
+  },
 ];
 ---
 
@@ -234,20 +303,25 @@ const faqs = [
             <strong>CLIBEL</strong> es una clínica de belleza con respaldo
             médico real, especializada en remodelación corporal no invasiva
             en Ciudad de México. Combinamos tecnología certificada
-            —radiofrecuencia bipolar, ultrasonido focalizado, presoterapia— con
+            —radiofrecuencia bipolar, criolipólisis, HIFU, presoterapia— con
             técnicas manuales aplicadas por terapeutas formadas y supervisadas
-            por personal médico. Cada plan corporal en CLIBEL se diseña tras un
-            diagnóstico clínico que incluye medidas, fotografía y bioimpedancia.
+            por personal médico. Cada plan corporal nace de un diagnóstico
+            real: medidas, bioimpedancia y fotografía clínica multi-ángulo.
+            Sin paquetes prearmados.
           </p>
 
           <p class="cat-hero-paragraph">
-            En esta categoría <strong>CLIBEL</strong> reúne sus protocolos
-            corporales más solicitados: <strong>radiofrecuencia</strong> para
-            reafirmar piel, <strong>reducción de grasa localizada</strong>
-            no invasiva, <strong>drenaje linfático</strong> manual y mecánico,
-            y <strong>masaje reductivo y anticelulitis</strong>. CLIBEL trabaja
-            con resultados medibles —centímetros, fotografía comparativa,
-            respuesta tisular— documentados sesión a sesión en tu expediente.
+            En esta categoría reunimos los cuatro protocolos corporales más
+            solicitados: <a href="/servicios/radiofrecuencia-corporal"><strong>radiofrecuencia</strong></a>
+            para reafirmar piel, <a href="/servicios/reduccion-grasa-localizada"><strong>reducción
+            de grasa localizada</strong></a> no invasiva,
+            <a href="/servicios/drenaje-linfatico"><strong>drenaje linfático</strong></a>
+            manual con técnica Vodder/Leduc, y
+            <a href="/servicios/masaje-anticelulitis"><strong>masaje reductivo y
+            anticelulitis</strong></a> con clasificación por grado clínico.
+            Trabajamos con resultados medibles —centímetros, fotografía
+            comparativa, respuesta tisular— documentados sesión a sesión en
+            tu expediente.
           </p>
         </div>
       </div>
@@ -273,10 +347,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker={`Catálogo · ${items.length} tratamientos`}
-        title="Tratamientos corporales en <em>CLIBEL</em>."
+        title="Los protocolos corporales<br/>que aplica <em>CLIBEL</em>."
         paragraphs={[
-          '<strong>CLIBEL</strong> realiza tratamientos corporales con grado clínico real: cada protocolo se aplica con tecnología certificada, técnicas validadas y respuesta tisular documentada sesión a sesión. En CLIBEL trabajamos remodelación, reafirmación, reducción de grasa localizada, drenaje y recuperación posparto o post-quirúrgica.',
-          'Cada plan corporal en <strong>CLIBEL</strong> registra medidas iniciales, fotografía clínica de baseline y parámetros de cada equipo en expediente digital. Esa trazabilidad permite a CLIBEL ajustar intensidad, frecuencia y técnica con base en cómo responde tu cuerpo, no según un guion comercial.',
+          'Cada protocolo corporal de <strong>CLIBEL</strong> nace de un diagnóstico real con bioimpedancia, perímetros y fotografía basal multi-ángulo. Trabajamos remodelación, reafirmación, reducción de grasa, drenaje y recuperación post-parto o post-quirúrgica — siempre con tecnología certificada y técnica supervisada.',
+          'Cada sesión registra medidas, parámetros de equipo y respuesta tisular en tu expediente digital. Esa trazabilidad es lo que permite a <strong>CLIBEL</strong> ajustar intensidad, frecuencia y técnica con base en cómo responde tu cuerpo — no según un guion comercial.',
         ]}
         cta={{ label: 'Solicitar valoración', href: '/contacto', variant: 'primary' }}
       />
@@ -299,15 +373,110 @@ const faqs = [
     </div>
   </section>
 
-  <!-- ============================ CONCERNS ============================ -->
+  <!-- ============================ PROFUNDIZA · interlinking L3 → L4 ============================ -->
   <section class="section bg-[color:var(--color-brand-50)]">
     <div class="container-x">
       <SectionHeader
-        kicker="Qué resolvemos"
-        title="Problemas corporales que atiende <em>CLIBEL</em>."
+        marginBottom="md"
+        kicker="Profundiza en cada protocolo"
+        title="Cada tratamiento corporal<br/>en <em>CLIBEL</em>, en detalle."
         paragraphs={[
-          '<strong>CLIBEL</strong> aborda las preocupaciones corporales más comunes que llegan a consulta: flacidez post-pérdida de peso o por edad, grasa localizada resistente al ejercicio, celulitis en sus diferentes tipos, retención de líquidos, recuperación posparto y post-quirúrgica. Cada motivo de consulta tiene un protocolo clínico distinto en CLIBEL — no aplicamos plantillas.',
-          'En <strong>CLIBEL</strong> el diagnóstico define el plan: combinamos radiofrecuencia, ultrasonido, drenaje y trabajo manual según lo que tu cuerpo realmente necesita. No tratamos zonas que no requieren intervención, ni vendemos paquetes sin antes evaluar.',
+          'Estos son los cuatro protocolos corporales que <strong>CLIBEL</strong> aplica como base. Cada uno tiene su propia página clínica con pasos, modalidades, zonas, casos reales, mitos desmontados y comparativas — para que decidas con información completa, no con marketing.',
+          'Si no sabes por dónde empezar, la <strong>radiofrecuencia</strong> es la entrada lógica para perfiles con flacidez, y la <strong>reducción de grasa localizada</strong> para cúmulos rebeldes en peso estable. Los demás se integran encima.',
+        ]}
+      />
+
+      <ol class="spot-list">
+        {items.map((s, i) => {
+          const meta = editorialLedes[s.id];
+          const topBen = (s.data.benefits ?? []).slice(0, 2);
+          const waSvc = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`Hola CLIBEL, me interesa el tratamiento ${s.data.title}.`)}`;
+          return (
+            <li class="spot reveal">
+              <div class="spot-num-wrap" aria-hidden="true">
+                <span class="spot-num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="spot-num-line"></span>
+              </div>
+
+              <div class="spot-body">
+                <header class="spot-head">
+                  <span class="spot-kicker">{s.data.icon ?? '✦'} {cat.short} · Protocolo {String(i + 1).padStart(2, '0')}</span>
+                  <h3 class="spot-title">
+                    <a href={`/servicios/${s.id}`}>{s.data.title}</a>
+                  </h3>
+                </header>
+
+                <dl class="spot-meta">
+                  {s.data.duration && (
+                    <div>
+                      <dt>Duración</dt>
+                      <dd>{s.data.duration}</dd>
+                    </div>
+                  )}
+                  {s.data.sessions && (
+                    <div>
+                      <dt>Frecuencia</dt>
+                      <dd>{s.data.sessions.split('·')[0].trim()}</dd>
+                    </div>
+                  )}
+                  {(s.data.protocolSteps?.length ?? 0) > 0 && (
+                    <div>
+                      <dt>Pasos clínicos</dt>
+                      <dd>{s.data.protocolSteps?.length}</dd>
+                    </div>
+                  )}
+                  {(s.data.modalities?.length ?? 0) > 0 && (
+                    <div>
+                      <dt>Modalidades</dt>
+                      <dd>{s.data.modalities?.length}</dd>
+                    </div>
+                  )}
+                </dl>
+
+                <p class="spot-lede">{meta?.lede ?? s.data.description}</p>
+
+                {topBen.length > 0 && (
+                  <ul class="spot-benefits">
+                    {topBen.map((b) => (
+                      <li>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <div class="spot-actions">
+                  <a href={`/servicios/${s.id}`} class="spot-cta spot-cta--primary">
+                    {meta?.readMore ?? 'Conocer protocolo'}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                  </a>
+                  <a href={waSvc} target="_blank" rel="noopener" class="spot-cta spot-cta--wa">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                    Pregunta por WhatsApp
+                  </a>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ CONCERNS ============================ -->
+  <section class="section bg-white">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Qué resolvemos"
+        title="Las consultas corporales<br/>más frecuentes en <em>CLIBEL</em>."
+        paragraphs={[
+          'Flacidez post-pérdida de peso o por edad, grasa localizada rebelde, celulitis con su clasificación clínica, retención crónica, recuperación posparto y post-quirúrgica: cada motivo llega con su propio protocolo. <strong>CLIBEL</strong> no aplica plantillas — cada cuadro pide herramientas distintas y seguimiento propio.',
+          'Lo que define tu plan es la valoración, no el catálogo. Combinamos radiofrecuencia, criolipólisis, HIFU, drenaje y trabajo manual según lo que tu cuerpo realmente necesita — sin tratar zonas que no requieren intervención ni vender paquetes sin haber evaluado primero.',
         ]}
       />
 
@@ -317,6 +486,14 @@ const faqs = [
             <span class="concern-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             <h3 class="concern-title">{c.title}</h3>
             <p class="concern-text">{c.text}</p>
+            {c.href && (
+              <a href={c.href} class="concern-link">
+                {c.linkLabel ?? 'Ver protocolo'}
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            )}
             <span class="concern-line" aria-hidden="true"></span>
           </article>
         ))}
@@ -325,11 +502,11 @@ const faqs = [
   </section>
 
   <!-- ============================ TECNOLOGÍA Y STACK ============================ -->
-  <section class="section bg-white">
+  <section class="section bg-[color:var(--color-brand-50)]">
     <div class="container-x">
       <SectionHeader
         kicker="Tecnología y productos"
-        title="Lo que <em>CLIBEL</em> usa en cada sesión corporal."
+        title="Las herramientas<br/>detrás del protocolo."
         paragraphs={[
           '<strong>CLIBEL</strong> opera con plataformas corporales de marcas internacionales certificadas —Venus Concept, BTL, Indiba— y técnicas manuales formadas en escuelas clínicas reconocidas (método Vodder, técnica francesa, drenaje sueco). Cada equipo se calibra antes de la sesión y cada protocolo se documenta en expediente.',
           'En <strong>CLIBEL</strong> los productos tópicos profesionales —lipolíticos, reafirmantes, descongestivos— tienen registro COFEPRIS visible con lote y trazabilidad disponibles para el paciente. CLIBEL no usa cosmecéuticos sin respaldo ni equipos imitación.',
@@ -354,10 +531,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Planes integrales"
-        title="Combinaciones clínicas que diseña <em>CLIBEL</em>."
+        title="Tres combinaciones<br/>que diseña <em>CLIBEL</em>."
         paragraphs={[
-          '<strong>CLIBEL</strong> arma planes integrales que combinan 2–3 técnicas corporales complementarias para resultados superiores a cualquier tratamiento aislado. Cada plan en CLIBEL incluye número estimado de sesiones, frecuencia clínica óptima y técnicas que se refuerzan entre sí.',
-          'Estos planes son <strong>orientativos</strong>. CLIBEL siempre personaliza el plan final tras tu valoración clínica — adaptamos sesiones, frecuencia, intensidad y combinación de técnicas según tu diagnóstico real, no según un paquete prearmado.',
+          'Estos tres planes integrales combinan 2 o 3 técnicas corporales complementarias para resultados superiores a cualquier tratamiento aislado. Cada plan referencia sus protocolos componentes — puedes profundizar en cada uno antes de tu valoración.',
+          'Los planes son <strong>orientativos</strong>, no paquetes cerrados. <strong>CLIBEL</strong> personaliza el plan final tras tu diagnóstico real — adaptamos sesiones, frecuencia, intensidad y combinación de técnicas según cómo responda tu cuerpo, no según un guion comercial.',
         ]}
       />
 
@@ -391,13 +568,26 @@ const faqs = [
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <polyline points="20 6 9 17 4 12"/>
                     </svg>
-                    {inc}
+                    {inc.href ? (
+                      <a href={inc.href}>{inc.label}</a>
+                    ) : (
+                      <span>{inc.label}</span>
+                    )}
                   </li>
                 ))}
               </ul>
             </div>
 
             <p class="plan-target">{p.target}</p>
+
+            {p.primaryHref && (
+              <a href={p.primaryHref} class="plan-link">
+                Ver protocolo principal
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            )}
           </article>
         ))}
       </div>
@@ -409,10 +599,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Resultados esperados"
-        title="Cuándo verás cambios con <em>CLIBEL</em>."
+        title="Cuándo verás cambios<br/>con <em>CLIBEL</em>."
         paragraphs={[
-          'En <strong>CLIBEL</strong> documentamos cada sesión con medidas, fotografía clínica y respuesta tisular. Esta línea de tiempo refleja la respuesta promedio en pacientes de CLIBEL — los tuyos pueden variar según diagnóstico inicial, edad, hábitos y respuesta individual.',
-          '<strong>CLIBEL</strong> no promete resultados milagrosos. Te decimos por escrito qué esperar en cada etapa del plan, qué evidencia clínica respalda esa expectativa y cómo se ajusta si tu cuerpo responde diferente a lo previsto.',
+          'Cada sesión documenta medidas, fotografía clínica y respuesta tisular. Esta línea de tiempo refleja la respuesta promedio en pacientes reales de <strong>CLIBEL</strong> — la tuya puede variar según diagnóstico inicial, edad, hábitos y respuesta individual.',
+          'No prometemos resultados milagrosos. Te decimos por escrito qué esperar en cada etapa del plan, qué evidencia clínica respalda esa expectativa y cómo se ajusta si tu cuerpo responde distinto a lo previsto. Esa es la diferencia entre venta de paquete y plan clínico.',
         ]}
       />
 
@@ -441,11 +631,11 @@ const faqs = [
     <div class="container-x relative">
       <SectionHeader
         kicker="Aftercare por fases"
-        title="Cuidados que <em>CLIBEL</em> documenta y supervisa."
+        title="Los cuidados que sostienen<br/>el resultado <em>en casa</em>."
         variant="dark"
         paragraphs={[
-          'Un tratamiento corporal en <strong>CLIBEL</strong> no termina cuando sales del consultorio: empieza la fase clave donde se consolidan los resultados. CLIBEL entrega protocolo aftercare por fases temporales —24 horas, 7 días, 30 días, 90 días— con indicaciones específicas, señales de alerta y revisión documentada.',
-          'En <strong>CLIBEL</strong> abrimos línea directa con tu terapeuta y médico responsable para resolver dudas durante el postratamiento. La consolidación del resultado requiere acompañamiento clínico real, no un PDF genérico — eso es parte del estándar CLIBEL.',
+          'Un tratamiento corporal no termina cuando sales del consultorio — ahí empieza la fase donde se consolidan los resultados. <strong>CLIBEL</strong> entrega protocolo aftercare por fases temporales (24 h, 7 días, 30 días, 90 días) con indicaciones específicas, señales de alerta y revisión documentada.',
+          'Abrimos línea directa con tu terapeuta y médico responsable para resolver dudas durante el postratamiento. La consolidación del resultado requiere acompañamiento real, no un PDF genérico — eso es parte del estándar.',
         ]}
       />
 
@@ -469,10 +659,10 @@ const faqs = [
     <div class="container-x">
       <SectionHeader
         kicker="Preguntas frecuentes y contacto"
-        title="Resuelve dudas o pide tu <em>valoración corporal</em>."
+        title="Dudas sobre <em>tu plan</em><br/>corporal, respondidas."
         paragraphs={[
-          'Las preguntas más frecuentes que recibe <strong>CLIBEL</strong> sobre tratamientos corporales no invasivos —resultados, seguridad, lactancia, combinaciones— resueltas con criterio clínico. A la derecha puedes enviarnos tus datos: la consulta llega directo al WhatsApp clínico de CLIBEL.',
-          'En <strong>CLIBEL</strong> entendemos que un tratamiento corporal implica decisiones legítimas: tiempo de inversión, expectativa real, compatibilidad con tu rutina y tu cuerpo. CLIBEL responde con honestidad y diagnóstico personalizado, no con guion comercial.',
+          'Las preguntas que más recibe <strong>CLIBEL</strong> sobre tratamientos corporales no invasivos —resultados reales, seguridad en posparto, combinaciones, várices, implantes— respondidas con criterio clínico. Si la tuya no aparece, llénanos el formulario: tu mensaje llega pre-armado al WhatsApp clínico.',
+          'Decidir un tratamiento corporal implica preguntas legítimas: tiempo de inversión, expectativa realista, compatibilidad con tu rutina y tu cuerpo. <strong>CLIBEL</strong> responde con honestidad y diagnóstico personalizado — no con guion comercial.',
         ]}
       />
 
@@ -491,7 +681,7 @@ const faqs = [
                     </svg>
                   </span>
                 </summary>
-                <div class="faq-a">{f.a}</div>
+                <div class="faq-a" set:html={f.answerHtml}></div>
               </details>
             ))}
           </div>
@@ -1480,4 +1670,267 @@ const faqs = [
     opacity: 0.85;
   }
   @media (max-width: 640px) { .faq-form { padding: 1.25rem; } }
+
+  /* ============= Hero · links inline en párrafos ============= */
+  .cat-hero-paragraph a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 0.25s ease !important;
+  }
+  .cat-hero-paragraph a:hover { color: var(--color-mauve-700); }
+  .cat-hero-paragraph a strong { color: inherit; font-weight: 600; }
+
+  /* ============= PROFUNDIZA — editorial spotlight por L4 ============= */
+  .spot-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 3vw, 2.75rem) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .spot {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding-block: clamp(2rem, 3vw, 2.75rem);
+    border-top: 1px solid rgba(201, 169, 97, 0.32);
+    align-items: start;
+  }
+  .spot:first-child { border-top: 0; padding-top: 0; }
+  .spot:last-child { padding-bottom: 0; }
+  @media (min-width: 820px) {
+    .spot { grid-template-columns: clamp(80px, 11vw, 130px) 1fr; gap: clamp(1.5rem, 3vw, 3rem); }
+  }
+  .spot-num-wrap { display: flex; align-items: baseline; gap: 0.85rem; }
+  @media (min-width: 820px) {
+    .spot-num-wrap { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding-top: 0.3rem; }
+  }
+  .spot-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+  }
+  .spot-num-line {
+    width: 32px;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    border-radius: 2px;
+  }
+  @media (max-width: 819px) {
+    .spot-num-line { display: none; }
+  }
+  .spot-body { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+  .spot-head { display: flex; flex-direction: column; gap: 0.5rem; }
+  .spot-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .spot-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 2.6vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.022em;
+    color: var(--color-ink-900);
+    margin: 0;
+    max-width: 26ch;
+  }
+  .spot-title a {
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    background-repeat: no-repeat;
+    background-size: 0 2px;
+    background-position: 0 100%;
+    transition: background-size 0.4s cubic-bezier(.2,.8,.2,1) !important;
+    padding-bottom: 2px;
+  }
+  .spot-title a:hover { background-size: 100% 2px; }
+  .spot-meta {
+    margin: 0;
+    padding: 0.85rem 0;
+    border-block: 1px dashed rgba(201, 169, 97, 0.3);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  @media (min-width: 700px) { .spot-meta { grid-template-columns: repeat(4, 1fr); } }
+  .spot-meta > div { padding: 0; }
+  .spot-meta > div + div {
+    padding-left: clamp(0.75rem, 1.5vw, 1.25rem);
+    border-left: 1px dashed rgba(201, 169, 97, 0.3);
+  }
+  .spot-meta dt {
+    font-family: var(--font-sans);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-bottom: 0.25rem;
+  }
+  .spot-meta dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(0.92rem, 1vw, 1.05rem);
+    line-height: 1.2;
+    color: var(--color-ink-900);
+    letter-spacing: -0.005em;
+  }
+  .spot-lede {
+    margin: 0;
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.7;
+    color: var(--color-ink-700);
+    max-width: 68ch;
+  }
+  .spot-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+  @media (min-width: 700px) { .spot-benefits { grid-template-columns: 1fr 1fr; gap: 0.65rem 1.5rem; } }
+  .spot-benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--color-ink-700);
+  }
+  .spot-benefits li svg {
+    flex-shrink: 0;
+    margin-top: 4px;
+    color: var(--color-brand-500);
+  }
+  .spot-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    align-items: center;
+    padding-top: 0.5rem;
+  }
+  .spot-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.2rem;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1) !important;
+    border: 1.5px solid transparent;
+  }
+  .spot-cta--primary {
+    background: var(--color-ink-900);
+    color: var(--color-brand-50);
+  }
+  .spot-cta--primary:hover {
+    background: var(--color-mauve-700);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -10px rgba(31, 20, 24, 0.4);
+  }
+  .spot-cta--primary svg { transition: transform 0.25s ease !important; }
+  .spot-cta--primary:hover svg { transform: translateX(3px); }
+  .spot-cta--wa {
+    background: rgba(37, 211, 102, 0.1);
+    color: #1B7A3F;
+    border: 1.5px solid rgba(37, 211, 102, 0.35);
+  }
+  .spot-cta--wa:hover {
+    background: #25D366;
+    color: white;
+    border-color: #25D366;
+    transform: translateY(-2px);
+  }
+
+  /* ============= Concern card link ============= */
+  .concern-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.3);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    text-decoration: none;
+    transition: color 0.25s ease, gap 0.25s ease !important;
+  }
+  .concern-link:hover {
+    color: var(--color-mauve-700);
+    gap: 0.75rem;
+  }
+  .concern-link svg { transition: transform 0.25s ease !important; }
+  .concern-link:hover svg { transform: translateX(3px); }
+
+  /* ============= Plan includes con links + Plan link ============= */
+  .plan-includes li a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.25s ease !important;
+  }
+  .plan-includes li a:hover { color: var(--color-mauve-700); }
+  .plan-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.32);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    text-decoration: none;
+    transition: gap 0.25s ease, color 0.25s ease !important;
+  }
+  .plan-link:hover {
+    color: var(--color-mauve-700);
+    gap: 0.65rem;
+  }
+  .plan-link svg { transition: transform 0.25s ease !important; }
+  .plan-link:hover svg { transform: translateX(3px); }
+
+  /* ============= FAQ answer inline links ============= */
+  .faq-a a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.25s ease !important;
+  }
+  .faq-a a:hover { color: var(--color-mauve-700); }
 </style>

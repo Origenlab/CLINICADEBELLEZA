@@ -1,117 +1,1556 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import CTA from '../components/CTA.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import HeroNavBar from '../components/HeroNavBar.astro';
+import RelatedCategories from '../components/RelatedCategories.astro';
+import { SITE, CONTACT, catHref } from '../consts';
 
+const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola CLIBEL, me interesa agendar valoración con el equipo médico.')}`;
+
+// ============ EQUIPO MÉDICO ============
 const team = [
   {
     initials: 'DJ',
     name: 'Dra. Jimena Reyes',
-    role: 'Directora médica · Medicina estética y armonización',
-    bio: 'Médica cirujana con especialidad en Medicina Estética y certificaciones internacionales por Merz Aesthetics y Allergan (MD Codes). Líder del equipo clínico desde 2014. Ponente en congresos AMWC y Congreso Mexicano de Medicina Estética.',
+    role: 'Directora médica',
+    specialty: 'Medicina estética y armonización facial',
+    bio: 'Médica cirujana con especialidad en Medicina Estética y certificaciones internacionales por Merz Aesthetics y Allergan (MD Codes). Líder del equipo clínico desde 2014. Ponente regular en congresos AMWC y Congreso Mexicano de Medicina Estética. Filosofía conservadora: prefiere sub-corregir y volver, antes que sobre-corregir.',
+    years: '14 años',
     certs: ['Cédula 0000000', 'Merz Aesthetics', 'MD Codes Allergan', 'Galderma GAIN'],
-    gradient: ['#8B5A6B', '#C9A961'],
+    treatments: [
+      { label: 'Ácido Hialurónico', href: '/servicios/acido-hialuronico' },
+      { label: 'Toxina Botulínica', href: '/servicios/toxina-botulinica' },
+      { label: 'Hilos Tensores', href: '/servicios/hilos-tensores' },
+    ],
+    accent: 'mauve',
+    initials_bg: ['#8B5A6B', '#C9A961'],
   },
   {
     initials: 'AM',
     name: 'Dr. Andrés Martínez',
-    role: 'Medicina estética avanzada · Bioestimulación',
-    bio: 'Médico estético con formación en Sculptra (Galderma) y Radiesse. Experto en bioestimulación de colágeno, hilos tensores y armonización masculina. Más de 8 años de práctica clínica.',
+    role: 'Medicina estética avanzada',
+    specialty: 'Bioestimulación · Armonización masculina',
+    bio: 'Médico estético con formación en Sculptra (Galderma), Radiesse y hilos tensores PDO/PCL. Experto en bioestimulación de colágeno y armonización masculina (definición mandibular, mentón, ángulo facial). Más de 8 años de práctica clínica en CDMX.',
+    years: '8 años',
     certs: ['Cédula 0000001', 'Sculptra Certified', 'Radiesse', 'Hilos PDO/PCL'],
-    gradient: ['#5C3946', '#B8923F'],
+    treatments: [
+      { label: 'Hilos Tensores', href: '/servicios/hilos-tensores' },
+      { label: 'Ácido Hialurónico', href: '/servicios/acido-hialuronico' },
+      { label: 'PRP', href: '/servicios/plasma-rico-plaquetas' },
+    ],
+    accent: 'gold',
+    initials_bg: ['#5C3946', '#B8923F'],
   },
   {
     initials: 'PS',
     name: 'Dra. Paola Sánchez',
-    role: 'Dermatología clínica y antiacné',
-    bio: 'Dermatóloga con subespecialidad en dermatocosmética. Especialista en manchas, melasma, rosácea, acné severo y planes de cuidado preventivo. Lidera el protocolo dermatocosmético de CLIBEL.',
+    role: 'Dermatología clínica',
+    specialty: 'Dermatocosmética · Acné · Pigmentación',
+    bio: 'Dermatóloga con subespecialidad en dermatocosmética. Especialista en manchas, melasma, rosácea, acné severo y planes de cuidado preventivo. Lidera el protocolo dermatocosmético de CLIBEL — incluyendo el manejo coordinado de pacientes con causa hormonal o autoinmune.',
+    years: '10 años',
     certs: ['Cédula 0000002', 'Sociedad Mexicana de Dermatología', 'Diplomado en Dermatocosmética'],
-    gradient: ['#BC8E9C', '#C9A961'],
+    treatments: [
+      { label: 'Tratamiento Antiacné', href: '/servicios/tratamiento-antiacne' },
+      { label: 'Peelings Químicos', href: '/servicios/peelings-quimicos' },
+      { label: 'Tricología Clínica', href: '/servicios/tricologia-clinica' },
+    ],
+    accent: 'rose',
+    initials_bg: ['#BC8E9C', '#C9A961'],
   },
   {
     initials: 'RC',
     name: 'Lic. Renata Cordero',
-    role: 'Cosmetología clínica · Faciales y corporales',
-    bio: 'Licenciada en Cosmetología con certificaciones en aparatología avanzada, microneedling, peelings químicos y drenaje linfático. Responsable del área de tratamientos faciales no médicos.',
-    certs: ['Microneedling certificado', 'Peelings médicos', 'Drenaje linfático'],
-    gradient: ['#D9BC9C', '#8B5A6B'],
+    role: 'Cosmetología clínica',
+    specialty: 'Faciales y corporales no médicos',
+    bio: 'Licenciada en Cosmetología con certificaciones en aparatología avanzada, microneedling, peelings químicos y drenaje linfático. Responsable del área de tratamientos faciales no médicos y de la integración con los planes médicos del resto del equipo.',
+    years: '7 años',
+    certs: ['Microneedling certificado', 'Peelings médicos', 'Drenaje linfático Vodder', 'Aparatología avanzada'],
+    treatments: [
+      { label: 'Limpieza Facial Profunda', href: '/servicios/limpieza-facial-profunda' },
+      { label: 'Rejuvenecimiento Facial', href: '/servicios/rejuvenecimiento-facial' },
+      { label: 'Drenaje Linfático', href: '/servicios/drenaje-linfatico' },
+    ],
+    accent: 'gold',
+    initials_bg: ['#D9BC9C', '#8B5A6B'],
   },
   {
     initials: 'MN',
     name: 'TSU Mónica Nava',
-    role: 'Técnica en láser · Depilación profesional',
-    bio: 'Técnica certificada en operación de plataformas láser. Especializada en depilación para todo tipo de piel y vello, con seguimiento personalizado por paciente y zona.',
-    certs: ['Operación láser certificada', 'Protocolos por fototipo'],
-    gradient: ['#C9A961', '#5C3946'],
+    role: 'Técnica en láser',
+    specialty: 'Depilación profesional · Fototipos I–VI',
+    bio: 'Técnica certificada en operación de plataformas láser (Alexandrita, Nd:YAG, Diodo). Especializada en depilación para todo tipo de piel y vello, con seguimiento personalizado por paciente y zona. Coordinación clínica directa con personal médico del equipo.',
+    years: '6 años',
+    certs: ['Operación láser certificada', 'Protocolos por fototipo', 'Manejo de complicaciones'],
+    treatments: [
+      { label: 'Depilación Láser Profesional', href: '/servicios/depilacion-laser' },
+      { label: 'Láser Rostro Completo', href: '/servicios/depilacion-laser-rostro-completo' },
+      { label: 'Láser Axilas e Ingle', href: '/servicios/depilacion-laser-axilas-ingle' },
+    ],
+    accent: 'mauve',
+    initials_bg: ['#C9A961', '#5C3946'],
   },
   {
     initials: 'IA',
     name: 'Lic. Isabella Acosta',
     role: 'Coordinadora de pacientes',
-    bio: 'Tu primer punto de contacto. Coordina valoraciones, agenda, seguimiento posterior y cualquier ajuste al plan. Conoce cada protocolo y te orienta sin presión comercial.',
-    certs: ['Atención al paciente', 'Coordinación clínica'],
-    gradient: ['#8B5A6B', '#BC8E9C'],
+    specialty: 'Atención clínica · Coordinación',
+    bio: 'Tu primer punto de contacto con CLIBEL. Coordina valoraciones, agenda, seguimiento posterior a cada sesión y cualquier ajuste al plan. Conoce cada protocolo del catálogo y te orienta sin presión comercial — su trabajo es asegurar que llegues a la valoración correcta.',
+    years: '5 años',
+    certs: ['Atención al paciente', 'Coordinación clínica', 'Manejo de expediente digital'],
+    treatments: [],
+    accent: 'rose',
+    initials_bg: ['#8B5A6B', '#BC8E9C'],
+  },
+];
+
+// ============ FILOSOFÍA DEL EQUIPO (4 principios) ============
+const principles = [
+  {
+    n: '01',
+    title: 'Médico antes que técnico',
+    text: 'Los procedimientos invasivos (ácido hialurónico, toxina, hilos, PRP) los aplica exclusivamente personal MÉDICO con cédula profesional. Los técnicos (láser, cosmetología) trabajan bajo supervisión médica directa. No improvisamos especialidad ajena.',
+  },
+  {
+    n: '02',
+    title: 'Certificación específica',
+    text: 'Cada miembro del equipo tiene certificación específica en su área de aplicación — no formación genérica con curso de fin de semana. Mostramos las certificaciones a quien lo pida, en cualquier momento.',
+  },
+  {
+    n: '03',
+    title: 'Educación continua',
+    text: 'Asistencia regular a congresos AMWC, IMCAS, Congreso Mexicano de Medicina Estética y entrenamientos de laboratorios (Allergan, Galderma, Merz). La medicina estética avanza rápido — el equipo se forma cada año, no descansa en el título inicial.',
+  },
+  {
+    n: '04',
+    title: 'Coordinación inter-especialidad',
+    text: 'Trabajamos en red con ginecología, endocrinología, dermatología capilar y cirugía plástica cuando un caso lo requiere. CLIBEL no improvisa especialidad ajena — coordina con el especialista correspondiente.',
+  },
+];
+
+// ============ QUIÉN APLICA QUÉ — MAPA POR CATEGORÍA ============
+const whoApplies = [
+  {
+    cat: 'Faciales',
+    catShort: 'Facial',
+    href: catHref('facial'),
+    applied: 'Personal MÉDICO + Cosmetología clínica',
+    detail: 'Tratamientos no invasivos (limpieza, peelings superficiales) por cosmetóloga certificada. Peelings medios, microneedling y planes antiacné severos por dermatóloga.',
+    members: ['Dra. Paola Sánchez', 'Lic. Renata Cordero'],
+  },
+  {
+    cat: 'Corporales',
+    catShort: 'Corporal',
+    href: catHref('corporal'),
+    applied: 'Cosmetología clínica + supervisión médica',
+    detail: 'Aparatología corporal (radiofrecuencia, criolipólisis, HIFU) y técnicas manuales por cosmetóloga certificada. Valoración médica previa obligatoria para descartar contraindicaciones.',
+    members: ['Lic. Renata Cordero', 'Dra. Jimena Reyes (valoración)'],
+  },
+  {
+    cat: 'Depilación Láser',
+    catShort: 'Láser',
+    href: catHref('laser'),
+    applied: 'Técnica certificada + supervisión médica',
+    detail: 'Aplicación por técnica certificada en operación de plataformas láser. Valoración del fototipo y prueba de parche por personal médico antes del plan completo. Manejo de complicaciones por médico del equipo.',
+    members: ['TSU Mónica Nava', 'Personal médico (valoración + complicaciones)'],
+  },
+  {
+    cat: 'Medicina Estética',
+    catShort: 'Medicina',
+    href: catHref('medicina-estetica'),
+    applied: 'Médico inyector exclusivamente',
+    detail: 'Todos los inyectables (AH, toxina, PRP, hilos) los aplica MÉDICO con cédula profesional y certificación específica en medicina estética. Sin excepciones — ni técnico, ni esteticista, ni enfermera con curso corto.',
+    members: ['Dra. Jimena Reyes', 'Dr. Andrés Martínez'],
+  },
+  {
+    cat: 'Capilares',
+    catShort: 'Capilar',
+    href: catHref('capilar'),
+    applied: 'Dermatología + médico inyector',
+    detail: 'Tricología clínica y diagnóstico por dermatóloga. PRP y mesoterapia capilar por personal médico. Coordinación con dermatología capilar especializada si el caso lo requiere.',
+    members: ['Dra. Paola Sánchez', 'Dra. Jimena Reyes'],
+  },
+];
+
+// ============ COMPARATIVA QUIÉN TE ATIENDE ============
+const comparison = [
+  {
+    aspect: 'Aplicación de inyectables (AH, toxina, hilos)',
+    home: 'Auto-aplicación NUNCA recomendada (riesgo ceguera, necrosis)',
+    spa: 'Esteticista, enfermera o técnico con curso corto',
+    clibel: 'Médico inyector con cédula profesional + certificación específica',
+  },
+  {
+    aspect: 'Operación de equipos láser',
+    home: 'Dispositivos IPL caseros sin penetración real',
+    spa: 'Técnico con curso corto sin valoración previa',
+    clibel: 'Técnica certificada + valoración médica previa + prueba de parche',
+  },
+  {
+    aspect: 'Valoración médica previa',
+    home: 'Auto-evaluación',
+    spa: 'Charla comercial sin diagnóstico',
+    clibel: 'Diagnóstico clínico documentado por personal médico antes de cualquier plan',
+  },
+  {
+    aspect: 'Coordinación inter-especialidad',
+    home: '—',
+    spa: 'Sin red clínica',
+    clibel: 'Derivación a ginecología, endocrinología, dermatología capilar o cirugía cuando aplica',
+  },
+  {
+    aspect: 'Manejo de complicaciones',
+    home: '—',
+    spa: 'Derivación a urgencias externas',
+    clibel: 'Protocolo escrito + hialuronidasa/apraclonidina disponibles + médico capacitado',
+  },
+  {
+    aspect: 'Educación continua del personal',
+    home: '—',
+    spa: 'Frecuentemente personal sin formación reciente',
+    clibel: 'Asistencia regular a congresos AMWC, IMCAS, entrenamientos de laboratorios',
+  },
+  {
+    aspect: 'Cédula y certificaciones visibles',
+    home: '—',
+    spa: 'No suele mostrar credenciales',
+    clibel: 'Cédula profesional visible · certificaciones documentadas por solicitud',
+  },
+];
+
+// ============ FAQs DEL EQUIPO ============
+const faqs: { q: string; answerHtml: string }[] = [
+  {
+    q: '¿Puedo pedir credenciales antes de mi sesión?',
+    answerHtml: 'Sí, y CLIBEL lo recomienda activamente. La cédula profesional es pública y puedes verificarla en la <a href="https://cedulaprofesional.sep.gob.mx/cedula/" target="_blank" rel="noopener">SEP</a>. Las certificaciones de laboratorios (Allergan, Galderma, Merz) están en el expediente del consultorio — pídelas en cualquier momento.',
+  },
+  {
+    q: '¿Quién va a aplicarme el tratamiento específico que me interesa?',
+    answerHtml: 'Depende del tratamiento. Inyectables (<a href="/servicios/acido-hialuronico">AH</a>, <a href="/servicios/toxina-botulinica">toxina</a>, <a href="/servicios/hilos-tensores">hilos</a>, <a href="/servicios/plasma-rico-plaquetas">PRP</a>): Dra. Jimena o Dr. Andrés. Acné, peelings, dermatocosmética: Dra. Paola. Tratamientos no médicos: Lic. Renata. Láser: TSU Mónica con supervisión médica. En valoración te decimos exactamente quién será.',
+  },
+  {
+    q: '¿Puedo elegir con quién quiero tratarme?',
+    answerHtml: 'Sí, dentro de la especialidad. Si tu tratamiento es facial dermatocosmético, lo hará la Dra. Paola; si es inyectable, lo elegirás entre Dra. Jimena o Dr. Andrés. No mezclamos especialidades — pero sí respetamos tu preferencia dentro de la especialidad correcta.',
+  },
+  {
+    q: '¿El equipo se mantiene actualizado?',
+    answerHtml: 'Sí, es parte del estándar. Asistimos regularmente a AMWC (Aesthetic & Anti-aging World Congress en Mónaco), IMCAS, Congreso Mexicano de Medicina Estética y entrenamientos específicos de laboratorios (Merz, Allergan, Galderma). La medicina estética avanza rápido — descansar en el título inicial no es opción.',
+  },
+  {
+    q: '¿Qué pasa si tengo una complicación post-procedimiento?',
+    answerHtml: 'Tienes acceso directo a tu médico vía WhatsApp clínico (no atención telefónica genérica). Hay protocolo escrito para cada complicación posible: hialuronidasa para AH, apraclonidina para ptosis palpebral, antibiótico para infecciones, derivación inmediata a dermatología o cirugía maxilofacial si la situación lo exige.',
+  },
+  {
+    q: '¿Atienden a hombres?',
+    answerHtml: 'Sí, regularmente. El Dr. Andrés se especializa en armonización masculina (definición mandibular, mentón, hilos tensores en cuello). El resto del equipo atiende hombres en todas las categorías. La depilación láser masculina (espalda, pecho, ingle) se aplica con la misma discreción que en pacientes femeninas.',
+  },
+  {
+    q: '¿Cómo agendo una valoración?',
+    answerHtml: 'Por WhatsApp clínico o el formulario de <a href="/contacto">contacto</a>. La Lic. Isabella Acosta (coordinadora de pacientes) te orienta sobre qué especialista necesitas según tu motivo de consulta. La primera valoración orientativa es <strong>sin costo</strong> y sin presión comercial.',
   },
 ];
 ---
 
 <BaseLayout
-  title="Médicos Especialistas"
-  description="Médicas y especialistas certificados en medicina estética y dermatología, con formación continua y experiencia clínica. Conoce a tu doctora."
+  title="Equipo Médico Certificado · CLIBEL CDMX"
+  description="Equipo médico de CLIBEL: 6 especialistas con cédula vigente, certificaciones internacionales por Allergan/Galderma/Merz, educación continua y coordinación inter-especialidad para atención clínica seria en CDMX."
 >
-  <!-- Hero -->
-  <section class="gradient-soft">
-    <div class="container-x section">
-      <div class="max-w-3xl">
-        <span class="kicker-line">Equipo CLIBEL</span>
-        <h1 class="mt-4 h-display text-5xl sm:text-6xl lg:text-7xl">
-          Profesionales que <em>realmente</em><br/>
-          conocen tu piel.
-        </h1>
-        <p class="mt-6 text-lg text-[color:var(--color-ink-700)] leading-relaxed max-w-2xl">
-          Cada miembro de nuestro equipo cuenta con cédula vigente, certificaciones de
-          laboratorios líderes y formación continua. La estética seria empieza por
-          saber quién está detrás del procedimiento.
-        </p>
+  <!-- ============================ BREADCRUMB ============================ -->
+  <Breadcrumb
+    kicker="Quién te atiende · CLIBEL"
+    items={[
+      { label: 'Equipo médico' },
+    ]}
+  />
+
+  <!-- ============================ HERO 2-col ============================ -->
+  <section class="cat-hero">
+    <div aria-hidden="true" class="cat-hero-bg"></div>
+    <div aria-hidden="true" class="cat-hero-blob cat-hero-blob-1"></div>
+    <div aria-hidden="true" class="cat-hero-blob cat-hero-blob-2"></div>
+    <div aria-hidden="true" class="cat-hero-grain"></div>
+
+    <div class="container-x relative">
+      <div class="cat-hero-grid">
+        <div class="cat-hero-col cat-hero-col--left fade-up">
+          <span class="eyebrow-tag">
+            <span class="dot" aria-hidden="true"></span>
+            Equipo médico · {team.length} especialistas
+          </span>
+
+          <h1 class="cat-hero-headline">
+            <span class="cat-hero-headline-line">Quien te</span>
+            <span class="cat-hero-headline-line"><em>atiende</em> importa.</span>
+          </h1>
+
+          <p class="cat-hero-lede">
+            Cada miembro del equipo CLIBEL tiene <strong>cédula vigente</strong>,
+            certificaciones específicas de laboratorios líderes (Allergan,
+            Galderma, Merz) y formación continua. La estética seria empieza
+            por saber quién está detrás del procedimiento — sin esto, no
+            hay medicina, hay improvisación cosmética.
+          </p>
+
+          <div class="cat-hero-trust">
+            <span class="cat-hero-trust-label">Certificaciones</span>
+            <div class="cat-hero-trust-list">
+              <span>AMWC</span><span aria-hidden="true">·</span>
+              <span>IMCAS</span><span aria-hidden="true">·</span>
+              <span>Allergan</span><span aria-hidden="true">·</span>
+              <span>Galderma</span><span aria-hidden="true">·</span>
+              <span>Merz</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cat-hero-col cat-hero-col--right fade-up-delay-2">
+          <span class="cat-hero-kicker">Cómo trabaja el equipo CLIBEL</span>
+
+          <p class="cat-hero-paragraph">
+            <strong>CLIBEL</strong> opera con seis especialistas distintos
+            porque la medicina estética seria exige separación de
+            especialidades. Los inyectables los aplica MÉDICO con cédula y
+            certificación; los tratamientos no médicos los aplica
+            cosmetología clínica certificada; el láser, técnica capacitada
+            con supervisión médica. Cada herramienta exige formación
+            específica — no improvisamos especialidad ajena.
+          </p>
+
+          <p class="cat-hero-paragraph">
+            Trabajamos en <strong>red inter-especialidad</strong> con
+            ginecología, endocrinología, dermatología capilar y cirugía
+            plástica cuando un caso lo requiere. Si tu cuadro exceds
+            nuestro alcance —alopecia cicatrizal, descolgamiento facial
+            severo, hiperandrogenismo activo— te derivamos honestamente
+            con especialista de confianza. La honestidad clínica es
+            estándar, no extra premium.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Team -->
-  <section class="section bg-white">
+  <!-- ============================ HERONAVBAR ============================ -->
+  <HeroNavBar
+    label="Quién aplica qué"
+    ariaLabel="Navegación rápida del equipo"
+    variant="cream"
+    links={[
+      { label: 'Equipo médico',    href: '#equipo' },
+      { label: 'Filosofía',        href: '#filosofia' },
+      { label: 'Quién aplica qué', href: '#aplica' },
+      { label: 'Comparativa',      href: '#comparativa' },
+      { label: 'FAQs',             href: '#faqs' },
+    ]}
+    cta={{ label: 'Agendar valoración', href: '/contacto' }}
+  />
+
+  <!-- ============================ STAT STRIP CLÍNICO ============================ -->
+  <section class="svc-stat-strip">
     <div class="container-x">
-      <div class="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
-        {team.map(m => (
-          <article class="card overflow-hidden reveal">
-            <div class="aspect-[4/5] relative overflow-hidden"
-                 style={`background: linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]});`}>
-              <div class="absolute inset-0 grid place-items-center">
-                <span class="font-display text-8xl font-bold text-white/95">{m.initials}</span>
-              </div>
-              <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/60 to-transparent">
-                <p class="text-[10px] uppercase tracking-[0.2em] text-white/80">CLIBEL · Equipo médico</p>
-              </div>
+      <dl class="equipo-stats">
+        <div>
+          <dt>Especialistas</dt>
+          <dd><em>{team.length}</em></dd>
+        </div>
+        <div>
+          <dt>Años CLIBEL</dt>
+          <dd><em>{new Date().getFullYear() - parseInt(SITE.founded)}</em></dd>
+        </div>
+        <div>
+          <dt>Médicos inyectores</dt>
+          <dd class="equipo-stats-text">Cédula + certificación específica</dd>
+        </div>
+        <div>
+          <dt>Coordinación</dt>
+          <dd class="equipo-stats-text">Inter-especialidad documentada</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================ EQUIPO · CARDS EDITORIALES ============================ -->
+  <section class="section bg-white" id="equipo">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Conoce al equipo"
+        title="Seis especialistas,<br/>una <em>filosofía</em>."
+        paragraphs={[
+          'Cada miembro del equipo <strong>CLIBEL</strong> aporta su especialidad al plan integral. No somos un médico que hace de todo — somos seis especialistas que coordinan según el caso. Esa separación de especialidades es lo que distingue medicina estética seria de polivalencia comercial.',
+          'Si tu tratamiento exige más de una especialidad (ej. <a href="/servicios/tratamiento-antiacne">antiacné hormonal</a> con manejo dermatológico + ginecológico), <strong>CLIBEL</strong> coordina el plan integrado — no te manda a tres clínicas distintas para hacer lo que se puede coordinar en una.',
+        ]}
+        cta={{ label: 'Agendar valoración', href: '/contacto', variant: 'primary' }}
+      />
+
+      <ol class="team-list">
+        {team.map((m, i) => (
+          <li class:list={['team-card', `team-card--${m.accent}`]}>
+            <div class="team-card-visual"
+                 style={`background: linear-gradient(135deg, ${m.initials_bg[0]}, ${m.initials_bg[1]});`}
+                 aria-hidden="true">
+              <span class="team-card-num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="team-card-initials">{m.initials}</span>
+              <span class="team-card-years">{m.years} en CLIBEL</span>
             </div>
-            <div class="p-6">
-              <h3 class="font-display text-2xl leading-tight">{m.name}</h3>
-              <p class="text-xs uppercase tracking-[0.16em] text-[color:var(--color-mauve-500)] mt-1.5 mb-4">{m.role}</p>
-              <p class="text-sm text-[color:var(--color-ink-500)] leading-relaxed mb-5">{m.bio}</p>
-              <div class="pt-4 border-t border-[color:var(--color-brand-200)]">
-                <p class="text-[10px] uppercase tracking-[0.16em] text-[color:var(--color-ink-500)] mb-2">Certificaciones</p>
-                <div class="flex flex-wrap gap-1.5">
-                  {m.certs.map(c => (
-                    <span class="text-[10px] bg-[color:var(--color-brand-100)] text-[color:var(--color-mauve-700)] px-2 py-1 rounded-full">{c}</span>
+            <div class="team-card-body">
+              <header class="team-card-head">
+                <span class="team-card-role">{m.role}</span>
+                <h3 class="team-card-name">{m.name}</h3>
+                <span class="team-card-specialty">{m.specialty}</span>
+              </header>
+
+              <p class="team-card-bio">{m.bio}</p>
+
+              {m.treatments.length > 0 && (
+                <div class="team-card-treatments">
+                  <span class="team-card-treatments-label">Aplica</span>
+                  <ul>
+                    {m.treatments.map((t) => (
+                      <li><a href={t.href}>{t.label}</a></li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div class="team-card-certs">
+                <span class="team-card-certs-label">Certificaciones</span>
+                <div class="team-card-certs-list">
+                  {m.certs.map((c) => (
+                    <span class="team-card-cert">{c}</span>
                   ))}
                 </div>
               </div>
             </div>
-          </article>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ FILOSOFÍA DEL EQUIPO (4 principios) ============================ -->
+  <section class="section equipo-philosophy" id="filosofia">
+    <div aria-hidden="true" class="equipo-philosophy-bg"></div>
+
+    <div class="container-x relative">
+      <SectionHeader
+        kicker="Filosofía clínica del equipo"
+        title="Cuatro principios<br/><em>no negociables</em>."
+        variant="dark"
+        paragraphs={[
+          'La diferencia entre un equipo serio de medicina estética y un grupo de cosméticos polivalentes no está en el discurso — está en la disciplina de aplicar estos cuatro principios <strong>siempre</strong>. <strong>CLIBEL</strong> los opera sin excepción comercial.',
+          'Si un equipo te ofrece inyectables sin médico, técnicos sin certificación específica o "tratamiento integral" sin coordinación inter-especialidad, te están vendiendo polivalencia disfrazada de servicio premium.',
+        ]}
+      />
+
+      <ol class="principles-list">
+        {principles.map((p) => (
+          <li class="principle reveal">
+            <span class="principle-num" aria-hidden="true">{p.n}</span>
+            <div class="principle-body">
+              <h3 class="principle-title">{p.title}</h3>
+              <p class="principle-text">{p.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ QUIÉN APLICA QUÉ — interlinking ============================ -->
+  <section class="section bg-white" id="aplica">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Mapa de aplicación"
+        title="Quién aplica <em>qué</em><br/>en cada categoría."
+        paragraphs={[
+          'Cada categoría de servicios <strong>CLIBEL</strong> tiene un perfil de profesional específico que la aplica. La separación no es burocrática — es regulatoria y clínica. Los inyectables exigen médico; los tratamientos no médicos exigen cosmetología certificada; el láser, técnica capacitada con supervisión médica.',
+          'Este mapa orienta a quién verás según tu motivo de consulta. La <strong>coordinadora de pacientes</strong> agenda según especialidad correspondiente — no por disponibilidad arbitraria.',
+        ]}
+      />
+
+      <ol class="apply-list">
+        {whoApplies.map((w, i) => (
+          <li class="apply-item">
+            <header class="apply-head">
+              <span class="apply-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <span class="apply-kicker">Categoría · {w.catShort}</span>
+                <h3 class="apply-cat">
+                  <a href={w.href}>{w.cat}</a>
+                </h3>
+              </div>
+            </header>
+
+            <div class="apply-body">
+              <div class="apply-applied">
+                <span class="apply-applied-label">Aplica</span>
+                <span class="apply-applied-value">{w.applied}</span>
+              </div>
+              <p class="apply-detail">{w.detail}</p>
+              <div class="apply-members">
+                <span class="apply-members-label">Miembros</span>
+                <ul>
+                  {w.members.map((m) => (
+                    <li>{m}</li>
+                  ))}
+                </ul>
+              </div>
+              <a href={w.href} class="apply-link">
+                Ver categoría {w.catShort.toLowerCase()}
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ COMPARATIVA ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]" id="comparativa">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Comparativa quién te atiende"
+        title="Cosmética, spa<br/>y <em>CLIBEL</em>."
+        paragraphs={[
+          'En medicina estética, la diferencia entre éxito y daño está en <strong>quién aplica</strong> el procedimiento. Esta comparativa muestra honestamente las diferencias entre auto-aplicación, spa estético sin médico y el equipo de <strong>CLIBEL</strong>.',
+          'No es marketing — es responsabilidad clínica. Si te ofrecen inyectables sin médico inyector, recoordinación inter-especialidad o sin manejo escrito de complicaciones, considéralo señal de alerta.',
+        ]}
+      />
+
+      <div class="equipo-compare-wrap">
+        <table class="equipo-compare-table">
+          <thead>
+            <tr>
+              <th scope="col" class="equipo-compare-aspect">Aspecto clínico</th>
+              <th scope="col">Auto-aplicación</th>
+              <th scope="col">Spa estético</th>
+              <th scope="col" class="equipo-compare-clibel">CLIBEL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {comparison.map((row, i) => (
+              <tr>
+                <th scope="row" class="equipo-compare-aspect">
+                  <span class="equipo-compare-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <span>{row.aspect}</span>
+                </th>
+                <td>{row.home}</td>
+                <td>{row.spa}</td>
+                <td class="equipo-compare-clibel">{row.clibel}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <ol class="equipo-compare-cards">
+          {comparison.map((row, i) => (
+            <li class="equipo-compare-card">
+              <header>
+                <span class="equipo-compare-card-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{row.aspect}</h3>
+              </header>
+              <dl>
+                <div>
+                  <dt>Casa</dt>
+                  <dd>{row.home}</dd>
+                </div>
+                <div>
+                  <dt>Spa</dt>
+                  <dd>{row.spa}</dd>
+                </div>
+                <div class="equipo-compare-card-clibel">
+                  <dt>CLIBEL</dt>
+                  <dd>{row.clibel}</dd>
+                </div>
+              </dl>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FAQs ============================ -->
+  <section class="section bg-white" id="faqs">
+    <div class="container-x">
+      <SectionHeader
+        kicker="Preguntas frecuentes"
+        title="Dudas sobre el<br/><em>equipo</em>, respondidas."
+        paragraphs={[
+          'Las preguntas que más recibe <strong>CLIBEL</strong> sobre el equipo médico: credenciales, especialidad por tratamiento, manejo de complicaciones, atención a hombres, agendamiento.',
+          'Si tu duda no aparece aquí, escríbenos a la coordinadora de pacientes — respondemos en menos de 2 horas en horario clínica.',
+        ]}
+      />
+
+      <div class="equipo-faq-list">
+        {faqs.map((f, i) => (
+          <details class="equipo-faq" open={i === 0}>
+            <summary class="equipo-faq-sum">
+              <span class="equipo-faq-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="equipo-faq-q">{f.q}</span>
+              <span class="equipo-faq-plus" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="equipo-faq-a" set:html={f.answerHtml}></div>
+          </details>
         ))}
       </div>
     </div>
   </section>
 
-  <CTA
-    title="¿Quieres conocer al equipo personalmente?"
-    subtitle="Agenda una valoración inicial sin compromiso y descubre cómo trabajamos. Conocerás a la doctora que estaría a cargo de tu plan."
-  />
+  <!-- ============================ PULL-QUOTE ============================ -->
+  <section class="svc-pullquote">
+    <div class="container-x">
+      <blockquote class="equipo-quote">
+        <span class="equipo-quote-mark" aria-hidden="true">&ldquo;</span>
+        <p class="equipo-quote-text">
+          La medicina estética seria no se trata del <em>producto que usas</em>,
+          se trata de <strong>quién lo aplica</strong>. El equipo es 80% del
+          resultado — y eso es lo que nunca está en oferta.
+        </p>
+        <cite class="equipo-quote-cite">Filosofía CLIBEL · Equipo</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ============================ CTA AGENDA ============================ -->
+  <section class="section equipo-cta">
+    <div class="container-x">
+      <div class="equipo-cta-card">
+        <span class="equipo-cta-kicker">Agenda con el equipo correcto</span>
+        <h2 class="equipo-cta-title">
+          La coordinadora te orienta<br/>a la <em>especialista</em> que necesitas.
+        </h2>
+        <p class="equipo-cta-text">
+          La primera valoración orientativa es <strong>sin costo</strong>.
+          La Lic. Isabella Acosta agenda tu cita con el especialista
+          correspondiente según tu motivo de consulta. Sin presión comercial.
+        </p>
+        <div class="equipo-cta-actions">
+          <a href="/contacto" class="btn btn-primary">Solicitar valoración</a>
+          <a href={wa} target="_blank" rel="noopener" class="btn btn-outline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+            WhatsApp clínico
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ RELATED CATEGORIES ============================ -->
+  <RelatedCategories current="facial" variant="cream" />
 </BaseLayout>
+
+<style>
+  /* ============= HERO 2-col (homologado) ============= */
+  .cat-hero {
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, var(--color-brand-100) 100%);
+    isolation: isolate;
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(201,169,97,0.18), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.16), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .cat-hero-blob { position: absolute; border-radius: 999px; filter: blur(110px); pointer-events: none; z-index: 0; opacity: 0.5; }
+  .cat-hero-blob-1 { width: 36rem; height: 36rem; top: -10rem; right: -10rem; background: var(--color-brand-300); }
+  .cat-hero-blob-2 { width: 32rem; height: 32rem; bottom: -12rem; left: -8rem; background: var(--color-mauve-300); }
+  .cat-hero-grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(31,20,24,0.05) 1px, transparent 1px);
+    background-size: 3px 3px;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .cat-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem;
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    width: 100% !important;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .cat-hero-grid { grid-template-columns: 1fr 1fr !important; gap: clamp(2rem, 4vw, 4.5rem); }
+  }
+  .cat-hero-col {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .cat-hero-col--left { container-type: inline-size; container-name: heroleft; }
+  .cat-hero-headline {
+    font-family: var(--font-display);
+    font-weight: 450;
+    letter-spacing: -0.022em;
+    line-height: 1.02;
+    color: var(--color-ink-900);
+    font-size: clamp(2.5rem, 10.5cqi, 6.5rem);
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    width: 100%;
+    margin: 0.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05em;
+  }
+  .cat-hero-headline-line { display: block; width: 100%; }
+  .cat-hero-headline em {
+    font-style: italic;
+    color: var(--color-mauve-500);
+    font-weight: 400;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+  }
+  @media (max-width: 899px) {
+    .cat-hero-headline { font-size: clamp(2.5rem, 9.5vw, 4.5rem); }
+  }
+  .cat-hero-lede {
+    font-size: clamp(1rem, 1.1vw, 1.18rem);
+    line-height: 1.65;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .cat-hero-lede strong { color: var(--color-ink-900); font-weight: 600; }
+  .cat-hero-trust {
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(201, 169, 97, 0.25);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem;
+  }
+  .cat-hero-trust-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .cat-hero-trust-list {
+    display: inline-flex; flex-wrap: wrap; gap: 0.55rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--color-ink-700);
+  }
+  .cat-hero-trust-list span[aria-hidden] { color: var(--color-brand-400); }
+
+  .cat-hero-col--right { gap: 1.25rem; }
+  @media (min-width: 900px) {
+    .cat-hero-col--right {
+      padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+      border-left: 1px solid rgba(201, 169, 97, 0.25);
+    }
+  }
+  .cat-hero-kicker {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--color-brand-400);
+    align-self: flex-start;
+  }
+  .cat-hero-paragraph {
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.75;
+    color: var(--color-ink-700);
+    margin: 0;
+  }
+  .cat-hero-paragraph strong { color: var(--color-ink-900); font-weight: 600; }
+
+  /* ============= STAT STRIP ============= */
+  .svc-stat-strip {
+    background: var(--color-brand-50);
+    padding-block: clamp(2rem, 3.5vw, 3rem);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .equipo-stats {
+    margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  @media (min-width: 720px) { .equipo-stats { grid-template-columns: repeat(4, 1fr); } }
+  .equipo-stats > div {
+    padding: 1rem 1.25rem;
+    border-right: 1px solid rgba(201, 169, 97, 0.22);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .equipo-stats > div:first-child { padding-left: 0; }
+  @media (min-width: 720px) {
+    .equipo-stats > div { border-bottom: 0; }
+    .equipo-stats > div:last-child { border-right: 0; }
+  }
+  @media (max-width: 719px) {
+    .equipo-stats > div:nth-child(2n) { border-right: 0; }
+    .equipo-stats > div:nth-last-child(-n+2) { border-bottom: 0; }
+  }
+  .equipo-stats dt {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    margin-bottom: 0.4rem;
+  }
+  .equipo-stats dd {
+    margin: 0;
+    font-family: var(--font-display);
+    line-height: 1;
+    color: var(--color-ink-900);
+    letter-spacing: -0.02em;
+  }
+  .equipo-stats dd em {
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 3.5vw, 3.25rem);
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-700));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .equipo-stats .equipo-stats-text {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(0.9rem, 1vw, 1.05rem);
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+  }
+
+  /* ============= EQUIPO · CARDS EDITORIALES ============= */
+  .team-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 3vw, 2.75rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 720px) { .team-list { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1280px) { .team-list { grid-template-columns: repeat(3, 1fr); } }
+
+  .team-card {
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.35s cubic-bezier(.2,.8,.2,1) !important;
+    box-shadow: 0 1px 2px rgba(31, 20, 24, 0.03), 0 12px 32px -22px rgba(31, 20, 24, 0.12);
+  }
+  .team-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-mauve-500);
+    box-shadow: 0 1px 2px rgba(31, 20, 24, 0.04), 0 28px 56px -22px rgba(31, 20, 24, 0.22);
+  }
+
+  .team-card-visual {
+    aspect-ratio: 4 / 5;
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    padding: 1.25rem;
+  }
+  .team-card-num {
+    position: absolute;
+    top: 1rem;
+    left: 1.25rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.05em;
+  }
+  .team-card-initials {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(4rem, 6vw, 5.5rem);
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .team-card-years {
+    position: absolute;
+    bottom: 1rem;
+    right: 1.25rem;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+  }
+
+  .team-card-body {
+    padding: 1.5rem 1.4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+  }
+  .team-card-head { display: flex; flex-direction: column; gap: 0.35rem; }
+  .team-card-role {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .team-card-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.35rem, 1.65vw, 1.55rem);
+    line-height: 1.15;
+    color: var(--color-ink-900);
+    margin: 0;
+    letter-spacing: -0.018em;
+  }
+  .team-card-specialty {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--color-mauve-500);
+    margin-top: 0.2rem;
+    letter-spacing: -0.005em;
+  }
+
+  .team-card-bio {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--color-ink-700);
+  }
+
+  .team-card-treatments {
+    padding-top: 0.95rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.32);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .team-card-treatments-label {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .team-card-treatments ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .team-card-treatments li a {
+    display: inline-block;
+    padding: 0.32rem 0.75rem;
+    background: var(--color-brand-50);
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--color-mauve-700);
+    text-decoration: none;
+    transition: all 0.25s ease !important;
+  }
+  .team-card-treatments li a:hover {
+    background: var(--color-mauve-500);
+    color: white;
+    border-color: var(--color-mauve-500);
+  }
+
+  .team-card-certs {
+    margin-top: auto;
+    padding-top: 0.95rem;
+    border-top: 1px dashed rgba(201, 169, 97, 0.32);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .team-card-certs-label {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .team-card-certs-list { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .team-card-cert {
+    font-family: var(--font-sans);
+    font-size: 0.66rem;
+    background: var(--color-brand-100);
+    color: var(--color-mauve-700);
+    padding: 0.22rem 0.6rem;
+    border-radius: 999px;
+  }
+
+  /* ============= FILOSOFÍA DEL EQUIPO (dark) ============= */
+  .equipo-philosophy {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .equipo-philosophy-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(201,169,97,0.08), transparent 60%),
+      radial-gradient(50% 50% at 0% 100%, rgba(139,90,107,0.1), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .principles-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 3vw, 2.75rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 900px) { .principles-list { grid-template-columns: repeat(2, 1fr); gap: 0; } }
+  .principle {
+    display: grid;
+    grid-template-columns: clamp(60px, 10vw, 100px) 1fr;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    padding: clamp(1.75rem, 2.5vw, 2.25rem);
+    border-top: 1px dashed rgba(201, 169, 97, 0.22);
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .principle:nth-child(odd) { border-right: 1px dashed rgba(201, 169, 97, 0.22); }
+    .principle:nth-child(1), .principle:nth-child(2) { border-top: 0; }
+  }
+  @media (max-width: 899px) {
+    .principle:first-child { border-top: 0; padding-top: 0; }
+  }
+  .principle-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.75rem, 5vw, 4rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-400), var(--color-mauve-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.015em;
+  }
+  .principle-body { display: flex; flex-direction: column; gap: 0.55rem; max-width: 60ch; }
+  .principle-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.25rem, 1.6vw, 1.55rem);
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .principle-text {
+    font-size: clamp(0.92rem, 1vw, 1.02rem);
+    line-height: 1.7;
+    color: rgba(242, 235, 223, 0.78);
+    margin: 0;
+  }
+
+  /* ============= QUIÉN APLICA QUÉ ============= */
+  .apply-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 3vw, 2.75rem) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+  @media (min-width: 820px) { .apply-list { grid-template-columns: 1fr 1fr; } }
+  .apply-item {
+    background: var(--color-brand-50);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1rem;
+    padding: clamp(1.5rem, 2vw, 1.85rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all 0.3s ease !important;
+  }
+  .apply-item:hover {
+    background: white;
+    border-color: var(--color-mauve-500);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -18px rgba(31, 20, 24, 0.18);
+  }
+  .apply-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+  .apply-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.25rem, 3.5vw, 2.85rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.015em;
+  }
+  .apply-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .apply-cat {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.3rem, 1.6vw, 1.5rem);
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+  }
+  .apply-cat a {
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    background-repeat: no-repeat;
+    background-size: 0 2px;
+    background-position: 0 100%;
+    transition: background-size 0.4s ease !important;
+    padding-bottom: 2px;
+  }
+  .apply-cat a:hover { background-size: 100% 2px; }
+  .apply-body { display: flex; flex-direction: column; gap: 0.85rem; }
+  .apply-applied { display: flex; flex-direction: column; gap: 0.3rem; }
+  .apply-applied-label {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .apply-applied-value {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(0.95rem, 1.05vw, 1.1rem);
+    color: var(--color-ink-900);
+    letter-spacing: -0.005em;
+  }
+  .apply-detail {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--color-ink-700);
+  }
+  .apply-members { display: flex; flex-direction: column; gap: 0.4rem; }
+  .apply-members-label {
+    font-family: var(--font-sans);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+  .apply-members ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.85rem;
+    color: var(--color-ink-700);
+  }
+  .apply-members ul li::before {
+    content: '·';
+    color: var(--color-brand-500);
+    margin-right: 0.5rem;
+    font-weight: 700;
+  }
+  .apply-link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding-top: 0.85rem;
+    margin-top: auto;
+    border-top: 1px dashed rgba(201, 169, 97, 0.32);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    text-decoration: none;
+    transition: gap 0.25s ease, color 0.25s ease !important;
+  }
+  .apply-link:hover { color: var(--color-mauve-700); gap: 0.7rem; }
+  .apply-link svg { transition: transform 0.25s ease !important; }
+  .apply-link:hover svg { transform: translateX(3px); }
+
+  /* ============= COMPARATIVA TABLA ============= */
+  .equipo-compare-wrap { margin-top: clamp(1.5rem, 2.5vw, 2.25rem); }
+  .equipo-compare-table {
+    display: none;
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  @media (min-width: 820px) {
+    .equipo-compare-table { display: table; }
+    .equipo-compare-cards { display: none; }
+  }
+  .equipo-compare-table thead {
+    background: var(--color-ink-900);
+    color: var(--color-brand-100);
+  }
+  .equipo-compare-table thead th {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-400);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    vertical-align: middle;
+  }
+  .equipo-compare-table thead th:last-child { border-right: 0; }
+  .equipo-compare-table thead .equipo-compare-aspect {
+    color: var(--color-brand-200);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .equipo-compare-table thead .equipo-compare-clibel {
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-700));
+    color: white;
+    letter-spacing: 0.24em;
+  }
+  .equipo-compare-table tbody tr {
+    border-top: 1px solid rgba(201, 169, 97, 0.22);
+    transition: background 0.25s ease !important;
+  }
+  .equipo-compare-table tbody tr:hover { background: var(--color-brand-50); }
+  .equipo-compare-table tbody th,
+  .equipo-compare-table tbody td {
+    padding: 1.1rem 1.2rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--color-ink-700);
+    vertical-align: top;
+    border-right: 1px dashed rgba(201, 169, 97, 0.22);
+  }
+  .equipo-compare-table tbody td:last-child,
+  .equipo-compare-table tbody th:last-child { border-right: 0; }
+  .equipo-compare-table tbody .equipo-compare-aspect {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    background: var(--color-brand-50);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.97rem;
+    color: var(--color-ink-900);
+    letter-spacing: -0.01em;
+    width: 24%;
+  }
+  .equipo-compare-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    opacity: 0.85;
+    min-width: 1.5rem;
+    line-height: 1.4;
+  }
+  .equipo-compare-table tbody .equipo-compare-clibel {
+    background: linear-gradient(180deg, rgba(201, 169, 97, 0.08), rgba(139, 90, 107, 0.05));
+    border-left: 2px solid var(--color-brand-400);
+    color: var(--color-ink-900);
+    font-weight: 500;
+  }
+  .equipo-compare-cards {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: 1fr; gap: 1rem;
+  }
+  @media (min-width: 820px) { .equipo-compare-cards { display: none; } }
+  .equipo-compare-card {
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.32);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  .equipo-compare-card header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--color-brand-50);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .equipo-compare-card-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: var(--color-brand-500);
+    opacity: 0.9;
+  }
+  .equipo-compare-card header h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--color-ink-900);
+    margin: 0;
+    line-height: 1.25;
+  }
+  .equipo-compare-card dl { margin: 0; padding: 0; }
+  .equipo-compare-card dl > div {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 0.85rem;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px dashed rgba(201, 169, 97, 0.22);
+  }
+  .equipo-compare-card dl > div:last-child { border-bottom: 0; }
+  .equipo-compare-card dl dt {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .equipo-compare-card dl dd {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--color-ink-700);
+  }
+  .equipo-compare-card-clibel {
+    background: linear-gradient(90deg, rgba(201, 169, 97, 0.08), rgba(139, 90, 107, 0.04));
+    border-left: 2px solid var(--color-brand-400);
+  }
+  .equipo-compare-card-clibel dt { color: var(--color-brand-500) !important; }
+  .equipo-compare-card-clibel dd { color: var(--color-ink-900) !important; font-weight: 500; }
+
+  /* ============= FAQs ============= */
+  .equipo-faq-list {
+    margin-top: clamp(2rem, 3vw, 2.75rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: 920px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .equipo-faq {
+    background: white;
+    border: 1px solid rgba(201, 169, 97, 0.28);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: border-color 0.3s ease, background 0.3s ease !important;
+  }
+  .equipo-faq[open] { border-color: var(--color-mauve-500); }
+  .equipo-faq-sum {
+    list-style: none;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+  }
+  .equipo-faq-sum::-webkit-details-marker { display: none; }
+  .equipo-faq-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--color-brand-500);
+    letter-spacing: 0.04em;
+    opacity: 0.8;
+    min-width: 24px;
+  }
+  .equipo-faq-q {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1rem, 1.1vw, 1.12rem);
+    color: var(--color-ink-900);
+    line-height: 1.3;
+  }
+  .equipo-faq-plus {
+    width: 32px; height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--color-brand-100);
+    color: var(--color-mauve-500);
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1), background 0.3s ease, color 0.3s ease !important;
+  }
+  .equipo-faq[open] .equipo-faq-plus {
+    transform: rotate(45deg);
+    background: var(--color-mauve-500);
+    color: white;
+  }
+  .equipo-faq-a {
+    padding: 0 1.25rem 1.25rem clamp(3.5rem, 6vw, 4rem);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--color-ink-700);
+  }
+  .equipo-faq-a a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    font-weight: 500;
+  }
+  .equipo-faq-a a:hover { color: var(--color-mauve-700); }
+
+  /* ============= PULL-QUOTE ============= */
+  .svc-pullquote {
+    background: white;
+    padding-block: clamp(3rem, 5vw, 5rem);
+    border-block: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .equipo-quote {
+    position: relative;
+    margin: 0 auto;
+    max-width: 880px;
+    padding: clamp(1.5rem, 2.5vw, 2.5rem) clamp(1.5rem, 3vw, 3rem);
+    background: linear-gradient(180deg, var(--color-brand-50) 0%, transparent 100%);
+    border-left: 3px solid var(--color-brand-400);
+    border-radius: 0 1rem 1rem 0;
+  }
+  .equipo-quote-mark {
+    position: absolute;
+    top: -0.45em;
+    left: 0.85rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(4rem, 6vw, 6.5rem);
+    line-height: 1;
+    color: var(--color-brand-400);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .equipo-quote-text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.35rem, 2.2vw, 2rem);
+    line-height: 1.35;
+    color: var(--color-ink-900);
+    letter-spacing: -0.015em;
+    max-width: 56ch;
+  }
+  .equipo-quote-text em { color: var(--color-mauve-500); font-style: italic; }
+  .equipo-quote-text strong { font-style: normal; font-weight: 600; color: var(--color-mauve-700); }
+  .equipo-quote-cite {
+    display: block;
+    margin-top: 1.1rem;
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+
+  /* ============= CTA AGENDA ============= */
+  .equipo-cta { background: var(--color-brand-50); }
+  .equipo-cta-card {
+    background: linear-gradient(180deg, white 0%, var(--color-brand-50) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    border-radius: 1.25rem;
+    padding: clamp(2rem, 4vw, 3.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.1rem;
+    max-width: 920px;
+    margin: 0 auto;
+    box-shadow: 0 1px 2px rgba(31, 20, 24, 0.03), 0 28px 60px -32px rgba(31, 20, 24, 0.2);
+  }
+  .equipo-cta-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .equipo-cta-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.85rem, 3vw, 2.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+    color: var(--color-ink-900);
+    margin: 0;
+  }
+  .equipo-cta-title em { font-style: italic; color: var(--color-mauve-500); font-weight: 400; }
+  .equipo-cta-text {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--color-ink-700);
+    max-width: 56ch;
+  }
+  .equipo-cta-text strong { color: var(--color-ink-900); font-weight: 600; }
+  .equipo-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+</style>

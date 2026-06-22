@@ -44,7 +44,6 @@ export const SOCIAL = {
 export const NAV: Array<{ label: string; href: string }> = [
   { label: 'Inicio', href: '/' },
   { label: 'Servicios', href: '/servicios' },
-  { label: 'Tecnología', href: '/tecnologia' },
   { label: 'Equipo', href: '/equipo' },
   { label: 'Nosotros', href: '/nosotros' },
   { label: 'Blog', href: '/blog' },
@@ -99,9 +98,9 @@ export const CATEGORIES = {
     badgeCount: 'Todas las zonas',
     items: [
       { label: 'Depilación Láser Profesional', href: '/servicios/depilacion-laser' },
-      { label: 'Rostro completo', href: '/servicios/depilacion-laser' },
-      { label: 'Axilas e ingle', href: '/servicios/depilacion-laser' },
-      { label: 'Piernas completas', href: '/servicios/depilacion-laser' },
+      { label: 'Rostro completo', href: '/servicios/depilacion-laser-rostro-completo' },
+      { label: 'Axilas e ingle', href: '/servicios/depilacion-laser-axilas-ingle' },
+      { label: 'Piernas completas', href: '/servicios/depilacion-laser-piernas-completas' },
       { label: 'Espalda y pecho', href: '/servicios/depilacion-laser' },
       { label: 'Brasileño completo', href: '/servicios/depilacion-laser' },
     ],
@@ -135,9 +134,9 @@ export const CATEGORIES = {
     badgeCount: '3+ protocolos',
     items: [
       { label: 'Tratamiento Capilar Avanzado', href: '/servicios/tratamiento-capilar' },
-      { label: 'PRP capilar', href: '/servicios/tratamiento-capilar' },
-      { label: 'Mesoterapia capilar', href: '/servicios/tratamiento-capilar' },
-      { label: 'Tricología clínica', href: '/servicios/tratamiento-capilar' },
+      { label: 'PRP capilar', href: '/servicios/prp-capilar' },
+      { label: 'Mesoterapia capilar', href: '/servicios/mesoterapia-capilar' },
+      { label: 'Tricología clínica', href: '/servicios/tricologia-clinica' },
     ],
   },
 } as const;

@@ -1,40 +1,290 @@
 ---
 title: "Hilos Tensores"
-description: "Tratamiento de lifting no quirúrgico que tensa, redefine y estimula colágeno para un rostro más firme y joven."
+description: "Lifting facial no quirúrgico mediante hilos absorbibles de PDO, PLLA o PCL que tensan tejidos descolgados y estimulan colágeno endógeno — alternativa real al lifting quirúrgico para descolgamiento facial leve a moderado, con anestesia local y recuperación rápida."
 category: "medicina-estetica"
-duration: "60-90 min"
-sessions: "1 sesión, refuerzo a los 12-18 meses"
+duration: "60–120 min según número de hilos"
+sessions: "1 sesión inicial · refuerzo 12–18 meses según tipo de hilo"
 icon: "✨"
 order: 4
-featured: false
+featured: true
+seoTitle: "Hilos Tensores en CDMX | CLIBEL"
+seoDescription: "Hilos tensores en CLIBEL CDMX: lifting facial no quirúrgico con hilos PDO, PLLA y PCL absorbibles. Médico inyector con certificación específica, protocolo de seguridad documentado y filosofía conservadora — la alternativa real al lifting quirúrgico cuando el descolgamiento es leve a moderado."
+heroTagline: "Lifting no quirúrgico CLIBEL"
+heroLede: "Los hilos tensores son el procedimiento de medicina estética más cercano a un lifting quirúrgico — pero sin cirugía, sin anestesia general y sin tiempo de recuperación extendido. CLIBEL los aplica con criterio anatómico estricto para descolgamiento leve a moderado, sabiendo que NO son sustituto del lifting cuando el caso es severo. Honestidad clínica antes que sobrepromesa."
 benefits:
-  - "Efecto lifting inmediato"
-  - "Redefine óvalo facial, cuello y pómulos"
-  - "Estimula la producción de colágeno"
-  - "Resultados naturales y progresivos"
-  - "Sin cirugía ni anestesia general"
+  - "Tensa tejidos descolgados de óvalo facial, cuello y mejillas medias"
+  - "Estimula colágeno endógeno por presencia del hilo en dermis (3–18 meses)"
+  - "Resultado tensor visible inmediato + maduración colágena progresiva"
+  - "Sin cirugía mayor, sin anestesia general, recuperación 5–7 días"
+  - "Hilos completamente absorbibles (PDO 6–8 m, PLLA 18–24 m, PCL 24–36 m)"
+  - "Reposicionamiento de cejas, comisuras o mandíbula sin transformar facciones"
 indications:
-  - "Flacidez facial leve a moderada"
-  - "Pérdida de definición del óvalo"
-  - "Descenso de tejidos en mejillas o cuello"
+  - "Descolgamiento facial leve a moderado (NO severo)"
+  - "Pérdida de definición del óvalo facial 35–55 años"
+  - "Cejas caídas o asimétricas con descolgamiento medial"
+  - "Comisuras orales descendentes"
+  - "Cuello con descolgamiento incipiente sin papada significativa"
+  - "Pacientes que rechazan cirugía pero buscan efecto tensor visible"
 contraindications:
+  - "Descolgamiento facial severo (lifting quirúrgico es la indicación)"
   - "Embarazo y lactancia"
-  - "Enfermedades autoinmunes en brote"
-  - "Infecciones cutáneas activas"
-  - "Trastornos de la coagulación"
-publishedAt: 2026-01-26
+  - "Enfermedades autoinmunes activas, infecciones cutáneas o sistémicas"
+  - "Trastornos de coagulación severos sin control"
+  - "Antecedente de queloides o cicatrización anómala"
+  - "Cirugía facial reciente (esperar 6 meses post-operatorio)"
+  - "Pacientes con expectativa de transformación radical"
+  - "Cuello con flacidez severa y exceso cutáneo cuantificable"
+protocolSteps:
+  - n: "01"
+    title: "Valoración facial y test de tracción manual"
+    text: "El médico inyector de CLIBEL evalúa grado de descolgamiento con tracción manual estandarizada, mapea vectores de elevación deseados y verifica que el caso sea candidato. Si tu descolgamiento es severo, te derivamos a cirugía plástica honestamente — los hilos NO sustituyen lifting quirúrgico en casos avanzados."
+  - n: "02"
+    title: "Fotografía clínica multi-ángulo basal"
+    text: "Foto basal frontal + perfil bilateral + oblicuos con iluminación clínica estandarizada. CLIBEL documenta basal para validar resultado a los 14 días y comparar maduración a los 3 y 6 meses. Evidencia objetiva, no percepción."
+  - n: "03"
+    title: "Selección del tipo de hilo y diseño vectorial"
+    text: "PDO (polidioxanona, 6–8 m duración), PLLA (poli-L-láctico, 18–24 m), PCL (policaprolactona, 24–36 m) — cada uno con perfil de tensión y bioestimulación distinto. CLIBEL elige según objetivo: PDO para refresh inicial, PLLA/PCL para resultado prolongado. Diseño de vectores de tracción anatómicos."
+  - n: "04"
+    title: "Anestesia local + asepsia rigurosa"
+    text: "Anestesia local infiltrada en puntos de entrada y trayectos de hilo (la sesión es completamente tolerable). Asepsia con clorhexidina, campo estéril, guantes estériles. Ambiente clínico quirúrgico menor, no cosmético."
+  - n: "05"
+    title: "Inserción de hilos con cánula o aguja según tipo"
+    text: "Hilos cog/barbed con cánulas o agujas guías según fabricante (Aptos, Mint, Silhouette Soft, NovaThreads). Inserción a profundidad subdérmica controlada por experiencia del médico. Cada hilo requiere ajuste manual de tensión hasta lograr vector deseado."
+  - n: "06"
+    title: "Verificación de simetría y ajuste"
+    text: "Verificación bilateral con paciente sentada y de pie. Ajuste manual de hilos cog si la tensión no es uniforme. CLIBEL no termina la sesión sin simetría verificable — ajustamos en cabina, no en cita posterior."
+  - n: "07"
+    title: "Sutura de puntos de entrada y protocolo post"
+    text: "Sutura mínima si requiere o cierre con cinta quirúrgica. Aplicación de compresas frías, antibiótico profiláctico oral 3–5 días según protocolo, indicaciones por escrito. Cita de revisión a 7–10 días para evaluar puntos de entrada."
+timeline:
+  - when: "Día 0 (inmediato)"
+    label: "Tensión visible · edema esperado"
+    text: "Efecto tensor inmediato visible. Inflamación facial moderada, equimosis posibles, sensación de tirantez. Aspecto inicial puede ser ligeramente exagerado por edema — se asienta en 5–7 días."
+  - when: "Día 07–10"
+    label: "Edema cedió · resultado real"
+    text: "Inflamación resuelta. Resultado tensor real visible. CLIBEL realiza revisión con foto comparativa. Si hay irregularidad menor por hilo (dimpling, asimetría), se evalúa manejo (masaje, ajuste, eventual retirada)."
+  - when: "Mes 03"
+    label: "Maduración colágena inicial"
+    text: "El estímulo colágeno alrededor del hilo madura. Tejido más firme y reposicionado. Esta es la fase donde el efecto bioestimulador se suma al efecto mecánico inicial."
+  - when: "Mes 06–12"
+    label: "Estabilidad consolidada"
+    text: "Resultado pleno establecido. PDO inicia reabsorción ~6 m (efecto tensor disminuye, colágeno permanece). PLLA/PCL mantienen tensión activa hasta 18–36 m. CLIBEL define refuerzo individualizado."
+preCare:
+  - "Suspender anticoagulantes (aspirina, ibuprofeno, naproxeno, omega 3) 7 días antes con autorización médica"
+  - "Sin alcohol 72 h antes (aumenta inflamación y equimosis)"
+  - "Sin tratamientos faciales agresivos 14 días previos (peelings medios, microneedling profundo)"
+  - "Sin exposición solar intensa 7 días previos"
+  - "Higiene facial impecable día previo y mañana de la sesión"
+  - "Avisar a CLIBEL de antecedentes autoinmunes, queloides, alergias a anestésicos locales, infecciones recientes"
+  - "Asistir con ropa cómoda, sin maquillaje, sin perfume en zona facial"
+postCare:
+  - "Antibiótico profiláctico oral 3–5 días (CLIBEL prescribe en cabina)"
+  - "Compresas frías intermitentes las primeras 48 h (frío indirecto, no hielo directo)"
+  - "Dormir boca arriba con cabeza elevada 7–10 noches"
+  - "Sin masajes faciales 30 días post-procedimiento"
+  - "Sin tratamientos estéticos faciales (peelings, RF, microneedling) 30 días"
+  - "Dieta blanda y sin abrir mucho la boca los 5 días iniciales"
+  - "Sin ejercicio intenso ni gestos faciales exagerados 14 días"
+  - "SPF 50+ obligatorio diario durante 30 días post-procedimiento"
+  - "Sin sauna, vapor, jacuzzi 21 días"
+  - "Reportar a CLIBEL inmediatamente: dolor desproporcionado, fiebre, eritema progresivo, secreción en puntos de entrada, asimetría súbita"
+faqs:
+  - q: "¿Es sustituto del lifting quirúrgico?"
+    a: "No, y esto es importante: los hilos NO son sustituto del lifting cuando el descolgamiento es severo. Son indicación para descolgamiento leve a moderado. Si tu caso requiere lifting quirúrgico, CLIBEL te lo dice honestamente y deriva con cirujano plástico — aplicar hilos donde corresponde cirugía da resultado decepcionante y exposición a riesgo innecesario."
+  - q: "¿Cuánto duran realmente los hilos?"
+    a: "Depende del material. <strong>PDO</strong> (polidioxanona): 6–8 meses efecto tensor + 12 meses de colágeno estimulado. <strong>PLLA</strong> (poli-L-láctico): 18–24 meses efecto completo. <strong>PCL</strong> (policaprolactona): 24–36 meses, los de mayor duración. CLIBEL te plantea expectativa realista por tipo de hilo seleccionado."
+  - q: "¿Duele el procedimiento?"
+    a: "La sesión es tolerable con anestesia local infiltrada. Hay molestia durante inserción (sensación de presión, no dolor agudo). El post-procedimiento puede ser incómodo 3–5 días (tirantez, sensibilidad al masticar, dolor leve). Analgésico oral indicado si requiere — CLIBEL prescribe."
+  - q: "¿Qué pasa si un hilo se mueve o se ve raro?"
+    a: "Las complicaciones más frecuentes son: dimpling (hoyuelo) en punto de inserción (5–10% casos, se resuelve con masaje o tiempo), asimetría leve (corregible en revisión 7–10 días), hilo palpable o visible en piel delgada (manejo con masaje o retirada quirúrgica menor si requiere). CLIBEL tiene protocolo escrito de manejo."
+  - q: "¿Puedo combinar hilos con otros tratamientos?"
+    a: "Sí, y CLIBEL frecuentemente lo recomienda. Combinaciones comunes: hilos + <a href='/servicios/acido-hialuronico'>ácido hialurónico</a> en zonas que pierden volumen + <a href='/servicios/toxina-botulinica'>toxina botulínica</a> para línea dinámica. Plan integral con espaciado clínico: AH 1–2 semanas antes de hilos, toxina 2–4 semanas antes o después. No el mismo día."
+  - q: "¿Cuándo NO debería aplicarme hilos?"
+    a: "Si tu descolgamiento es severo (necesitas lifting). Si tienes antecedentes de queloides, autoinmunes activos, infecciones, anticoagulación crónica no controlada o embarazo. Si tu expectativa es transformación radical. Si tienes cirugía facial reciente <6 meses. CLIBEL evalúa todo esto en valoración."
+  - q: "¿Cómo elijo qué hilos me convienen?"
+    a: "PDO es la entrada lógica: menos costo, refresh inicial, duración moderada — ideal para primera experiencia o pacientes 35–45 años con descolgamiento leve. PLLA y PCL son para pacientes 45–60 que buscan resultado prolongado y aceptan inversión mayor. CLIBEL te plantea el costo-beneficio honesto en valoración."
+modalities:
+  - name: "Hilos PDO (Polidioxanona)"
+    kicker: "Duración 6–8 meses · Refresh inicial"
+    profile: "Pacientes 35–45 con primer descolgamiento"
+    text: "Material absorbible más usado (sutura quirúrgica reciclada). Efecto tensor inmediato + estímulo colágeno por 12 meses. CLIBEL los emplea como entrada al procedimiento o para refresh entre sesiones de hilos de mayor duración."
+    intensity: "Refresh moderado"
+    downtime: "5–7 días"
+  - name: "Hilos PLLA (Poli-L-Láctico)"
+    kicker: "Duración 18–24 meses · Bioestimulación intensa"
+    profile: "Pacientes 40–55 con descolgamiento moderado"
+    text: "Material con alta capacidad bioestimuladora de colágeno (mismo principio que Sculptra). Efecto tensor + bioestimulación más prolongada. CLIBEL los emplea cuando se busca resultado mayor a 18 meses con un solo procedimiento."
+    intensity: "Bioestimulación prolongada"
+    downtime: "7–10 días"
+  - name: "Hilos PCL (Policaprolactona)"
+    kicker: "Duración 24–36 meses · Premium"
+    profile: "Pacientes 45–60 que buscan máxima duración"
+    text: "Material de mayor duración disponible. Combina tensión mecánica con bioestimulación intensiva. CLIBEL los recomienda como opción premium para pacientes que aceptan inversión mayor a cambio de no requerir refuerzo durante 2–3 años."
+    intensity: "Premium · larga duración"
+    downtime: "7–14 días"
+  - name: "Hilos lisos (mono) bioestimulantes"
+    kicker: "Refresh · sin efecto mecánico"
+    profile: "Calidad cutánea + colágeno · sin tensión"
+    text: "Hilos sin cog que NO crean tensión mecánica — solo estimulan colágeno endógeno por presencia. CLIBEL los emplea para mejorar calidad cutánea en zonas no candidatas a tensión (frente, cuello fino), como alternativa al microneedling."
+    intensity: "Bioestimulación pura"
+    downtime: "1–3 días"
+clinicalCases:
+  - name: "Descolgamiento óvalo facial leve · 35–45 años"
+    profile: "Pacientes con primera pérdida de definición mandibular"
+    duration: "1 sesión · revisión 14 días · refuerzo 6–8 m"
+    plan:
+      - "Hilos PDO en óvalo facial bilateral (8–12 hilos por lado)"
+      - "Vector ascendente hacia región preauricular"
+      - "Combinación opcional con AH en mejillas si hay pérdida volumen"
+      - "Revisión 7 días + 14 días"
+    target: "Redefinir óvalo facial con tensión mecánica + bioestimulación. Resultado conservador que refresca sin transformar facciones."
+    accent: "gold"
+  - name: "Antienvejecimiento moderado · 45–55 años"
+    profile: "Mujeres con descolgamiento facial moderado generalizado"
+    duration: "1 sesión · revisión 14 días · refuerzo 18 m"
+    plan:
+      - "Hilos PLLA en óvalo + mejillas medias + cejas"
+      - "16–24 hilos totales según anatomía"
+      - "Combinación con AH y toxina con espaciado clínico"
+      - "Plan integral 'antienvejecimiento total'"
+    target: "Reposicionar tejidos descolgados con resultado prolongado (18 meses). Resultado debe verse como 'estoy descansada', no como 'me operé'."
+    accent: "mauve"
+  - name: "Cejas y mirada · reposicionamiento ascendente"
+    profile: "Pacientes con cejas caídas o asimetría medial"
+    duration: "1 sesión · revisión 14 días · refuerzo 12 m"
+    plan:
+      - "Hilos PDO o PLLA específicos para ceja (4–6 hilos lado)"
+      - "Vector cefálico-lateral en cola de ceja"
+      - "Combinación con toxina (efecto sinérgico de apertura de mirada)"
+      - "Revisión 14 días para ajuste si requiere"
+    target: "Elevación medial-lateral de cola de ceja para apertura de mirada. Cambio sutil que rejuvenece expresión sin transformar."
+    accent: "rose"
+  - name: "Cuello incipiente · descolgamiento leve"
+    profile: "Pacientes 40–55 con cuello con flacidez inicial"
+    duration: "1 sesión · revisión 14 días · refuerzo 12–18 m"
+    plan:
+      - "Hilos PDO o PLLA en cuerdas plamtisma anteriores"
+      - "8–12 hilos según extensión"
+      - "Combinación con toxina para platisma si requiere"
+      - "NO indicado para cuello con flacidez severa"
+    target: "Definir contorno cervical en casos de descolgamiento leve. Si la flacidez es severa o hay 'cuello de pavo' marcado, derivamos a cirugía plástica."
+    accent: "gold"
+myths:
+  - myth: "Los hilos te hacen lifting completo sin cirugía."
+    reality: "Falso. Los hilos NO son sustituto del lifting quirúrgico cuando el descolgamiento es severo. Son indicación específica para descolgamiento leve a moderado. CLIBEL deriva a cirugía plástica cuando el caso lo requiere — no aplicamos hilos donde corresponde lifting."
+  - myth: "Una vez puestos, se quedan para siempre."
+    reality: "Falso. Todos los hilos que usa CLIBEL son completamente absorbibles. PDO 6–8 m, PLLA 18–24 m, PCL 24–36 m. Lo que permanece es el estímulo colágeno que el hilo activó al estar presente — eso se mantiene parcialmente más allá de la reabsorción."
+  - myth: "Es procedimiento sin riesgo."
+    reality: "Falso. Es procedimiento invasivo con riesgos reales: infección, asimetría, dimpling, hilo visible, granuloma, asimetría facial persistente. CLIBEL los aplica con protocolo estéril, médico inyector certificado y manejo escrito de complicaciones — pero el riesgo no es cero."
+  - myth: "Los hilos pueden migrar a otros lugares del cuerpo."
+    reality: "Falso. Los hilos modernos (cog/barbed) tienen anclajes que los fijan en el tejido subdérmico. Pueden mostrar movimientos menores en primeras 24 h si el paciente hace gestos exagerados, pero migración a distancia es práticamente imposible con técnica correcta."
+  - myth: "Es el mismo procedimiento en todas las clínicas."
+    reality: "Falso. Diferencia crítica: marca/calidad del hilo, certificación del médico inyector, técnica de inserción, manejo de complicaciones. Los hilos no certificados de origen incierto pueden generar reacciones granulomatosas crónicas — CLIBEL usa exclusivamente Aptos, Mint, Silhouette Soft, NovaThreads."
+  - myth: "El resultado es inmediato y dura para siempre."
+    reality: "Falso doblemente. El efecto inicial está mezclado con edema (resultado real visible a 7–10 días). La duración varía por material (6 m a 36 m). CLIBEL es honesta sobre tiempos: planea refuerzo desde valoración inicial."
+commitments:
+  - title: "Cumplir antibiótico profiláctico completo"
+    text: "Imprescindible. CLIBEL prescribe antibiótico oral 3–5 días post-procedimiento para prevenir infección de puntos de entrada. NO suspender al primer alivio — completar el ciclo es protección clínica básica."
+    weight: "Imprescindible"
+  - title: "Dormir boca arriba 7–10 noches"
+    text: "Imprescindible. Dormir boca abajo o de lado en primeros días puede desplazar hilos antes de fijación tisular. Almohada elevada (cabeza más alta que corazón) reduce inflamación post-procedimiento."
+    weight: "Imprescindible"
+  - title: "Sin masajes faciales 30 días"
+    text: "Imprescindible. Masaje facial puede desplazar hilos durante fase de fijación. Esto incluye masajes estéticos, masajes de relajación, y limpieza facial profunda. Sin excepciones durante el primer mes."
+    weight: "Imprescindible"
+  - title: "Sin tratamientos faciales agresivos 30 días"
+    text: "Imprescindible. Peelings, radiofrecuencia, microneedling, láser facial pueden afectar fijación de los hilos. CLIBEL coordina plan integral con espaciado clínico — los demás tratamientos se reanudan después del primer mes."
+    weight: "Imprescindible"
+  - title: "Dieta blanda y gestos faciales moderados 14 días"
+    text: "Recomendado. Apertura amplia de boca, reír exagerado, masticar duro pueden generar movimiento de hilos antes de fijación. Dieta blanda y gestos moderados los primeros 14 días."
+    weight: "Recomendado"
+  - title: "Asistir a revisión 7–10 días"
+    text: "Imprescindible. CLIBEL evalúa puntos de entrada, descarta infección, valida simetría y ajusta si requiere. Saltarte esta revisión compromete identificación temprana de complicaciones potenciales."
+    weight: "Imprescindible"
+safetyProtocol:
+  - title: "Hilos con registro COFEPRIS y trazabilidad"
+    text: "CLIBEL aplica exclusivamente hilos certificados: Aptos (Rusia), Mint (Corea), Silhouette Soft (USA), NovaThreads (USA). Te mostramos empaque cerrado, lote y caducidad antes de abrir. Trazabilidad real — nunca productos genéricos sin origen verificable."
+    kind: "producto"
+  - title: "Médico inyector con certificación específica en hilos"
+    text: "Los hilos los aplica MÉDICO con formación específica en técnica de hilos tensores (no solo certificación general en medicina estética). Es procedimiento que exige experiencia anatómica precisa — sin esa formación, las complicaciones se multiplican."
+    kind: "personal"
+  - title: "Antibiótico profiláctico oral protocolizado"
+    text: "Régimen de antibiótico oral 3–5 días post-procedimiento estandarizado en CLIBEL. Reduce significativamente riesgo de infección de puntos de entrada — protocolo clínico no negociable."
+    kind: "protocolo"
+  - title: "Campo estéril quirúrgico menor"
+    text: "Asepsia con clorhexidina, campo estéril, guantes estériles, mascarilla. El procedimiento se realiza como cirugía menor — no como inyección cosmética. Reducción de riesgo infeccioso al mínimo."
+    kind: "protocolo"
+  - title: "Manejo escrito de dimpling y asimetría"
+    text: "El dimpling (hoyuelo) en punto de inserción ocurre en 5–10% de los casos. CLIBEL tiene protocolo escrito: masaje específico, observación 14 días, ajuste si persiste. Si requiere retirada de hilo, la realizamos en cabina con técnica mínima invasiva."
+    kind: "protocolo"
+  - title: "Coordinación con cirugía plástica si requiere"
+    text: "Si tu valoración determina que el descolgamiento es severo, CLIBEL deriva a cirugía plástica honestamente — no aplicamos hilos donde corresponde lifting quirúrgico. Tenemos red de cirujanos plásticos certificados para derivación."
+    kind: "personal"
+  - title: "Retirada de hilo disponible si requiere"
+    text: "Si por alguna razón (asimetría persistente, dimpling no resuelto, irregularidad palpable molesta) se requiere retirada parcial o total del hilo, CLIBEL la realiza en cabina con técnica mínima invasiva. Procedimiento simple cuando el médico tiene experiencia."
+    kind: "reversibilidad"
+  - title: "Foto multi-ángulo basal y de seguimiento"
+    text: "Foto basal pre-procedimiento + foto 14 días + foto 3 m + 6 m. Documentación clínica completa para validar resultado objetivamente y planear refuerzo futuro con evidencia."
+    kind: "protocolo"
+comparison:
+  - aspect: "Quién aplica los hilos"
+    home: "—"
+    spa: "Médico general con curso corto o enfermera"
+    clibel: "Médico inyector con certificación ESPECÍFICA en hilos tensores (no genérica)"
+  - aspect: "Hilos utilizados"
+    home: "—"
+    spa: "Frecuentemente sin trazabilidad o origen genérico"
+    clibel: "Solo Aptos, Mint, Silhouette Soft, NovaThreads · empaque sellado con lote"
+  - aspect: "Asepsia y campo estéril"
+    home: "—"
+    spa: "Sin campo estéril quirúrgico"
+    clibel: "Campo estéril quirúrgico menor + asepsia con clorhexidina + guantes estériles"
+  - aspect: "Antibiótico profiláctico"
+    home: "—"
+    spa: "Frecuentemente sin antibiótico post-procedimiento"
+    clibel: "Régimen oral 3–5 días estandarizado · protocolo no negociable"
+  - aspect: "Honestidad sobre indicación"
+    home: "—"
+    spa: "Vende hilos a TODOS los casos sin distinción"
+    clibel: "Deriva a cirugía si el descolgamiento es severo · sólo aplica donde son adecuados"
+  - aspect: "Manejo de complicaciones"
+    home: "—"
+    spa: "Derivación a otra clínica o urgencias externas"
+    clibel: "Protocolo escrito + retirada de hilo disponible en cabina si requiere"
+  - aspect: "Documentación clínica"
+    home: "—"
+    spa: "Sin foto comparativa ni revisiones programadas"
+    clibel: "Foto basal + 14 días + 3 m + 6 m · 2 revisiones programadas incluidas"
+publishedAt: 2026-01-25
 ---
 
-## Lifting sin cirugía
+## Hilos tensores: el procedimiento más cerca del lifting (cuando aplica)
 
-Los hilos tensores se colocan bajo la piel mediante microcánulas. Una vez insertados, ejercen tracción sobre los tejidos y estimulan la producción de colágeno. Los hilos son reabsorbibles —desaparecen progresivamente— pero el efecto del colágeno generado perdura.
+Los hilos tensores son el procedimiento de medicina estética **más cercano al lifting quirúrgico** — pero ese 'cercano' tiene asterisco crítico: aplican cuando el descolgamiento es leve a moderado, NO cuando es severo. La industria estética los vende como 'lifting sin cirugía' a todo paciente sin distinguir grado de descolgamiento, y ese marketing genera dos problemas: pacientes con descolgamiento severo obtienen resultado decepcionante, y se contamina la percepción del procedimiento.
 
-### Tipos de hilos
+En CLIBEL los aplicamos con **criterio anatómico estricto**: tracción manual estandarizada para verificar candidatura, derivación honesta a cirugía plástica cuando el caso lo amerita, hilos certificados (Aptos, Mint, Silhouette Soft, NovaThreads) con lote verificable, médico inyector con certificación específica en hilos, y protocolo de seguridad documentado. Si tu caso encaja, los hilos funcionan muy bien; si no encaja, te lo decimos honestamente.
 
-- **Hilos PDO (polidioxanona):** efecto bioestimulador.
-- **Hilos PCL (policaprolactona):** mayor duración y estímulo de colágeno.
-- **Hilos espiculados:** efecto de tracción inmediata.
+> Los hilos tensores son **medicina estética seria** — procedimiento invasivo que merece criterio quirúrgico, no aplicación cosmética. La diferencia entre éxito y complicación está en quién los aplica y dónde.
+> <cite>Filosofía CLIBEL · Hilos Tensores</cite>
 
-### Recuperación
+### ¿Para quién es este procedimiento?
 
-Es un procedimiento ambulatorio. Puedes presentar leve inflamación o sensibilidad durante 3-5 días. Al cabo de una semana podrás retomar todas tus actividades.
+Pacientes con **descolgamiento facial leve a moderado** entre 35 y 60 años: óvalo facial perdiendo definición, mejillas medias descolgadas, cejas caídas, comisuras descendentes, cuello con flacidez inicial. La condición no es la edad sino el **grado de descolgamiento medible** con tracción manual.
+
+CLIBEL **no es buena opción** si tu descolgamiento es severo (necesitas lifting quirúrgico), si tienes antecedente de queloides o cicatrización anómala, autoinmunes activos, embarazo, anticoagulación crónica no controlada, o si esperas transformación radical. Te lo planteamos en valoración antes de cobrar.
+
+### La decisión clave: hilos vs cirugía
+
+La gran pregunta en pacientes con descolgamiento moderado es 'hilos o lifting'. La respuesta clínica honesta depende de:
+
+1. **Grado de descolgamiento**: leve-moderado → hilos · severo → lifting
+2. **Exceso de tejido cuantificable**: poco → hilos · mucho → lifting
+3. **Expectativa**: rejuvenecimiento sutil → hilos · transformación visible → lifting
+4. **Tolerancia a cirugía**: rechaza cirugía → hilos · acepta → lifting
+5. **Plazo**: refresh ahora → hilos · resultado a largo plazo → lifting
+
+CLIBEL te plantea las cinco preguntas en valoración con honestidad clínica. Si tu caso es ambiguo, podemos hacer hilos como 'puente' a lifting eventual — no son mutuamente excluyentes.
+
+### Filosofía CLIBEL de los hilos
+
+Anatomic-driven, conservadora y honesta sobre indicación. Aplicamos solo donde corresponde, con productos certificados, técnica precisa, protocolo de seguridad documentado y manejo de complicaciones por escrito. Si tu caso no es candidato (descolgamiento severo, contraindicación, expectativa no realista), te derivamos sin cobrar la consulta. La medicina estética seria es la que conoce sus límites — no la que vende hilos a todo cliente que entre por la puerta.

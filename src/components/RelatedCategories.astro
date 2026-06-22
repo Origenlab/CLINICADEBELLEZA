@@ -1,4 +1,5 @@
 ---
+import SectionHeader from './SectionHeader.astro';
 import { CATEGORIES, catHref, type Category } from '../consts';
 
 interface Props {
@@ -66,18 +67,15 @@ const reasons = reasoning[current] ?? {};
 
 <section class:list={['rcat', `rcat--${variant}`]} aria-label="Categorías relacionadas">
   <div class="container-x">
-    <header class="rcat-head">
-      <span class="rcat-kicker">Complementa tu plan</span>
-      <h2 class="rcat-title">
-        Categorías que <em>CLIBEL</em> combina con esta.
-      </h2>
-      <p class="rcat-lede">
-        Cuando llegas a <strong>CLIBEL</strong> por una categoría, en
-        valoración solemos identificar oportunidades en otras. Estas son
-        las combinaciones clínicas más frecuentes — no como venta cruzada,
-        sino como criterio integral.
-      </p>
-    </header>
+    <SectionHeader
+      marginBottom="lg"
+      kicker="Complementa tu plan"
+      title={`Categorías que <em>CLIBEL</em><br/>combina con esta.`}
+      paragraphs={[
+        `Cuando llegas a <strong>CLIBEL</strong> por una categoría, en valoración solemos identificar oportunidades en otras. Estas son las combinaciones clínicas más frecuentes — no como venta cruzada, sino como criterio integral.`,
+        `Cada recomendación responde a un patrón observado en pacientes de <strong>CLIBEL</strong>: sinergia biológica, ciclo hormonal compartido o coherencia estética global. La elección final siempre depende de tu valoración.`,
+      ]}
+    />
 
     <div class="rcat-grid" data-count={recommended.length}>
       {recommended.map((c, i) => (
@@ -105,42 +103,7 @@ const reasons = reasoning[current] ?? {};
   .rcat--cream { background: var(--color-brand-50); }
   .rcat--white { background: white; }
 
-  .rcat-head {
-    text-align: center;
-    max-width: 760px;
-    margin: 0 auto clamp(2.5rem, 4vw, 3.25rem);
-  }
-  .rcat-kicker {
-    display: inline-block;
-    font-family: var(--font-sans);
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--color-mauve-500);
-    margin-bottom: 0.85rem;
-  }
-  .rcat-title {
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(1.85rem, 3.2vw, 2.85rem);
-    line-height: 1.1;
-    letter-spacing: -0.025em;
-    color: var(--color-ink-900);
-    margin: 0 0 0.95rem;
-  }
-  .rcat-title em {
-    font-style: italic;
-    color: var(--color-mauve-500);
-    font-weight: 400;
-  }
-  .rcat-lede {
-    font-size: clamp(0.95rem, 1vw, 1.05rem);
-    line-height: 1.7;
-    color: var(--color-ink-700);
-    margin: 0;
-  }
-  .rcat-lede strong { color: var(--color-ink-900); font-weight: 600; }
+  /* Header homologado vía SectionHeader (2-col) — sin estilos locales */
 
   /* === Grid === */
   .rcat-grid {

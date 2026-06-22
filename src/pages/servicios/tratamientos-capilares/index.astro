@@ -47,6 +47,26 @@ const catalogSchema = {
   },
 };
 
+// ============ Editorial leds por L4 (humanizados · sección Profundiza) ============
+const editorialLedes: Record<string, { lede: string; readMore: string }> = {
+  'tratamiento-capilar': {
+    lede: 'El programa integral que combina diagnóstico tricológico + PRP + mesoterapia + coordinación con medicación sistémica según diagnóstico. CLIBEL lo aplica como medicina, no como cosmética — diagnóstico previo, plan personalizado y mantenimiento sostenido como protocolo.',
+    readMore: 'Ver programa integral',
+  },
+  'prp-capilar': {
+    lede: 'Probablemente el procedimiento con mejor evidencia clínica para alopecia androgenética temprana a moderada. CLIBEL lo aplica con kit estéril certificado (Regen Lab, Arthrex), tricoscopia comparativa cada sesión y honestidad sobre lo que el PRP puede y no puede hacer.',
+    readMore: 'Ver protocolo PRP',
+  },
+  'mesoterapia-capilar': {
+    lede: 'Bioactivos —dutasterida tópica, biotina, vitaminas, minoxidil inyectable— entregados DIRECTAMENTE al folículo vía microinyecciones. Complemento del PRP y de la medicación sistémica. CLIBEL la considera pieza del plan integral, no tratamiento aislado.',
+    readMore: 'Ver mesoterapia',
+  },
+  'tricologia-clinica': {
+    lede: 'El filtro clínico obligatorio antes de cualquier plan capilar serio. Tricoscopia digital, clasificación clínica de alopecia, descarte de causa sistémica y plan terapéutico por escrito. Sin tricología no hay tratamiento — solo improvisación cosmética cara.',
+    readMore: 'Ver consulta diagnóstica',
+  },
+};
+
 // ============ DIAGNÓSTICO TRICOLÓGICO (NUEVO) ============
 const diagnosis = [
   {
@@ -219,14 +239,40 @@ const habits = {
   ],
 };
 
-// ============ FAQs específicas capilares ============
-const faqs = [
-  { q: '¿Cuándo empezaré a ver resultados con el tratamiento capilar?', a: 'En CLIBEL la caída se estabiliza alrededor del mes 1–2. Crecimiento nuevo visible aparece entre el mes 3–4. Densidad consolidada se aprecia hacia el mes 6. El cabello tiene tiempos biológicos largos que ningún tratamiento puede acortar — quien promete resultados en 30 días miente.' },
-  { q: '¿El PRP capilar duele?', a: 'CLIBEL aplica anestesia tópica en cuero cabelludo 20 min antes. La sensación durante la aplicación es de pequeños piquetes tolerables, similares a vacuna. Después la zona puede quedar sensible algunas horas, sin dolor real. Es ambulatorio total.' },
-  { q: '¿Sirve para alopecia avanzada o calvicie consolidada?', a: 'CLIBEL es honesta: si el folículo ya está atrofiado (zona brillante sin folículos visibles en tricoscopia), ningún tratamiento médico lo revive. Sí podemos densificar zonas con folículos miniaturizados aún viables. Para calvicie consolidada lo único es trasplante quirúrgico — CLIBEL te lo dice antes.' },
-  { q: '¿El tratamiento sirve igual en hombres y mujeres?', a: 'Los principios biológicos son los mismos pero los planes difieren. CLIBEL personaliza dosis, sustancias y frecuencia según género, edad, perfil hormonal y patrón específico. Patrón masculino se concentra en coronilla y entradas; femenino se difunde por toda la corona.' },
-  { q: '¿Puedo combinar tratamiento en CLIBEL con minoxidil que ya uso?', a: 'Sí, en muchos casos potencia el efecto. CLIBEL revisa tu protocolo actual, evalúa si la formulación es la correcta para tu caso, y ajusta concentración si hace falta. Trabajamos compatible con dermatólogos externos sin conflicto.' },
-  { q: '¿Hay efectos secundarios?', a: 'CLIBEL informa todos: sensibilidad transitoria post-sesión, mínimo enrojecimiento, posible aumento momentáneo de caída en primeras 2 semanas (efecto de sincronización), reacciones locales raras. Sin efectos sistémicos relevantes — son tratamientos locales.' },
+// ============ FAQs específicas capilares (humanizadas + interlinking) ============
+const faqs: { q: string; answerHtml: string }[] = [
+  {
+    q: '¿Cuándo empezaré a ver resultados con el tratamiento capilar?',
+    answerHtml: 'La caída se estabiliza al mes 1–2. Crecimiento nuevo visible aparece mes 3–4. Densidad consolidada hacia el mes 6. El cabello tiene tiempos biológicos largos que ningún tratamiento puede acortar — quien promete resultados en 30 días miente. <a href="/servicios/tratamiento-capilar">Ver programa integral →</a>',
+  },
+  {
+    q: '¿El PRP capilar duele?',
+    answerHtml: 'CLIBEL aplica anestesia tópica en cuero cabelludo 20 min antes. La sensación durante la aplicación es de pequeños piquetes tolerables. Después la zona queda sensible algunas horas, sin dolor real. Es ambulatorio total. <a href="/servicios/prp-capilar">Conoce el protocolo PRP capilar →</a>',
+  },
+  {
+    q: '¿Sirve para alopecia avanzada o calvicie consolidada?',
+    answerHtml: 'Honestidad clínica: si el folículo ya está atrofiado (zona brillante sin folículos visibles en tricoscopia), ningún tratamiento médico lo revive. Sí densificamos zonas con folículos miniaturizados aún viables. Para calvicie consolidada lo único es <strong>transplante quirúrgico</strong> — derivamos con cirujano de confianza. La <a href="/servicios/tricologia-clinica">tricología</a> determina candidatura.',
+  },
+  {
+    q: '¿Qué diferencia hay entre PRP y mesoterapia capilar?',
+    answerHtml: '<a href="/servicios/prp-capilar"><strong>PRP capilar</strong></a>: tu propia sangre procesada con factores de crecimiento autólogos. Sin riesgo de alergia. <a href="/servicios/mesoterapia-capilar"><strong>Mesoterapia capilar</strong></a>: cócteles farmacéuticos con bioactivos específicos (dutasterida tópica, biotina, vitaminas). Son complementarios — CLIBEL frecuentemente los alterna en plan integral para potenciar efecto.',
+  },
+  {
+    q: '¿El tratamiento sirve igual en hombres y mujeres?',
+    answerHtml: 'Los principios biológicos son los mismos pero los planes difieren. CLIBEL personaliza dosis, sustancias y frecuencia según sexo, edad, perfil hormonal y patrón específico. Patrón masculino (Norwood): entradas y vertex. Patrón femenino (Ludwig): difusión centroparietal. En mujer con sospecha hormonal coordinamos con ginecología.',
+  },
+  {
+    q: '¿Puedo combinar tratamiento con minoxidil o finasterida?',
+    answerHtml: 'Sí, y de hecho es lo más eficaz. <strong>Minoxidil tópico</strong>: no requiere receta, accesible. <strong>Finasterida oral</strong>: requiere receta médica (CLIBEL puede prescribir si eres candidato). La combinación PRP/mesoterapia + medicación supera al protocolo aislado en evidencia clínica. <a href="/servicios/tratamiento-capilar">Plan integral coordinado →</a>',
+  },
+  {
+    q: '¿Hay efectos secundarios?',
+    answerHtml: 'CLIBEL informa todos honestamente: sensibilidad transitoria post-sesión, mínimo enrojecimiento, posible aumento momentáneo de caída en primeras 2 semanas (<strong>shedding efluvio</strong> — señal de que está funcionando, no empeoramiento real), reacciones locales raras. Sin efectos sistémicos relevantes — son tratamientos locales.',
+  },
+  {
+    q: '¿Por qué CLIBEL pide análisis antes del tratamiento?',
+    answerHtml: 'Porque muchas alopecias tienen causa subyacente: anemia ferropénica, hipotiroidismo, hiperandrogenismo, déficit de vitamina D. Sin descartar esto, aplicar PRP/mesoterapia es atacar el síntoma sin tratar la causa — el resultado será parcial o nulo. La <a href="/servicios/tricologia-clinica">tricología clínica</a> es el filtro obligatorio.',
+  },
 ];
 ---
 
@@ -290,22 +336,24 @@ const faqs = [
           <p class="cat-hero-paragraph">
             <strong>CLIBEL</strong> es una clínica de belleza con respaldo
             médico especializada en tricología clínica en Ciudad de México.
-            A diferencia de spas que venden "ampolletas milagrosas", en CLIBEL
-            cada plan capilar parte de <strong>diagnóstico tricoscópico</strong>
+            A diferencia de spas que venden "ampolletas milagrosas", cada
+            plan capilar parte de <strong>diagnóstico tricoscópico</strong>
             por dermatoscopio digital y análisis hormonal-nutricional cuando
             aplica. Identificamos el tipo de alopecia antes de proponer
-            tratamiento — porque caída androgenética, telógena, areata y
-            por tracción requieren protocolos distintos.
+            tratamiento — porque androgenética, telógena, areata y cicatrizal
+            requieren protocolos distintos (y algunas NO responden a PRP).
           </p>
 
           <p class="cat-hero-paragraph">
-            En esta categoría <strong>CLIBEL</strong> reúne sus protocolos
-            capilares regenerativos: <strong>PRP capilar autólogo</strong>,
-            <strong>mesoterapia con bioactivos</strong>, <strong>tricología
-            clínica diagnóstica</strong> y tratamientos integrales para
-            caída del cabello. CLIBEL documenta cada sesión con tricoscopia
-            comparativa y fototricograma trimestral — para que veas tu
-            evolución con evidencia objetiva, no con tu memoria subjetiva.
+            En esta categoría reunimos los cuatro protocolos capilares
+            integrales: <a href="/servicios/tricologia-clinica"><strong>tricología
+            clínica</strong></a> como filtro diagnóstico obligatorio,
+            <a href="/servicios/prp-capilar"><strong>PRP capilar autólogo</strong></a>
+            con kit certificado, <a href="/servicios/mesoterapia-capilar"><strong>mesoterapia
+            con bioactivos</strong></a> y <a href="/servicios/tratamiento-capilar"><strong>tratamiento
+            capilar avanzado integral</strong></a> que combina técnicas
+            según diagnóstico. Documentamos cada sesión con tricoscopia
+            comparativa — evidencia objetiva, no memoria subjetiva.
           </p>
         </div>
       </div>
@@ -354,6 +402,125 @@ const faqs = [
           />
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- ============================ STAT STRIP CLÍNICO ============================ -->
+  <section class="svc-stat-strip">
+    <div class="container-x">
+      <dl class="capilar-stats">
+        <div>
+          <dt>Protocolos</dt>
+          <dd><em>{items.length}</em></dd>
+        </div>
+        <div>
+          <dt>Tipos de alopecia</dt>
+          <dd><em>06</em></dd>
+        </div>
+        <div>
+          <dt>Diagnóstico</dt>
+          <dd class="capilar-stats-text">Tricoscopia digital</dd>
+        </div>
+        <div>
+          <dt>Documentación</dt>
+          <dd class="capilar-stats-text">Foto comparativa basal</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================ PROFUNDIZA · interlinking L3 → L4 ============================ -->
+  <section class="section bg-[color:var(--color-brand-50)]">
+    <div class="container-x">
+      <SectionHeader
+        marginBottom="md"
+        kicker="Profundiza en cada protocolo"
+        title="Cada protocolo capilar<br/>de <em>CLIBEL</em>, en detalle."
+        paragraphs={[
+          'Los cuatro protocolos capilares de <strong>CLIBEL</strong> tienen su propia página clínica con diagnóstico, pasos, modalidades, casos reales, mitos desmontados y <strong>protocolo de seguridad documentado</strong>. La medicina capilar seria exige decisión informada — aquí está todo lo que necesitas saber.',
+          'Si no sabes por dónde empezar, <a href="/servicios/tricologia-clinica"><strong>tricología clínica</strong></a> es el filtro obligatorio: diagnóstico antes de tratamiento. Sin clasificación de tipo de alopecia, aplicar PRP o mesoterapia es improvisación cosmética cara.',
+        ]}
+      />
+
+      <ol class="spot-list">
+        {items.map((s, i) => {
+          const meta = editorialLedes[s.id];
+          const topBen = (s.data.benefits ?? []).slice(0, 2);
+          const waSvc = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`Hola CLIBEL, me interesa el tratamiento ${s.data.title}.`)}`;
+          return (
+            <li class="spot reveal">
+              <div class="spot-num-wrap" aria-hidden="true">
+                <span class="spot-num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="spot-num-line"></span>
+              </div>
+
+              <div class="spot-body">
+                <header class="spot-head">
+                  <span class="spot-kicker">{s.data.icon ?? '✦'} {cat.short} · Protocolo {String(i + 1).padStart(2, '0')}</span>
+                  <h3 class="spot-title">
+                    <a href={`/servicios/${s.id}`}>{s.data.title}</a>
+                  </h3>
+                </header>
+
+                <dl class="spot-meta">
+                  {s.data.duration && (
+                    <div>
+                      <dt>Duración</dt>
+                      <dd>{s.data.duration}</dd>
+                    </div>
+                  )}
+                  {s.data.sessions && (
+                    <div>
+                      <dt>Frecuencia</dt>
+                      <dd>{s.data.sessions.split('·')[0].trim()}</dd>
+                    </div>
+                  )}
+                  {(s.data.modalities?.length ?? 0) > 0 && (
+                    <div>
+                      <dt>Modalidades</dt>
+                      <dd>{s.data.modalities?.length}</dd>
+                    </div>
+                  )}
+                  {(s.data.safetyProtocol?.length ?? 0) > 0 && (
+                    <div>
+                      <dt>Protocolos seguridad</dt>
+                      <dd>{s.data.safetyProtocol?.length}</dd>
+                    </div>
+                  )}
+                </dl>
+
+                <p class="spot-lede">{meta?.lede ?? s.data.description}</p>
+
+                {topBen.length > 0 && (
+                  <ul class="spot-benefits">
+                    {topBen.map((b) => (
+                      <li>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <div class="spot-actions">
+                  <a href={`/servicios/${s.id}`} class="spot-cta spot-cta--primary">
+                    {meta?.readMore ?? 'Conocer protocolo'}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                  </a>
+                  <a href={waSvc} target="_blank" rel="noopener" class="spot-cta spot-cta--wa">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                    Pregunta por WhatsApp
+                  </a>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
     </div>
   </section>
 
@@ -609,7 +776,7 @@ const faqs = [
                     </svg>
                   </span>
                 </summary>
-                <div class="faq-a">{f.a}</div>
+                <div class="faq-a" set:html={f.answerHtml}></div>
               </details>
             ))}
           </div>
@@ -1634,4 +1801,249 @@ const faqs = [
     opacity: 0.85;
   }
   @media (max-width: 640px) { .faq-form { padding: 1.25rem; } }
+
+  /* ============= Hero + FAQ links inline ============= */
+  .cat-hero-paragraph a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 0.25s ease !important;
+  }
+  .cat-hero-paragraph a:hover { color: var(--color-mauve-700); }
+  .cat-hero-paragraph a strong { color: inherit; font-weight: 600; }
+  .faq-a a {
+    color: var(--color-mauve-500);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    font-weight: 500;
+  }
+  .faq-a a:hover { color: var(--color-mauve-700); }
+
+  /* ============= STAT STRIP CLÍNICO ============= */
+  .svc-stat-strip {
+    background: var(--color-brand-50);
+    padding-block: clamp(2rem, 3.5vw, 3rem);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .capilar-stats {
+    margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  @media (min-width: 720px) { .capilar-stats { grid-template-columns: repeat(4, 1fr); } }
+  .capilar-stats > div {
+    padding: 1rem 1.25rem;
+    border-right: 1px solid rgba(201, 169, 97, 0.22);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.22);
+  }
+  .capilar-stats > div:first-child { padding-left: 0; }
+  @media (min-width: 720px) {
+    .capilar-stats > div { border-bottom: 0; }
+    .capilar-stats > div:last-child { border-right: 0; }
+  }
+  @media (max-width: 719px) {
+    .capilar-stats > div:nth-child(2n) { border-right: 0; }
+    .capilar-stats > div:nth-last-child(-n+2) { border-bottom: 0; }
+  }
+  .capilar-stats dt {
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+    margin-bottom: 0.4rem;
+  }
+  .capilar-stats dd {
+    margin: 0;
+    font-family: var(--font-display);
+    line-height: 1;
+    color: var(--color-ink-900);
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: baseline;
+    gap: 0.15rem;
+  }
+  .capilar-stats dd em {
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 3.5vw, 3.25rem);
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-700));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .capilar-stats .capilar-stats-text {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(0.9rem, 1vw, 1.05rem);
+    line-height: 1.25;
+    color: var(--color-ink-900);
+    letter-spacing: -0.005em;
+  }
+
+  /* ============= PROFUNDIZA — editorial spotlight ============= */
+  .spot-list {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 3vw, 2.75rem) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .spot {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding-block: clamp(2rem, 3vw, 2.75rem);
+    border-top: 1px solid rgba(201, 169, 97, 0.32);
+    align-items: start;
+  }
+  .spot:first-child { border-top: 0; padding-top: 0; }
+  .spot:last-child { padding-bottom: 0; }
+  @media (min-width: 820px) {
+    .spot { grid-template-columns: clamp(80px, 11vw, 130px) 1fr; gap: clamp(1.5rem, 3vw, 3rem); }
+  }
+  .spot-num-wrap { display: flex; align-items: baseline; gap: 0.85rem; }
+  @media (min-width: 820px) {
+    .spot-num-wrap { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding-top: 0.3rem; }
+  }
+  .spot-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    line-height: 0.85;
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-mauve-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+  }
+  .spot-num-line {
+    width: 32px; height: 1.5px;
+    background: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    border-radius: 2px;
+  }
+  @media (max-width: 819px) { .spot-num-line { display: none; } }
+  .spot-body { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+  .spot-head { display: flex; flex-direction: column; gap: 0.5rem; }
+  .spot-kicker {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mauve-500);
+  }
+  .spot-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 2.6vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.022em;
+    color: var(--color-ink-900);
+    margin: 0;
+    max-width: 26ch;
+  }
+  .spot-title a {
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(90deg, var(--color-brand-400), var(--color-mauve-500));
+    background-repeat: no-repeat;
+    background-size: 0 2px;
+    background-position: 0 100%;
+    transition: background-size 0.4s cubic-bezier(.2,.8,.2,1) !important;
+    padding-bottom: 2px;
+  }
+  .spot-title a:hover { background-size: 100% 2px; }
+  .spot-meta {
+    margin: 0;
+    padding: 0.85rem 0;
+    border-block: 1px dashed rgba(201, 169, 97, 0.3);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  @media (min-width: 700px) { .spot-meta { grid-template-columns: repeat(4, 1fr); } }
+  .spot-meta > div { padding: 0; }
+  .spot-meta > div + div {
+    padding-left: clamp(0.75rem, 1.5vw, 1.25rem);
+    border-left: 1px dashed rgba(201, 169, 97, 0.3);
+  }
+  .spot-meta dt {
+    font-family: var(--font-sans);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+    margin-bottom: 0.25rem;
+  }
+  .spot-meta dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(0.92rem, 1vw, 1.05rem);
+    line-height: 1.2;
+    color: var(--color-ink-900);
+    letter-spacing: -0.005em;
+  }
+  .spot-lede {
+    margin: 0;
+    font-size: clamp(0.98rem, 1.05vw, 1.1rem);
+    line-height: 1.7;
+    color: var(--color-ink-700);
+    max-width: 68ch;
+  }
+  .spot-benefits {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: 1fr; gap: 0.45rem;
+  }
+  @media (min-width: 700px) { .spot-benefits { grid-template-columns: 1fr 1fr; gap: 0.65rem 1.5rem; } }
+  .spot-benefits li {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.92rem; line-height: 1.5;
+    color: var(--color-ink-700);
+  }
+  .spot-benefits li svg { flex-shrink: 0; margin-top: 4px; color: var(--color-brand-500); }
+  .spot-actions { display: flex; flex-wrap: wrap; gap: 0.85rem; align-items: center; padding-top: 0.5rem; }
+  .spot-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.2rem;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1) !important;
+    border: 1.5px solid transparent;
+  }
+  .spot-cta--primary { background: var(--color-ink-900); color: var(--color-brand-50); }
+  .spot-cta--primary:hover {
+    background: var(--color-mauve-700);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -10px rgba(31, 20, 24, 0.4);
+  }
+  .spot-cta--primary svg { transition: transform 0.25s ease !important; }
+  .spot-cta--primary:hover svg { transform: translateX(3px); }
+  .spot-cta--wa {
+    background: rgba(37, 211, 102, 0.1);
+    color: #1B7A3F;
+    border: 1.5px solid rgba(37, 211, 102, 0.35);
+  }
+  .spot-cta--wa:hover {
+    background: #25D366;
+    color: white;
+    border-color: #25D366;
+    transform: translateY(-2px);
+  }
 </style>
