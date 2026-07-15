@@ -270,7 +270,7 @@ comparison:
   - aspect: "Manejo de complicaciones"
     home: "Sin recurso clínico"
     spa: "Derivación a dermatólogo externo"
-    clibel: "Personal médico supervisa, WhatsApp clínico activo durante todo el plan"
+    clibel: "Personal médico supervisa y da seguimiento durante todo el plan"
   - aspect: "Honestidad sobre limitaciones"
     home: "—"
     spa: "Promesas de 'piel sin vello para siempre'"

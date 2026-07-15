@@ -6,7 +6,7 @@ import Breadcrumb from '../../../components/Breadcrumb.astro';
 import HeroNavBar from '../../../components/HeroNavBar.astro';
 import RelatedCategories from '../../../components/RelatedCategories.astro';
 import { getCollection } from 'astro:content';
-import { CATEGORIES, SITE, CONTACT, catHref } from '../../../consts';
+import { CATEGORIES, SITE, catHref } from '../../../consts';
 
 const cat = CATEGORIES.laser;
 
@@ -15,7 +15,6 @@ const items = all
   .filter((s) => s.data.category === 'laser')
   .sort((a, b) => a.data.order - b.data.order);
 
-const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, me gustaría agendar mi sesión de depilación láser en CLIBEL.')}`;
 
 // ============ SCHEMAS SEO ============
 const breadcrumbSchema = {
@@ -187,7 +186,7 @@ const comparison: { aspect: string; home?: string; spa?: string; clibel: string 
     aspect: 'Manejo de complicaciones',
     home: 'Sin recurso clínico',
     spa: 'Derivación a dermatólogo externo',
-    clibel: 'Personal médico supervisa, WhatsApp clínico activo durante todo el plan',
+    clibel: 'Personal médico supervisa y da seguimiento durante todo el plan',
   },
   {
     aspect: 'Honestidad sobre limitaciones',
@@ -488,7 +487,7 @@ const faqs: { q: string; answerHtml: string }[] = [
       </div>
 
       <p class="zones-foot reveal">
-        ¿Buscas una zona combinada? <a href={wa} target="_blank" rel="noopener">Consulta paquetes en WhatsApp →</a>
+        ¿Buscas una zona combinada? <a href="/contacto/">Agenda tu valoración →</a>
       </p>
     </div>
   </section>
@@ -868,7 +867,7 @@ const faqs: { q: string; answerHtml: string }[] = [
         kicker="Preguntas frecuentes y contacto"
         title="Dudas sobre tu plan láser,<br/>respondidas con <em>criterio</em>."
         paragraphs={[
-          'Las preguntas que más recibe <strong>CLIBEL</strong> sobre depilación láser respondidas con criterio clínico — no con guion comercial. Si la tuya no aparece, llena el formulario: tu mensaje llega pre-armado al WhatsApp clínico en menos de 2 horas en horario consulta.',
+          'Las preguntas que más recibe <strong>CLIBEL</strong> sobre depilación láser respondidas con criterio clínico — no con guion comercial. Si la tuya no aparece, envíanos tu caso desde el formulario de contacto.',
           'La primera consulta incluye <strong>prueba de parche sin costo</strong> para validar tecnología y respuesta de tu piel antes de cualquier plan completo. Sin compromiso, sin presión comercial.',
         ]}
       />
@@ -895,113 +894,26 @@ const faqs: { q: string; answerHtml: string }[] = [
         </div>
 
         <aside class="faq-form-wrap">
-          <form id="laserWaForm" class="faq-form" novalidate>
+          <div class="faq-form">
             <span class="faq-form-kicker">Prueba de parche sin costo</span>
-            <h3 class="faq-form-title">Reserva por <em>WhatsApp</em></h3>
+            <h3 class="faq-form-title">Agenda tu <em>valoración</em></h3>
             <p class="faq-form-sub">
-              Llena el formulario y abre tu mensaje pre-armado en WhatsApp.
-              Respuesta de <strong>CLIBEL</strong> en menos de 2 horas en horario clínica.
+              Cuéntanos qué zona te interesa desde el formulario de contacto y
+              <strong>CLIBEL</strong> te responde a la brevedad en horario clínica.
             </p>
 
-            <div class="faq-form-row">
-              <label for="lsr-nombre">Nombre completo <span aria-hidden="true">*</span></label>
-              <input id="lsr-nombre" name="nombre" type="text" required autocomplete="name" />
-            </div>
-
-            <div class="faq-form-grid-2">
-              <div class="faq-form-row">
-                <label for="lsr-tel">Teléfono <span aria-hidden="true">*</span></label>
-                <input id="lsr-tel" name="telefono" type="tel" required autocomplete="tel" placeholder="55 1234 5678" />
-              </div>
-              <div class="faq-form-row">
-                <label for="lsr-email">Email</label>
-                <input id="lsr-email" name="email" type="email" autocomplete="email" />
-              </div>
-            </div>
-
-            <div class="faq-form-grid-2">
-              <div class="faq-form-row">
-                <label for="lsr-zona">Zona principal <span aria-hidden="true">*</span></label>
-                <select id="lsr-zona" name="zona" required>
-                  <option value="">Selecciona</option>
-                  {zones.map((z) => (
-                    <option value={`${z.area} — ${z.zone}`}>{z.area} · {z.zone}</option>
-                  ))}
-                  <option value="Combinación de zonas">Combinación de varias zonas</option>
-                </select>
-              </div>
-              <div class="faq-form-row">
-                <label for="lsr-fototipo">Mi piel</label>
-                <select id="lsr-fototipo" name="fototipo">
-                  <option value="">Selecciona (opcional)</option>
-                  <option value="I — Muy clara, siempre se quema">I · Muy clara</option>
-                  <option value="II — Clara, se quema fácil">II · Clara</option>
-                  <option value="III — Intermedia, broncea progresivo">III · Intermedia</option>
-                  <option value="IV — Trigueña, broncea fácil">IV · Trigueña</option>
-                  <option value="V — Morena">V · Morena</option>
-                  <option value="VI — Negra">VI · Negra</option>
-                  <option value="No estoy segura">No estoy segura — quiero diagnóstico</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="faq-form-row">
-              <label for="lsr-msg">Cuéntanos qué buscas (opcional)</label>
-              <textarea id="lsr-msg" name="mensaje" rows="3" placeholder="Ej: nunca me he hecho láser, tengo vello hormonal, etc."></textarea>
-            </div>
-
-            <label class="faq-form-check">
-              <input type="checkbox" name="privacidad" required />
-              <span>Acepto el <a href="/aviso-de-privacidad">Aviso de Privacidad</a> y autorizo el contacto por WhatsApp.</span>
-            </label>
-
-            <button type="submit" class="faq-form-submit">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-              Enviar por WhatsApp
-            </button>
+            <a href="/contacto/" class="faq-form-submit">
+              Agenda tu valoración
+            </a>
 
             <p class="faq-form-foot">
-              Respuesta &lt; 2h · COFEPRIS · Prueba de parche sin costo
+              COFEPRIS · Prueba de parche sin costo
             </p>
-          </form>
+          </div>
         </aside>
       </div>
     </div>
   </section>
-
-  <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
-    (function () {
-      const form = document.getElementById('laserWaForm');
-      if (!form) return;
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const d = new FormData(form);
-        const g = (k) => (d.get(k) || '').toString().trim();
-        const nombre = g('nombre'), tel = g('telefono'), email = g('email');
-        const zona = g('zona'), fototipo = g('fototipo'), msg = g('mensaje');
-        const acepto = form.querySelector('[name="privacidad"]').checked;
-
-        if (!nombre || !tel || !zona || !acepto) {
-          form.classList.add('is-invalid');
-          return;
-        }
-        form.classList.remove('is-invalid');
-
-        const lines = [
-          'Hola CLIBEL, vengo desde la página de Depilación Láser.',
-          '',
-          'Nombre: ' + nombre,
-          'Teléfono: ' + tel,
-        ];
-        if (email)    lines.push('Email: ' + email);
-        if (zona)     lines.push('Zona principal: ' + zona);
-        if (fototipo) lines.push('Fototipo: ' + fototipo);
-        if (msg)      lines.push('', 'Comentario: ' + msg);
-
-        window.open(waBase + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
-      });
-    })();
-  </script>
 
   <!-- ============================ RELATED L3 ============================ -->
   <RelatedCategories current="laser" variant="cream" />
@@ -1012,11 +924,10 @@ const faqs: { q: string; answerHtml: string }[] = [
     ariaLabel="Zonas láser populares"
     variant="dark"
     links={[
-      { label: 'Axilas',         href: wa },
-      { label: 'Bikini',         href: wa },
-      { label: 'Piernas',        href: wa },
-      { label: 'Rostro',         href: wa },
-      { label: 'Espalda',        href: wa },
+      { label: 'Axilas e ingle',  href: '/servicios/depilacion-laser-axilas-ingle' },
+      { label: 'Piernas',         href: '/servicios/depilacion-laser-piernas-completas' },
+      { label: 'Rostro',          href: '/servicios/depilacion-laser-rostro-completo' },
+      { label: 'Otras zonas',     href: '/contacto/' },
     ]}
     cta={{ label: 'Reserva prueba de parche', href: '/contacto' }}
   />

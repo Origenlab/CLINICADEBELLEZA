@@ -6,7 +6,7 @@ import Breadcrumb from '../../../components/Breadcrumb.astro';
 import HeroNavBar from '../../../components/HeroNavBar.astro';
 import RelatedCategories from '../../../components/RelatedCategories.astro';
 import { getCollection } from 'astro:content';
-import { CATEGORIES, SITE, CONTACT, catHref } from '../../../consts';
+import { CATEGORIES, SITE, catHref } from '../../../consts';
 
 const cat = CATEGORIES.facial;
 
@@ -14,8 +14,6 @@ const all = await getCollection('servicios');
 const items = all
   .filter((s) => s.data.category === 'facial')
   .sort((a, b) => a.data.order - b.data.order);
-
-const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, me gustaría agendar una cita en CLIBEL para tratamientos faciales.')}`;
 
 // Schemas
 const breadcrumbSchema = {
@@ -165,7 +163,7 @@ const protocols = {
     'Limpiadores suaves sin sulfatos las primeras 48 h',
     'Sin sauna, vapor ni piscina 24 h',
     'No exfoliar mecánicamente 5–7 días según protocolo',
-    'Reportar a CLIBEL cualquier reacción inesperada por WhatsApp clínico',
+    'Reportar a CLIBEL de inmediato cualquier reacción inesperada',
   ],
 };
 
@@ -423,7 +421,6 @@ const faqs: { q: string; answerHtml: string }[] = [
         {items.map((s, i) => {
           const meta = editorialLedes[s.id];
           const topBen = (s.data.benefits ?? []).slice(0, 2);
-          const waSvc = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`Hola CLIBEL, me interesa el tratamiento ${s.data.title}.`)}`;
           return (
             <li class="spot reveal">
               <div class="spot-num-wrap" aria-hidden="true">
@@ -488,9 +485,8 @@ const faqs: { q: string; answerHtml: string }[] = [
                       <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                     </svg>
                   </a>
-                  <a href={waSvc} target="_blank" rel="noopener" class="spot-cta spot-cta--wa">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-                    Pregunta por WhatsApp
+                  <a href="/contacto/" class="spot-cta spot-cta--wa">
+                    Agenda tu valoración
                   </a>
                 </div>
               </div>
@@ -735,7 +731,7 @@ const faqs: { q: string; answerHtml: string }[] = [
         kicker="Preguntas frecuentes y contacto"
         title="Dudas sobre <em>tu plan</em><br/>facial, respondidas."
         paragraphs={[
-          'Las preguntas que más recibe <strong>CLIBEL</strong> sobre cuidado facial profesional, respondidas con criterio clínico — no con guion comercial. Si la tuya no aparece, llénanos el formulario: tu mensaje llega pre-armado al WhatsApp clínico en menos de 2 horas en horario consulta.',
+          'Las preguntas que más recibe <strong>CLIBEL</strong> sobre cuidado facial profesional, respondidas con criterio clínico — no con guion comercial. Si la tuya no aparece, envíanos el formulario de contacto y te respondemos a la brevedad en horario consulta.',
           'Decidir un tratamiento facial implica preguntas legítimas: tiempos, recuperación, seguridad, compatibilidad con tu rutina y, sobre todo, qué pasa si tu piel no responde como esperas. Aquí están las respuestas honestas.',
         ]}
       />
@@ -762,109 +758,28 @@ const faqs: { q: string; answerHtml: string }[] = [
           </div>
         </div>
 
-        <!-- RIGHT — Form a WhatsApp -->
+        <!-- RIGHT — CTA a contacto -->
         <aside class="faq-form-wrap">
-          <form
-            id="facialWaForm"
-            class="faq-form"
-            data-wa-base={`https://wa.me/${CONTACT.whatsapp}`}
-            novalidate
-          >
+          <div class="faq-form">
             <span class="faq-form-kicker">Valoración facial sin costo</span>
-            <h3 class="faq-form-title">Escríbenos por <em>WhatsApp</em></h3>
+            <h3 class="faq-form-title">Agenda tu <em>valoración</em></h3>
             <p class="faq-form-sub">
-              Llena el formulario y tu mensaje pre-armado se abre en WhatsApp.
-              Respuesta de <strong>CLIBEL</strong> en menos de 2 horas en horario clínica.
+              Cuéntanos qué busca tu piel desde el formulario de contacto y
+              <strong>CLIBEL</strong> te responde a la brevedad en horario clínica.
             </p>
 
-            <div class="faq-form-row">
-              <label for="fac-nombre">Nombre completo <span aria-hidden="true">*</span></label>
-              <input id="fac-nombre" name="nombre" type="text" required autocomplete="name" />
-            </div>
-
-            <div class="faq-form-grid-2">
-              <div class="faq-form-row">
-                <label for="fac-tel">Teléfono <span aria-hidden="true">*</span></label>
-                <input id="fac-tel" name="telefono" type="tel" required autocomplete="tel" placeholder="55 1234 5678" />
-              </div>
-              <div class="faq-form-row">
-                <label for="fac-email">Email</label>
-                <input id="fac-email" name="email" type="email" autocomplete="email" />
-              </div>
-            </div>
-
-            <div class="faq-form-row">
-              <label for="fac-interes">¿Qué tratamiento facial te interesa?</label>
-              <select id="fac-interes" name="interes">
-                <option value="">Selecciona uno (opcional)</option>
-                {items.map((s) => (
-                  <option value={s.data.title}>{s.data.title}</option>
-                ))}
-                <option value="No estoy segura — quiero diagnóstico">No estoy segura — quiero diagnóstico</option>
-              </select>
-            </div>
-
-            <div class="faq-form-row">
-              <label for="fac-msg">Cuéntanos qué buscas (opcional)</label>
-              <textarea id="fac-msg" name="mensaje" rows="3" placeholder="Ej: tengo manchas, busco rejuvenecimiento, etc."></textarea>
-            </div>
-
-            <label class="faq-form-check">
-              <input type="checkbox" name="privacidad" required />
-              <span>Acepto el <a href="/aviso-de-privacidad">Aviso de Privacidad</a> y autorizo el contacto por WhatsApp.</span>
-            </label>
-
-            <button type="submit" class="faq-form-submit">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-              Enviar por WhatsApp
-            </button>
+            <a href="/contacto/" class="faq-form-submit">
+              Agenda tu valoración
+            </a>
 
             <p class="faq-form-foot">
-              Respuesta &lt; 2h · COFEPRIS · Sin compromiso
+              COFEPRIS · Sin compromiso
             </p>
-          </form>
+          </div>
         </aside>
       </div>
     </div>
   </section>
-
-  <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
-    (function () {
-      const form = document.getElementById('facialWaForm');
-      if (!form) return;
-
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const data = new FormData(form);
-        const nombre  = (data.get('nombre')   || '').toString().trim();
-        const tel     = (data.get('telefono') || '').toString().trim();
-        const email   = (data.get('email')    || '').toString().trim();
-        const interes = (data.get('interes')  || '').toString().trim();
-        const msg     = (data.get('mensaje')  || '').toString().trim();
-        const acepto  = data.get('privacidad') === 'on' || form.querySelector('[name="privacidad"]').checked;
-
-        if (!nombre || !tel || !acepto) {
-          form.classList.add('is-invalid');
-          return;
-        }
-        form.classList.remove('is-invalid');
-
-        const lines = [
-          'Hola CLIBEL, vengo desde la página de Tratamientos Faciales.',
-          '',
-          'Nombre: ' + nombre,
-          'Teléfono: ' + tel,
-        ];
-        if (email)   lines.push('Email: ' + email);
-        if (interes) lines.push('Me interesa: ' + interes);
-        if (msg)     lines.push('', 'Comentario: ' + msg);
-
-        const text = encodeURIComponent(lines.join('\n'));
-        const url = waBase + '?text=' + text;
-        window.open(url, '_blank', 'noopener');
-      });
-    })();
-  </script>
 
   <!-- ============================ RELATED L3 ============================ -->
   <RelatedCategories current="facial" variant="cream" />
@@ -875,7 +790,7 @@ const faqs: { q: string; answerHtml: string }[] = [
     ariaLabel="Tratamientos faciales individuales"
     variant="dark"
     links={items.map((s) => ({ label: s.data.title, href: `/servicios/${s.id}` }))}
-    cta={{ label: 'Escríbenos por WhatsApp', href: wa }}
+    cta={{ label: 'Agenda tu valoración', href: '/contacto/' }}
   />
 </BaseLayout>
 

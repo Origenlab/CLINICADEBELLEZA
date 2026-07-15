@@ -1,5 +1,4 @@
 // Constantes globales del sitio CLIBEL
-// Reemplaza con datos reales antes de publicar
 
 export const SITE = {
   name: 'CLIBEL',
@@ -9,36 +8,18 @@ export const SITE = {
     '45 años atendiendo en CDMX. Medicina estética, depilación láser, faciales y corporales con respaldo médico. Agenda tu valoración sin costo.',
   keywords:
     'clínica de belleza, medicina estética, depilación láser, tratamientos faciales, rejuvenecimiento facial, ácido hialurónico, toxina botulínica, plasma rico en plaquetas, hilos tensores, radiofrecuencia corporal, peelings químicos, CLIBEL',
-  url: 'https://www.clibel.com.mx',
+  url: 'https://clinicadebelleza.com.mx',
   locale: 'es_MX',
   lang: 'es-MX',
   defaultImage: '/og-default.jpg',
   founded: '1981',
-  cofepris: '253300891A0XXXX',
 } as const;
 
 export const CONTACT = {
-  phone: '+52 55 0000 0000',
-  phoneDisplay: '55 0000 0000',
-  phoneAlt: '55 0000 0001',
-  whatsapp: '525500000000',
-  whatsappMessage:
-    'Hola, me gustaría agendar una cita en CLIBEL para conocer más sobre sus tratamientos.',
-  email: 'contacto@clibel.com.mx',
-  emailAlt: 'citas@clibel.com.mx',
   address: 'Ciudad de México, CDMX',
-  addressFull: 'Av. Reforma 000, Col. Centro, 06000 Ciudad de México, CDMX',
+  addressFull: 'Ciudad de México, CDMX',
   hours: 'Lun–Vie 10:00–19:00 · Sáb 10:00–15:00',
   hoursShort: 'Lun–Sáb 10:00–19:00',
-  mapsEmbed:
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.6!2d-99.1332!3d19.4326!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1',
-} as const;
-
-export const SOCIAL = {
-  instagram: 'https://instagram.com/clibel',
-  facebook: 'https://facebook.com/clibel',
-  tiktok: 'https://tiktok.com/@clibel',
-  youtube: 'https://youtube.com/@clibel',
 } as const;
 
 export const NAV: Array<{ label: string; href: string }> = [
@@ -224,23 +205,8 @@ export const PARTNERS = [
   'Restylane', 'Juvéderm', 'Venus Concept', 'OxyGeneo', 'Sinclair', 'Belotero',
 ] as const;
 
-export const BRANCHES = [
-  {
-    name: 'CLIBEL Reforma',
-    address: 'Av. Reforma 000, Col. Centro, 06000 CDMX',
-    hours: 'Lun–Vie 10:00–19:00 · Sáb 10:00–15:00',
-    phone: '55 0000 0000',
-  },
-  {
-    name: 'CLIBEL Polanco',
-    address: 'Av. Presidente Masaryk 000, Polanco, 11560 CDMX',
-    hours: 'Lun–Sáb 10:00–19:00',
-    phone: '55 0000 0001',
-  },
-] as const;
-
 export const FAQ_ITEMS = [
-  { q: '¿Cómo agendo mi primera cita?', a: 'Por WhatsApp, llamada o el formulario de la página de contacto. Te respondemos el mismo día y reservamos tu valoración con la doctora correspondiente.' },
+  { q: '¿Cómo agendo mi primera cita?', a: 'Por el formulario de la página de contacto. Te respondemos a la brevedad y reservamos tu valoración con la doctora correspondiente.' },
   { q: '¿La valoración inicial tiene costo?', a: 'La valoración incluye diagnóstico personalizado y plan de tratamiento. Consulta nuestras promociones vigentes: la mayoría de los meses ofrecemos sin costo.' },
   { q: '¿Los procedimientos son seguros?', a: 'Sí. Personal médico certificado, productos avalados por COFEPRIS y tecnología clínica de última generación. Cada protocolo se documenta en expediente.' },
   { q: '¿Trabajan con productos originales?', a: 'Exclusivamente. Compramos directo a laboratorios autorizados (Allergan, Galderma, Merz, Sinclair). Mostramos lote y trazabilidad si nos lo pides.' },

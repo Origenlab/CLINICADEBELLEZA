@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.clibel.com.mx/sitemap-index.xml
+Sitemap: https://clinicadebelleza.com.mx/sitemap-index.xml

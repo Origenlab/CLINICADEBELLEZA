@@ -4,10 +4,9 @@ import SectionHeader from '../components/SectionHeader.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import HeroNavBar from '../components/HeroNavBar.astro';
 import RelatedCategories from '../components/RelatedCategories.astro';
-import { SITE, CONTACT, BRANCHES, PARTNERS, catHref } from '../consts';
+import { SITE, PARTNERS, catHref } from '../consts';
 
 const yearsCount = new Date().getFullYear() - parseInt(SITE.founded);
-const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola CLIBEL, quiero agendar valoración sin costo.')}`;
 
 // ============ HITOS DE HISTORIA ============
 const milestones = [
@@ -33,8 +32,8 @@ const milestones = [
   },
   {
     when: '2024',
-    label: 'Expediente digital + WhatsApp clínico',
-    text: 'Migración completa a expediente digital con foto comparativa multi-ángulo, lote de productos COFEPRIS, parámetros por sesión. Línea WhatsApp clínico directa con personal médico para complicaciones.',
+    label: 'Expediente digital',
+    text: 'Migración completa a expediente digital con foto comparativa multi-ángulo, lote de productos COFEPRIS, parámetros por sesión. Línea de seguimiento directa con personal médico para complicaciones.',
   },
   {
     when: `${new Date().getFullYear()}`,
@@ -105,8 +104,8 @@ const infrastructure = [
     icon: '📋',
   },
   {
-    title: 'WhatsApp clínico 24/7',
-    text: 'Línea directa con personal médico responsable durante la ventana sensible post-procedimiento. Respuesta clínica en menos de 2 horas en horario consulta, manejo de urgencias fuera de horario.',
+    title: 'Seguimiento clínico directo',
+    text: 'Contacto directo con personal médico responsable durante la ventana sensible post-procedimiento, con protocolo escrito para el manejo de cualquier complicación.',
     icon: '📞',
   },
   {
@@ -176,19 +175,15 @@ const faqs: { q: string; answerHtml: string }[] = [
   },
   {
     q: '¿Qué pasa si tengo una complicación post-procedimiento?',
-    answerHtml: 'Tienes acceso directo a tu médico via <strong>WhatsApp clínico</strong> 24/7. Hay protocolo escrito para cada complicación: hialuronidasa para AH, apraclonidina para ptosis, antibiótico para infecciones, derivación inmediata a dermatología o cirugía si la situación lo exige. La <a href="/equipo">infraestructura de seguridad</a> es estándar, no extra.',
+    answerHtml: 'Tienes <strong>acceso directo a tu médico</strong> durante el seguimiento. Hay protocolo escrito para cada complicación: hialuronidasa para AH, apraclonidina para ptosis, antibiótico para infecciones, derivación inmediata a dermatología o cirugía si la situación lo exige. La <a href="/equipo">infraestructura de seguridad</a> es estándar, no extra.',
   },
   {
     q: '¿Atienden a hombres? ¿A adolescentes?',
     answerHtml: 'Hombres: sí, regularmente — armonización facial masculina, depilación corporal, capilar. Adolescentes: desde los 14 años con autorización de madre/padre (depilación láser, antiacné, limpieza facial). Procedimientos inyectables solo a partir de los 18 años. Cada perfil se valora individualmente.',
   },
   {
-    q: '¿Cuántas sucursales tienen?',
-    answerHtml: `Operamos <strong>${BRANCHES.length} sucursales</strong> en CDMX. La coordinadora de pacientes te asigna la sucursal más cercana o conveniente para tu rutina. <a href="/contacto">Ver ubicaciones y mapa →</a>`,
-  },
-  {
     q: '¿Cómo agendo una cita?',
-    answerHtml: 'Por <strong>WhatsApp clínico</strong> directo, <a href="/contacto">formulario de contacto</a> en el sitio o por teléfono. La <a href="/equipo">coordinadora de pacientes</a> te orienta sobre qué especialista necesitas según tu motivo y agenda con quien corresponda. Respuesta en menos de 2 horas en horario clínica.',
+    answerHtml: 'Por el <a href="/contacto">formulario de contacto</a> del sitio. La <a href="/equipo">coordinadora de pacientes</a> te orienta sobre qué especialista necesitas según tu motivo y agenda con quien corresponda. Te respondemos a la brevedad en horario clínica.',
   },
   {
     q: '¿Aceptan pagos en plazos o solo efectivo?',
@@ -314,8 +309,8 @@ const faqs: { q: string; answerHtml: string }[] = [
           <dd><em>05</em></dd>
         </div>
         <div>
-          <dt>Sucursales</dt>
-          <dd><em>{BRANCHES.length}</em><span class="nos-stats-loc">CDMX</span></dd>
+          <dt>Ubicación</dt>
+          <dd><em>CDMX</em></dd>
         </div>
       </dl>
     </div>
@@ -483,7 +478,7 @@ const faqs: { q: string; answerHtml: string }[] = [
         title="Dudas sobre <em>CLIBEL</em><br/>como clínica."
         paragraphs={[
           'Las preguntas que más recibimos sobre la clínica (no sobre tratamientos específicos): precios, productos, complicaciones, sucursales, formas de pago, perfiles que atendemos.',
-          'Si tu duda no aparece aquí, escríbenos a la coordinadora de pacientes — respondemos en menos de 2 horas en horario consulta.',
+          'Si tu duda no aparece aquí, escríbenos desde el formulario de contacto — la coordinadora de pacientes te responde a la brevedad en horario consulta.',
         ]}
       />
 
@@ -506,51 +501,6 @@ const faqs: { q: string; answerHtml: string }[] = [
     </div>
   </section>
 
-  <!-- ============================ SUCURSALES ============================ -->
-  <section class="section bg-white">
-    <div class="container-x">
-      <SectionHeader
-        kicker="Ubicaciones"
-        title="Visítanos en <em>CDMX</em>."
-        paragraphs={[
-          `Operamos ${BRANCHES.length} sucursales en Ciudad de México. La coordinadora de pacientes te asigna la sucursal más cercana o conveniente para tu rutina. Ambas operan con la misma infraestructura clínica y el mismo equipo de especialistas — sin diferencias de servicio entre ubicaciones.`,
-          'La primera valoración orientativa es <strong>sin costo</strong>. Agenda por WhatsApp clínico o por el formulario de contacto.',
-        ]}
-      />
-
-      <ol class="branches-grid">
-        {BRANCHES.map((b, i) => (
-          <li class="branch-card">
-            <header class="branch-head">
-              <span class="branch-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-              <h3 class="branch-name">{b.name}</h3>
-            </header>
-            <dl class="branch-info">
-              <div>
-                <dt>Dirección</dt>
-                <dd>{b.address}</dd>
-              </div>
-              <div>
-                <dt>Horario</dt>
-                <dd>{b.hours}</dd>
-              </div>
-              <div>
-                <dt>Teléfono</dt>
-                <dd><a href={`tel:${b.phone.replace(/\s/g, '')}`}>{b.phone}</a></dd>
-              </div>
-            </dl>
-            <a href="/contacto" class="branch-link">
-              Agendar en esta sucursal
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </a>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
   <!-- ============================ CTA FINAL ============================ -->
   <section class="section nos-cta">
     <div class="container-x">
@@ -566,10 +516,6 @@ const faqs: { q: string; answerHtml: string }[] = [
         </p>
         <div class="nos-cta-actions">
           <a href="/contacto" class="btn btn-primary">Solicitar valoración</a>
-          <a href={wa} target="_blank" rel="noopener" class="btn btn-outline">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-            WhatsApp clínico
-          </a>
         </div>
       </div>
     </div>

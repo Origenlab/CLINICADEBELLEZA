@@ -6,7 +6,7 @@ import Breadcrumb from '../../../components/Breadcrumb.astro';
 import HeroNavBar from '../../../components/HeroNavBar.astro';
 import RelatedCategories from '../../../components/RelatedCategories.astro';
 import { getCollection } from 'astro:content';
-import { CATEGORIES, SITE, CONTACT, catHref } from '../../../consts';
+import { CATEGORIES, SITE, catHref } from '../../../consts';
 
 const cat = CATEGORIES.corporal;
 
@@ -15,7 +15,6 @@ const items = all
   .filter((s) => s.data.category === 'corporal')
   .sort((a, b) => a.data.order - b.data.order);
 
-const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, me gustaría agendar una cita en CLIBEL para tratamientos corporales.')}`;
 
 // ============ SCHEMAS SEO ============
 const breadcrumbSchema = {
@@ -390,7 +389,6 @@ const faqs: { q: string; answerHtml: string }[] = [
         {items.map((s, i) => {
           const meta = editorialLedes[s.id];
           const topBen = (s.data.benefits ?? []).slice(0, 2);
-          const waSvc = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`Hola CLIBEL, me interesa el tratamiento ${s.data.title}.`)}`;
           return (
             <li class="spot reveal">
               <div class="spot-num-wrap" aria-hidden="true">
@@ -455,9 +453,8 @@ const faqs: { q: string; answerHtml: string }[] = [
                       <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                     </svg>
                   </a>
-                  <a href={waSvc} target="_blank" rel="noopener" class="spot-cta spot-cta--wa">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-                    Pregunta por WhatsApp
+                  <a href="/contacto/" class="spot-cta spot-cta--wa">
+                    Agenda tu valoración
                   </a>
                 </div>
               </div>
@@ -661,7 +658,7 @@ const faqs: { q: string; answerHtml: string }[] = [
         kicker="Preguntas frecuentes y contacto"
         title="Dudas sobre <em>tu plan</em><br/>corporal, respondidas."
         paragraphs={[
-          'Las preguntas que más recibe <strong>CLIBEL</strong> sobre tratamientos corporales no invasivos —resultados reales, seguridad en posparto, combinaciones, várices, implantes— respondidas con criterio clínico. Si la tuya no aparece, llénanos el formulario: tu mensaje llega pre-armado al WhatsApp clínico.',
+          'Las preguntas que más recibe <strong>CLIBEL</strong> sobre tratamientos corporales no invasivos —resultados reales, seguridad en posparto, combinaciones, várices, implantes— respondidas con criterio clínico. Si la tuya no aparece, envíanos tu caso desde el formulario de contacto.',
           'Decidir un tratamiento corporal implica preguntas legítimas: tiempo de inversión, expectativa realista, compatibilidad con tu rutina y tu cuerpo. <strong>CLIBEL</strong> responde con honestidad y diagnóstico personalizado — no con guion comercial.',
         ]}
       />
@@ -688,115 +685,26 @@ const faqs: { q: string; answerHtml: string }[] = [
         </div>
 
         <aside class="faq-form-wrap">
-          <form id="corpWaForm" class="faq-form" novalidate>
+          <div class="faq-form">
             <span class="faq-form-kicker">Valoración corporal sin costo</span>
-            <h3 class="faq-form-title">Escríbenos por <em>WhatsApp</em></h3>
+            <h3 class="faq-form-title">Agenda tu <em>valoración</em></h3>
             <p class="faq-form-sub">
-              Llena el formulario y abre tu mensaje pre-armado en WhatsApp.
-              Respuesta de <strong>CLIBEL</strong> en menos de 2 horas en horario clínica.
+              Cuéntanos tu objetivo corporal desde el formulario de contacto y
+              <strong>CLIBEL</strong> te responde a la brevedad en horario clínica.
             </p>
 
-            <div class="faq-form-row">
-              <label for="corp-nombre">Nombre completo <span aria-hidden="true">*</span></label>
-              <input id="corp-nombre" name="nombre" type="text" required autocomplete="name" />
-            </div>
-
-            <div class="faq-form-grid-2">
-              <div class="faq-form-row">
-                <label for="corp-tel">Teléfono <span aria-hidden="true">*</span></label>
-                <input id="corp-tel" name="telefono" type="tel" required autocomplete="tel" placeholder="55 1234 5678" />
-              </div>
-              <div class="faq-form-row">
-                <label for="corp-email">Email</label>
-                <input id="corp-email" name="email" type="email" autocomplete="email" />
-              </div>
-            </div>
-
-            <div class="faq-form-grid-2">
-              <div class="faq-form-row">
-                <label for="corp-interes">Tratamiento de interés</label>
-                <select id="corp-interes" name="interes">
-                  <option value="">Selecciona uno (opcional)</option>
-                  {items.map((s) => (
-                    <option value={s.data.title}>{s.data.title}</option>
-                  ))}
-                  <option value="Plan integral — no estoy segura">Plan integral — no estoy segura</option>
-                </select>
-              </div>
-              <div class="faq-form-row">
-                <label for="corp-zona">Zona principal</label>
-                <select id="corp-zona" name="zona">
-                  <option value="">Selecciona (opcional)</option>
-                  <option value="Abdomen">Abdomen</option>
-                  <option value="Brazos">Brazos</option>
-                  <option value="Espalda">Espalda</option>
-                  <option value="Flancos / cintura">Flancos / cintura</option>
-                  <option value="Glúteos">Glúteos</option>
-                  <option value="Muslos / piernas">Muslos / piernas</option>
-                  <option value="Recuperación posparto">Recuperación posparto</option>
-                  <option value="Postoperatorio">Postoperatorio</option>
-                  <option value="Cuerpo completo">Cuerpo completo</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="faq-form-row">
-              <label for="corp-msg">Cuéntanos qué buscas (opcional)</label>
-              <textarea id="corp-msg" name="mensaje" rows="3" placeholder="Ej: posparto reciente, busco reafirmación, tengo X meses de objetivo, etc."></textarea>
-            </div>
-
-            <label class="faq-form-check">
-              <input type="checkbox" name="privacidad" required />
-              <span>Acepto el <a href="/aviso-de-privacidad">Aviso de Privacidad</a> y autorizo el contacto por WhatsApp.</span>
-            </label>
-
-            <button type="submit" class="faq-form-submit">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-              Enviar por WhatsApp
-            </button>
+            <a href="/contacto/" class="faq-form-submit">
+              Agenda tu valoración
+            </a>
 
             <p class="faq-form-foot">
-              Respuesta &lt; 2h · COFEPRIS · Sin compromiso
+              COFEPRIS · Sin compromiso
             </p>
-          </form>
+          </div>
         </aside>
       </div>
     </div>
   </section>
-
-  <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
-    (function () {
-      const form = document.getElementById('corpWaForm');
-      if (!form) return;
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const d = new FormData(form);
-        const get = (k) => (d.get(k) || '').toString().trim();
-        const nombre = get('nombre'), tel = get('telefono'), email = get('email');
-        const interes = get('interes'), zona = get('zona'), msg = get('mensaje');
-        const acepto = form.querySelector('[name="privacidad"]').checked;
-
-        if (!nombre || !tel || !acepto) {
-          form.classList.add('is-invalid');
-          return;
-        }
-        form.classList.remove('is-invalid');
-
-        const lines = [
-          'Hola CLIBEL, vengo desde la página de Tratamientos Corporales.',
-          '',
-          'Nombre: ' + nombre,
-          'Teléfono: ' + tel,
-        ];
-        if (email)   lines.push('Email: ' + email);
-        if (interes) lines.push('Me interesa: ' + interes);
-        if (zona)    lines.push('Zona principal: ' + zona);
-        if (msg)     lines.push('', 'Comentario: ' + msg);
-
-        window.open(waBase + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
-      });
-    })();
-  </script>
 
   <!-- ============================ RELATED L3 ============================ -->
   <RelatedCategories current="corporal" variant="cream" />
@@ -807,7 +715,7 @@ const faqs: { q: string; answerHtml: string }[] = [
     ariaLabel="Tratamientos corporales individuales"
     variant="dark"
     links={items.map((s) => ({ label: s.data.title, href: `/servicios/${s.id}` }))}
-    cta={{ label: 'Escríbenos por WhatsApp', href: wa }}
+    cta={{ label: 'Agenda tu valoración', href: '/contacto/' }}
   />
 </BaseLayout>
 

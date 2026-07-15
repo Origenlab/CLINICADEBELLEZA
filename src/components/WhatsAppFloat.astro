@@ -1,13 +1,12 @@
 ---
-import { CONTACT } from '../consts';
-const url = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
+// Botón flotante de contacto. Sin línea de WhatsApp verificada, apunta al
+// formulario de contacto. Actualmente NO se monta en ningún layout.
+const url = '/contacto/';
 ---
 
 <a
   href={url}
-  target="_blank"
-  rel="noopener"
-  aria-label="Contactar por WhatsApp"
+  aria-label="Agenda tu valoración"
   class="fixed bottom-5 right-5 z-50 grid place-items-center w-14 h-14 rounded-full bg-[#25D366] text-white shadow-xl hover:scale-110 transition-transform"
   style="box-shadow: 0 10px 30px -8px rgba(37, 211, 102, 0.6);"
 >

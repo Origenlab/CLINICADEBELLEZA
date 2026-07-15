@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import { SITE, CONTACT, SOCIAL, NAV, CATEGORIES, BRANCHES, PARTNERS, catHref } from '../consts';
+import { SITE, CONTACT, NAV, CATEGORIES, PARTNERS, catHref } from '../consts';
 const year = new Date().getFullYear();
 const cats = Object.values(CATEGORIES);
 
@@ -82,51 +82,34 @@ const featuredServices = allServices
         </div>
       </div>
 
-      <!-- Sucursales -->
+      <!-- Visítanos -->
       <div class="ftr-col">
-        <h3 class="ftr-h3">Sucursales</h3>
-        <div class="ftr-branches">
-          {BRANCHES.map((b, i) => (
-            <article class="ftr-branch">
-              <span class="ftr-branch-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-              <div class="ftr-branch-body">
-                <h4 class="ftr-branch-name">{b.name}</h4>
-                <p class="ftr-branch-addr">{b.address}</p>
-                <p class="ftr-branch-hours">{b.hours}</p>
-                <a href={`tel:${b.phone}`} class="ftr-branch-phone">{b.phone}</a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-
-      <!-- Contacto + redes -->
-      <div class="ftr-col">
-        <h3 class="ftr-h3">Contacto</h3>
+        <h3 class="ftr-h3">Visítanos</h3>
         <ul class="ftr-contact">
           <li>
-            <span class="ftr-contact-label">Teléfono</span>
-            <a href={`tel:${CONTACT.phone}`} class="ftr-contact-value">{CONTACT.phoneDisplay}</a>
-          </li>
-          <li>
-            <span class="ftr-contact-label">Email</span>
-            <a href={`mailto:${CONTACT.email}`} class="ftr-contact-value">{CONTACT.email}</a>
+            <span class="ftr-contact-label">Ubicación</span>
+            <span class="ftr-contact-value">{CONTACT.address}</span>
           </li>
           <li>
             <span class="ftr-contact-label">Horario</span>
             <span class="ftr-contact-value">{CONTACT.hours}</span>
           </li>
         </ul>
+      </div>
 
-        <div class="ftr-social">
-          <span class="ftr-social-label">Síguenos</span>
-          <div class="ftr-social-links">
-            <a href={SOCIAL.instagram} target="_blank" rel="noopener" class="ftr-social-link">Instagram</a>
-            <a href={SOCIAL.facebook} target="_blank" rel="noopener" class="ftr-social-link">Facebook</a>
-            <a href={SOCIAL.tiktok} target="_blank" rel="noopener" class="ftr-social-link">TikTok</a>
-            <a href={SOCIAL.youtube} target="_blank" rel="noopener" class="ftr-social-link">YouTube</a>
-          </div>
-        </div>
+      <!-- Contacto -->
+      <div class="ftr-col">
+        <h3 class="ftr-h3">Contacto</h3>
+        <ul class="ftr-contact">
+          <li>
+            <span class="ftr-contact-label">Citas y valoración</span>
+            <span class="ftr-contact-value">Agenda desde el formulario de contacto — te respondemos a la brevedad.</span>
+          </li>
+        </ul>
+        <a href="/contacto/" class="ftr-col-cta">
+          Agenda tu valoración
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
     </section>
 
@@ -149,7 +132,7 @@ const featuredServices = allServices
         © {year} <strong>{SITE.name}</strong> — Clínica de Belleza. Todos los derechos reservados.
       </p>
       <p class="ftr-cofepris">
-        Permiso COFEPRIS · {SITE.cofepris} · Hecho con cuidado en CDMX
+        Hecho con cuidado en CDMX
       </p>
     </section>
   </div>

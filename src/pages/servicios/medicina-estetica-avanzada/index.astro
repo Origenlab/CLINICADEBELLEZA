@@ -6,7 +6,7 @@ import Breadcrumb from '../../../components/Breadcrumb.astro';
 import HeroNavBar from '../../../components/HeroNavBar.astro';
 import RelatedCategories from '../../../components/RelatedCategories.astro';
 import { getCollection } from 'astro:content';
-import { CATEGORIES, SITE, CONTACT, catHref } from '../../../consts';
+import { CATEGORIES, SITE, catHref } from '../../../consts';
 
 const cat = CATEGORIES['medicina-estetica'];
 
@@ -15,7 +15,6 @@ const items = all
   .filter((s) => s.data.category === 'medicina-estetica')
   .sort((a, b) => a.data.order - b.data.order);
 
-const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, me gustaría agendar una valoración de medicina estética avanzada en CLIBEL.')}`;
 
 // ============ SCHEMAS SEO ============
 const breadcrumbSchema = {
@@ -453,7 +452,6 @@ const faqs: { q: string; answerHtml: string }[] = [
         {items.map((s, i) => {
           const meta = editorialLedes[s.id];
           const topBen = (s.data.benefits ?? []).slice(0, 2);
-          const waSvc = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`Hola CLIBEL, me interesa el tratamiento ${s.data.title}.`)}`;
           return (
             <li class="spot reveal">
               <div class="spot-num-wrap" aria-hidden="true">
@@ -518,9 +516,8 @@ const faqs: { q: string; answerHtml: string }[] = [
                       <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                     </svg>
                   </a>
-                  <a href={waSvc} target="_blank" rel="noopener" class="spot-cta spot-cta--wa">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-                    Pregunta por WhatsApp
+                  <a href="/contacto/" class="spot-cta spot-cta--wa">
+                    Agenda tu valoración
                   </a>
                 </div>
               </div>
@@ -857,7 +854,7 @@ const faqs: { q: string; answerHtml: string }[] = [
         kicker="Preguntas frecuentes y contacto"
         title="Resuelve dudas o pide tu <em>análisis facial</em>."
         paragraphs={[
-          'Las preguntas más recurrentes que recibe <strong>CLIBEL</strong> en consulta de medicina estética avanzada, resueltas con criterio clínico real. A la derecha puedes enviar tus datos: el mensaje llega al WhatsApp clínico de CLIBEL con tu información pre-armada.',
+          'Las preguntas más recurrentes que recibe <strong>CLIBEL</strong> en consulta de medicina estética avanzada, resueltas con criterio clínico real. Si la tuya no aparece, envíanos tu caso desde el formulario de contacto.',
           'En <strong>CLIBEL</strong> la primera consulta es un <strong>análisis facial completo sin costo</strong>. Recibes diagnóstico, plan personalizado por escrito y presupuesto detallado antes de cualquier decisión — sin presión comercial, sin paquetes prearmados.',
         ]}
       />
@@ -884,108 +881,26 @@ const faqs: { q: string; answerHtml: string }[] = [
         </div>
 
         <aside class="faq-form-wrap">
-          <form id="medWaForm" class="faq-form" novalidate>
+          <div class="faq-form">
             <span class="faq-form-kicker">Análisis facial sin costo</span>
-            <h3 class="faq-form-title">Agenda por <em>WhatsApp</em></h3>
+            <h3 class="faq-form-title">Agenda tu <em>valoración</em></h3>
             <p class="faq-form-sub">
-              Llena el formulario y abre tu mensaje pre-armado en WhatsApp.
-              Respuesta de <strong>CLIBEL</strong> en menos de 2 horas en horario clínica.
+              Cuéntanos qué buscas desde el formulario de contacto y
+              <strong>CLIBEL</strong> te responde a la brevedad en horario clínica.
             </p>
 
-            <div class="faq-form-row">
-              <label for="med-nombre">Nombre completo <span aria-hidden="true">*</span></label>
-              <input id="med-nombre" name="nombre" type="text" required autocomplete="name" />
-            </div>
-
-            <div class="faq-form-grid-2">
-              <div class="faq-form-row">
-                <label for="med-tel">Teléfono <span aria-hidden="true">*</span></label>
-                <input id="med-tel" name="telefono" type="tel" required autocomplete="tel" placeholder="55 1234 5678" />
-              </div>
-              <div class="faq-form-row">
-                <label for="med-email">Email</label>
-                <input id="med-email" name="email" type="email" autocomplete="email" />
-              </div>
-            </div>
-
-            <div class="faq-form-grid-2">
-              <div class="faq-form-row">
-                <label for="med-interes">Procedimiento de interés</label>
-                <select id="med-interes" name="interes">
-                  <option value="">Selecciona uno (opcional)</option>
-                  {items.map((s) => (
-                    <option value={s.data.title}>{s.data.title}</option>
-                  ))}
-                  <option value="Plan armonización integral">Plan armonización integral</option>
-                  <option value="No estoy segura — quiero análisis">No estoy segura — quiero análisis facial</option>
-                </select>
-              </div>
-              <div class="faq-form-row">
-                <label for="med-zona">Zona / objetivo</label>
-                <select id="med-zona" name="zona">
-                  <option value="">Selecciona (opcional)</option>
-                  <option value="Tercio superior (frente / entrecejo / sienes)">Tercio superior</option>
-                  <option value="Tercio medio (pómulos / ojeras / surcos)">Tercio medio</option>
-                  <option value="Tercio inferior (labios / mentón / mandíbula)">Tercio inferior</option>
-                  <option value="Ojos descansados">Plan: Ojos descansados</option>
-                  <option value="Código de barras">Plan: Código de barras</option>
-                  <option value="Ovalado facial">Plan: Ovalado facial</option>
-                  <option value="Glow integral antiedad">Plan: Glow integral</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="faq-form-row">
-              <label for="med-msg">Cuéntanos qué buscas (opcional)</label>
-              <textarea id="med-msg" name="mensaje" rows="3" placeholder="Ej: nunca me he hecho nada, busco prevención, quiero retoque, etc."></textarea>
-            </div>
-
-            <label class="faq-form-check">
-              <input type="checkbox" name="privacidad" required />
-              <span>Acepto el <a href="/aviso-de-privacidad">Aviso de Privacidad</a> y autorizo el contacto por WhatsApp.</span>
-            </label>
-
-            <button type="submit" class="faq-form-submit">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-              Enviar por WhatsApp
-            </button>
+            <a href="/contacto/" class="faq-form-submit">
+              Agenda tu valoración
+            </a>
 
             <p class="faq-form-foot">
-              Respuesta &lt; 2h · Análisis facial sin costo · COFEPRIS
+              Análisis facial sin costo · COFEPRIS
             </p>
-          </form>
+          </div>
         </aside>
       </div>
     </div>
   </section>
-
-  <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
-    (function () {
-      const form = document.getElementById('medWaForm');
-      if (!form) return;
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const d = new FormData(form);
-        const g = (k) => (d.get(k) || '').toString().trim();
-        const nombre = g('nombre'), tel = g('telefono'), email = g('email');
-        const interes = g('interes'), zona = g('zona'), msg = g('mensaje');
-        const acepto = form.querySelector('[name="privacidad"]').checked;
-        if (!nombre || !tel || !acepto) { form.classList.add('is-invalid'); return; }
-        form.classList.remove('is-invalid');
-        const lines = [
-          'Hola CLIBEL, vengo desde la página de Medicina Estética Avanzada.',
-          '',
-          'Nombre: ' + nombre,
-          'Teléfono: ' + tel,
-        ];
-        if (email)   lines.push('Email: ' + email);
-        if (interes) lines.push('Me interesa: ' + interes);
-        if (zona)    lines.push('Zona / objetivo: ' + zona);
-        if (msg)     lines.push('', 'Comentario: ' + msg);
-        window.open(waBase + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
-      });
-    })();
-  </script>
 
   <!-- ============================ RELATED L3 ============================ -->
   <RelatedCategories current="medicina-estetica" variant="cream" />

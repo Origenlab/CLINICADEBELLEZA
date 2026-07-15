@@ -55,7 +55,7 @@ timeline:
     text: "Consulta diagnóstica completa de 45–60 min. Sales con: diagnóstico clasificado, foto basal documentada, plan terapéutico por escrito, solicitud de análisis si requiere, derivación clara si tu caso no es candidato a PRP/mesoterapia."
   - when: "2 semanas"
     label: "Resultados de análisis"
-    text: "CLIBEL revisa tus análisis y ajusta plan si revelan causa sistémica (anemia, hipotiroidismo). Comunicación por WhatsApp clínico o cita breve. Plan final confirmado antes de iniciar tratamiento."
+    text: "CLIBEL revisa tus análisis y ajusta plan si revelan causa sistémica (anemia, hipotiroidismo). Comunicación directa o cita breve. Plan final confirmado antes de iniciar tratamiento."
   - when: "Cada 4 sesiones del plan"
     label: "Tricoscopia comparativa"
     text: "Durante el plan terapéutico, tricología clínica reincide cada 4 sesiones para validar evolución objetiva. Foto comparativa basal vs actual + ajuste de plan si requiere."
@@ -70,7 +70,7 @@ preCare:
   - "Anotar antecedentes familiares de alopecia previo a la consulta"
 postCare:
   - "Hacer los análisis sugeridos en laboratorio confiable"
-  - "Compartir resultados por WhatsApp clínico cuando estén"
+  - "Compartir resultados con CLIBEL en cuanto estén"
   - "Iniciar plan terapéutico una vez confirmado el diagnóstico final"
   - "Foto del cuero cabelludo en casa cada 30 días para tu propio seguimiento"
 faqs:
@@ -168,7 +168,7 @@ commitments:
     text: "Imprescindible. Sin análisis no puedes descartar causa sistémica. La biometría, ferritina y perfil tiroideo son obligatorios — no hay plan capilar serio sin esto."
     weight: "Imprescindible"
   - title: "Compartir resultados con CLIBEL"
-    text: "Imprescindible. Sin tus análisis, CLIBEL no puede confirmar plan terapéutico. Comparte por WhatsApp clínico cuando los tengas — revisamos y ajustamos plan antes de iniciar tratamiento."
+    text: "Imprescindible. Sin tus análisis, CLIBEL no puede confirmar plan terapéutico. Compártelos con CLIBEL cuando los tengas — revisamos y ajustamos plan antes de iniciar tratamiento."
     weight: "Imprescindible"
   - title: "Iniciar plan terapéutico tras diagnóstico"
     text: "Recomendado. Si decides iniciar plan, hazlo dentro de los siguientes 30 días. Mientras más esperes, más miniaturización folicular continúa — y más difícil revertir."

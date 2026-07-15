@@ -78,7 +78,7 @@ postCare:
   - "Sin sauna, vapor, piscina ni ejercicio intenso por 24 h"
   - "No exfoliar mecánica ni químicamente durante 5 días"
   - "Hidratación con cosmecéuticos sin perfume ni alcohol"
-  - "Contactar a CLIBEL por WhatsApp clínico ante cualquier reacción inesperada"
+  - "Contactar a CLIBEL de inmediato ante cualquier reacción inesperada"
 faqs:
   - q: "¿Con qué frecuencia debo hacerme una limpieza facial profunda?"
     a: "En CLIBEL recomendamos una sesión mensual de mantenimiento para pieles sanas y cada 15–21 días si tu piel es grasa, mixta o tiene tendencia comedónica activa. La frecuencia exacta sale de tu valoración inicial — no aplicamos calendario genérico."

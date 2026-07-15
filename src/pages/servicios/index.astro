@@ -7,7 +7,7 @@ import HeroNavBar from '../../components/HeroNavBar.astro';
 import Process from '../../components/Process.astro';
 import FAQContact from '../../components/FAQContact.astro';
 import { getCollection } from 'astro:content';
-import { CATEGORIES, SITE, CONTACT, catHref, CATEGORY_LANDING_PAGES } from '../../consts';
+import { CATEGORIES, SITE, catHref, CATEGORY_LANDING_PAGES } from '../../consts';
 
 const all = await getCollection('servicios');
 all.sort((a, b) => a.data.order - b.data.order);
@@ -20,8 +20,6 @@ const grouped = Object.values(CATEGORIES).map((cat) => ({
 const featured = all.filter((s) => s.data.featured).slice(0, 4);
 
 const totalServices = all.length;
-
-const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
 
 // Deep-links a tratamientos específicos para interlinking SEO en la nav inferior
 const topTreatmentLinks = [
@@ -300,7 +298,7 @@ const comparison = [
             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
             </svg>
-            <p>Próximamente publicaremos más tratamientos en esta categoría. <a href={wa} target="_blank" rel="noopener">Pregúntanos por WhatsApp</a> si buscas algo específico.</p>
+            <p>Próximamente publicaremos más tratamientos en esta categoría. <a href="/contacto/">Agenda tu valoración</a> si buscas algo específico.</p>
           </div>
         ) : (
           <div class="svc-cat-grid">
@@ -415,7 +413,7 @@ const comparison = [
     ariaLabel="Categorías de tratamientos CLIBEL"
     variant="cream"
     links={categoryAnchorLinks}
-    cta={{ label: 'Escríbenos por WhatsApp', href: wa }}
+    cta={{ label: 'Agenda tu valoración', href: '/contacto/' }}
   />
 </BaseLayout>
 

@@ -149,7 +149,7 @@ comparison:
   - aspect: "Manejo de complicaciones"
     home: "Sin recursos clínicos"
     spa: "Derivación a dermatólogo externo si surge"
-    clibel: "Personal médico CLIBEL maneja complicaciones in-situ + WhatsApp clínico"
+    clibel: "Personal médico CLIBEL maneja complicaciones in-situ con seguimiento directo"
 publishedAt: 2026-01-17
 ---
 

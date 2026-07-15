@@ -1,5 +1,5 @@
 ---
-import { NAV, SITE, CONTACT, CATEGORIES, catHref } from '../consts';
+import { NAV, SITE, CATEGORIES, catHref } from '../consts';
 
 const path = Astro.url.pathname;
 const isActive = (href: string) =>
@@ -87,10 +87,6 @@ const cats = Object.values(CATEGORIES);
     </nav>
 
     <div class="hdr-actions">
-      <a href={`tel:${CONTACT.phone}`} class="hdr-phone" aria-label={`Llamar al ${CONTACT.phoneDisplay}`}>
-        <span class="hdr-phone-label">Llámanos</span>
-        <span class="hdr-phone-num">{CONTACT.phoneDisplay}</span>
-      </a>
       <a href="/contacto" class="hdr-cta">
         Agendar cita
       </a>

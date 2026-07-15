@@ -71,7 +71,6 @@ const {
 } = Astro.props;
 
 const cat = CATEGORIES[category];
-const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`Hola CLIBEL, me interesa el tratamiento ${title}.`)}`;
 
 // === Servicios relacionados (misma categoría) ===
 const allServices = await getCollection('servicios');
@@ -221,7 +220,7 @@ const toc: { id: string; label: string; n: string }[] = [
 
           <div class="svc-hero-actions">
             <a href="/contacto" class="btn btn-primary">Agendar valoración</a>
-            <a href={wa} target="_blank" rel="noopener" class="btn btn-outline">Pregunta por WhatsApp</a>
+            <a href="/servicios" class="btn btn-outline">Ver todos los tratamientos</a>
           </div>
         </div>
 
@@ -390,9 +389,8 @@ const toc: { id: string; label: string; n: string }[] = [
                     Este tratamiento puede no ser adecuado en los siguientes casos. <strong>CLIBEL</strong> valora cada paciente antes de aplicar — si te identificas con alguno, coméntalo en valoración para ajustar el protocolo o sustituirlo por uno más seguro para tu piel.
                   </p>
                   <div class="svc-contra-cta">
-                    <a href={wa} target="_blank" rel="noopener">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-                      Pregunta por WhatsApp clínico
+                    <a href="/contacto/">
+                      Agenda tu valoración
                     </a>
                   </div>
                 </header>
@@ -448,10 +446,6 @@ const toc: { id: string; label: string; n: string }[] = [
 
             <div class="svc-widget-actions">
               <a href="/contacto" class="btn btn-primary svc-widget-cta">Agendar valoración</a>
-              <a href={wa} target="_blank" rel="noopener" class="svc-widget-wa">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-                <span>WhatsApp clínico · &lt; 2h</span>
-              </a>
             </div>
 
             <p class="svc-widget-foot">Valoración sin costo · COFEPRIS · {SITE.founded ? `${new Date().getFullYear() - parseInt(SITE.founded)} años` : 'Respaldo médico'}</p>
@@ -553,17 +547,9 @@ const toc: { id: string; label: string; n: string }[] = [
 
           <!-- Widget 6: Línea editorial — info de contacto rápido -->
           <div class="svc-widget svc-widget--contact">
-            <span class="svc-widget-tag svc-widget-tag--dark">Contacto directo</span>
+            <span class="svc-widget-tag svc-widget-tag--dark">Contacto</span>
             <h4 class="svc-widget-h svc-widget-h--dark">Habla con <em>CLIBEL</em></h4>
             <dl class="svc-widget-contact-list">
-              <div>
-                <dt>WhatsApp</dt>
-                <dd><a href={wa} target="_blank" rel="noopener">{CONTACT.phoneDisplay}</a></dd>
-              </div>
-              <div>
-                <dt>Email</dt>
-                <dd><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></dd>
-              </div>
               <div>
                 <dt>Horario</dt>
                 <dd>{CONTACT.hoursShort}</dd>
@@ -573,7 +559,7 @@ const toc: { id: string; label: string; n: string }[] = [
                 <dd>{CONTACT.address}</dd>
               </div>
             </dl>
-            <a href="/contacto" class="svc-widget-link svc-widget-link--gold">Ver sucursales y mapa →</a>
+            <a href="/contacto" class="svc-widget-link svc-widget-link--gold">Agenda tu valoración →</a>
           </div>
         </aside>
       </div>
@@ -1108,7 +1094,7 @@ const toc: { id: string; label: string; n: string }[] = [
           title={`Lo que <em>CLIBEL</em><br/>indica antes y después.`}
           paragraphs={[
             `<strong>CLIBEL</strong> entrega estas indicaciones por escrito en tu valoración. Seguirlas no es opcional — la eficacia del tratamiento y la seguridad clínica dependen de cumplir estos pasos simples antes y después de la sesión.`,
-            `El protocolo doméstico es tan importante como la técnica en cabina. <strong>CLIBEL</strong> resuelve dudas en tiempo real por WhatsApp clínico durante toda la ventana sensible post-tratamiento.`,
+            `El protocolo doméstico es tan importante como la técnica en cabina. <strong>CLIBEL</strong> resuelve tus dudas durante toda la ventana sensible post-tratamiento.`,
           ]}
         />
 
@@ -1166,8 +1152,8 @@ const toc: { id: string; label: string; n: string }[] = [
           kicker="Preguntas frecuentes y contacto"
           title={`Dudas sobre <em>${title}</em>.`}
           paragraphs={[
-            `Las preguntas más recurrentes que recibe <strong>CLIBEL</strong> sobre este tratamiento, respondidas por personal médico — no por copywriter. Si tu duda no aparece aquí, envíanos tu mensaje desde el formulario y te respondemos por WhatsApp clínico.`,
-            `<strong>CLIBEL</strong> contesta en menos de <strong>2 horas</strong> en horario de consulta. El mensaje llega pre-armado con tu nombre, teléfono y servicio de interés para que la valoración avance desde la primera respuesta.`,
+            `Las preguntas más recurrentes que recibe <strong>CLIBEL</strong> sobre este tratamiento, respondidas por personal médico — no por copywriter. Si tu duda no aparece aquí, envíanos tu mensaje desde el formulario de contacto.`,
+            `<strong>CLIBEL</strong> te responde a la brevedad en horario de consulta, con la información necesaria para que la valoración avance desde la primera respuesta.`,
           ]}
         />
 
@@ -1193,46 +1179,19 @@ const toc: { id: string; label: string; n: string }[] = [
           </div>
 
           <aside class="faq-form-wrap">
-            <form id="svcWaForm" class="faq-form" novalidate data-service={title}>
+            <div class="faq-form">
               <span class="faq-form-kicker">Valoración sin costo</span>
-              <h3 class="faq-form-title">Agenda por <em>WhatsApp</em></h3>
+              <h3 class="faq-form-title">Agenda tu <em>valoración</em></h3>
               <p class="faq-form-sub">
-                Tu mensaje pre-armado para <strong>{title}</strong>. Respuesta de <strong>CLIBEL</strong> en menos de 2 horas en horario clínica.
+                Cuéntanos tu caso de <strong>{title}</strong> desde el formulario de contacto y <strong>CLIBEL</strong> te responde a la brevedad en horario clínica.
               </p>
 
-              <div class="faq-form-row">
-                <label for="svc-nombre">Nombre completo <span aria-hidden="true">*</span></label>
-                <input id="svc-nombre" name="nombre" type="text" required autocomplete="name" />
-              </div>
+              <a href="/contacto/" class="faq-form-submit">
+                Agenda tu valoración
+              </a>
 
-              <div class="faq-form-grid-2">
-                <div class="faq-form-row">
-                  <label for="svc-tel">Teléfono <span aria-hidden="true">*</span></label>
-                  <input id="svc-tel" name="telefono" type="tel" required autocomplete="tel" placeholder="55 1234 5678" />
-                </div>
-                <div class="faq-form-row">
-                  <label for="svc-email">Email</label>
-                  <input id="svc-email" name="email" type="email" autocomplete="email" />
-                </div>
-              </div>
-
-              <div class="faq-form-row">
-                <label for="svc-msg">Cuéntanos qué buscas (opcional)</label>
-                <textarea id="svc-msg" name="mensaje" rows="3" placeholder="Ej: nunca me he hecho este tratamiento, busco mantenimiento, tengo X duda específica..."></textarea>
-              </div>
-
-              <label class="faq-form-check">
-                <input type="checkbox" name="privacidad" required />
-                <span>Acepto el <a href="/aviso-de-privacidad">Aviso de Privacidad</a> y autorizo el contacto por WhatsApp.</span>
-              </label>
-
-              <button type="submit" class="faq-form-submit">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-                Enviar por WhatsApp
-              </button>
-
-              <p class="faq-form-foot">Respuesta &lt; 2h · COFEPRIS · Sin compromiso</p>
-            </form>
+              <p class="faq-form-foot">COFEPRIS · Sin compromiso</p>
+            </div>
           </aside>
         </div>
       </div>
@@ -1274,32 +1233,6 @@ const toc: { id: string; label: string; n: string }[] = [
       };
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
-    })();
-  </script>
-
-  <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
-    (function () {
-      const form = document.getElementById('svcWaForm');
-      if (!form) return;
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const d = new FormData(form);
-        const g = (k) => (d.get(k) || '').toString().trim();
-        const nombre = g('nombre'), tel = g('telefono'), email = g('email'), msg = g('mensaje');
-        const acepto = form.querySelector('[name="privacidad"]').checked;
-        const service = form.dataset.service || '';
-        if (!nombre || !tel || !acepto) { form.classList.add('is-invalid'); return; }
-        form.classList.remove('is-invalid');
-        const lines = [
-          'Hola CLIBEL, vengo desde la página de ' + service + '.',
-          '',
-          'Nombre: ' + nombre,
-          'Teléfono: ' + tel,
-        ];
-        if (email) lines.push('Email: ' + email);
-        if (msg)   lines.push('', 'Comentario: ' + msg);
-        window.open(waBase + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
-      });
     })();
   </script>
 

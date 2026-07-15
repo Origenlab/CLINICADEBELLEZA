@@ -4,9 +4,7 @@ import SectionHeader from '../components/SectionHeader.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import HeroNavBar from '../components/HeroNavBar.astro';
 import RelatedCategories from '../components/RelatedCategories.astro';
-import { SITE, CONTACT, catHref } from '../consts';
-
-const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola CLIBEL, me interesa agendar valoración con el equipo médico.')}`;
+import { SITE, catHref } from '../consts';
 
 // ============ EQUIPO MÉDICO ============
 const team = [
@@ -17,7 +15,7 @@ const team = [
     specialty: 'Medicina estética y armonización facial',
     bio: 'Médica cirujana con especialidad en Medicina Estética y certificaciones internacionales por Merz Aesthetics y Allergan (MD Codes). Líder del equipo clínico desde 2014. Ponente regular en congresos AMWC y Congreso Mexicano de Medicina Estética. Filosofía conservadora: prefiere sub-corregir y volver, antes que sobre-corregir.',
     years: '14 años',
-    certs: ['Cédula 0000000', 'Merz Aesthetics', 'MD Codes Allergan', 'Galderma GAIN'],
+    certs: ['Cédula profesional vigente', 'Merz Aesthetics', 'MD Codes Allergan', 'Galderma GAIN'],
     treatments: [
       { label: 'Ácido Hialurónico', href: '/servicios/acido-hialuronico' },
       { label: 'Toxina Botulínica', href: '/servicios/toxina-botulinica' },
@@ -33,7 +31,7 @@ const team = [
     specialty: 'Bioestimulación · Armonización masculina',
     bio: 'Médico estético con formación en Sculptra (Galderma), Radiesse y hilos tensores PDO/PCL. Experto en bioestimulación de colágeno y armonización masculina (definición mandibular, mentón, ángulo facial). Más de 8 años de práctica clínica en CDMX.',
     years: '8 años',
-    certs: ['Cédula 0000001', 'Sculptra Certified', 'Radiesse', 'Hilos PDO/PCL'],
+    certs: ['Cédula profesional vigente', 'Sculptra Certified', 'Radiesse', 'Hilos PDO/PCL'],
     treatments: [
       { label: 'Hilos Tensores', href: '/servicios/hilos-tensores' },
       { label: 'Ácido Hialurónico', href: '/servicios/acido-hialuronico' },
@@ -49,7 +47,7 @@ const team = [
     specialty: 'Dermatocosmética · Acné · Pigmentación',
     bio: 'Dermatóloga con subespecialidad en dermatocosmética. Especialista en manchas, melasma, rosácea, acné severo y planes de cuidado preventivo. Lidera el protocolo dermatocosmético de CLIBEL — incluyendo el manejo coordinado de pacientes con causa hormonal o autoinmune.',
     years: '10 años',
-    certs: ['Cédula 0000002', 'Sociedad Mexicana de Dermatología', 'Diplomado en Dermatocosmética'],
+    certs: ['Cédula profesional vigente', 'Sociedad Mexicana de Dermatología', 'Diplomado en Dermatocosmética'],
     treatments: [
       { label: 'Tratamiento Antiacné', href: '/servicios/tratamiento-antiacne' },
       { label: 'Peelings Químicos', href: '/servicios/peelings-quimicos' },
@@ -238,7 +236,7 @@ const faqs: { q: string; answerHtml: string }[] = [
   },
   {
     q: '¿Qué pasa si tengo una complicación post-procedimiento?',
-    answerHtml: 'Tienes acceso directo a tu médico vía WhatsApp clínico (no atención telefónica genérica). Hay protocolo escrito para cada complicación posible: hialuronidasa para AH, apraclonidina para ptosis palpebral, antibiótico para infecciones, derivación inmediata a dermatología o cirugía maxilofacial si la situación lo exige.',
+    answerHtml: 'Tienes acceso directo a tu médico durante el seguimiento (no atención genérica de mostrador). Hay protocolo escrito para cada complicación posible: hialuronidasa para AH, apraclonidina para ptosis palpebral, antibiótico para infecciones, derivación inmediata a dermatología o cirugía maxilofacial si la situación lo exige.',
   },
   {
     q: '¿Atienden a hombres?',
@@ -246,7 +244,7 @@ const faqs: { q: string; answerHtml: string }[] = [
   },
   {
     q: '¿Cómo agendo una valoración?',
-    answerHtml: 'Por WhatsApp clínico o el formulario de <a href="/contacto">contacto</a>. La Lic. Isabella Acosta (coordinadora de pacientes) te orienta sobre qué especialista necesitas según tu motivo de consulta. La primera valoración orientativa es <strong>sin costo</strong> y sin presión comercial.',
+    answerHtml: 'Por el formulario de <a href="/contacto">contacto</a>. La coordinadora de pacientes te orienta sobre qué especialista necesitas según tu motivo de consulta. La primera valoración orientativa es <strong>sin costo</strong> y sin presión comercial.',
   },
 ];
 ---
@@ -581,7 +579,7 @@ const faqs: { q: string; answerHtml: string }[] = [
         title="Dudas sobre el<br/><em>equipo</em>, respondidas."
         paragraphs={[
           'Las preguntas que más recibe <strong>CLIBEL</strong> sobre el equipo médico: credenciales, especialidad por tratamiento, manejo de complicaciones, atención a hombres, agendamiento.',
-          'Si tu duda no aparece aquí, escríbenos a la coordinadora de pacientes — respondemos en menos de 2 horas en horario clínica.',
+          'Si tu duda no aparece aquí, escríbenos desde el formulario de contacto — la coordinadora de pacientes te responde a la brevedad en horario clínica.',
         ]}
       />
 
@@ -634,10 +632,6 @@ const faqs: { q: string; answerHtml: string }[] = [
         </p>
         <div class="equipo-cta-actions">
           <a href="/contacto" class="btn btn-primary">Solicitar valoración</a>
-          <a href={wa} target="_blank" rel="noopener" class="btn btn-outline">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-            WhatsApp clínico
-          </a>
         </div>
       </div>
     </div>

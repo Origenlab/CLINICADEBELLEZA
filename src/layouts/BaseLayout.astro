@@ -4,9 +4,8 @@ import SEO from '../components/SEO.astro';
 import TopBar from '../components/TopBar.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import RevealScript from '../components/RevealScript.astro';
-import { SITE, CONTACT } from '../consts';
+import { SITE } from '../consts';
 
 interface Props {
   title: string;
@@ -31,20 +30,11 @@ const jsonLd = {
   description: SITE.description,
   slogan: 'Clínica de belleza con respaldo médico en Ciudad de México',
   url: SITE.url,
-  telephone: CONTACT.phone,
-  email: CONTACT.email,
   address: {
     '@type': 'PostalAddress',
-    streetAddress: CONTACT.addressFull,
     addressLocality: 'Ciudad de México',
     addressRegion: 'CDMX',
-    postalCode: '06000',
     addressCountry: 'MX',
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 19.4326,
-    longitude: -99.1332,
   },
   areaServed: [
     { '@type': 'City', name: 'Ciudad de México' },
@@ -96,12 +86,6 @@ const jsonLd = {
     bestRating: '5',
     worstRating: '1',
   },
-  sameAs: [
-    'https://instagram.com/clibel',
-    'https://facebook.com/clibel',
-    'https://tiktok.com/@clibel',
-    'https://youtube.com/@clibel',
-  ],
 };
 ---
 
@@ -137,7 +121,6 @@ const jsonLd = {
       <slot />
     </main>
     <Footer />
-    <WhatsAppFloat />
     <RevealScript />
   </body>
 </html>

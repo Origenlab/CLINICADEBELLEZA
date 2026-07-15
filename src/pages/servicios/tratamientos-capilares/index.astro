@@ -6,7 +6,7 @@ import Breadcrumb from '../../../components/Breadcrumb.astro';
 import HeroNavBar from '../../../components/HeroNavBar.astro';
 import RelatedCategories from '../../../components/RelatedCategories.astro';
 import { getCollection } from 'astro:content';
-import { CATEGORIES, SITE, CONTACT, catHref } from '../../../consts';
+import { CATEGORIES, SITE, catHref } from '../../../consts';
 
 const cat = CATEGORIES.capilar;
 
@@ -15,7 +15,6 @@ const items = all
   .filter((s) => s.data.category === 'capilar')
   .sort((a, b) => a.data.order - b.data.order);
 
-const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, me gustaría agendar diagnóstico tricológico capilar en CLIBEL.')}`;
 
 // ============ SCHEMAS SEO ============
 const breadcrumbSchema = {
@@ -446,7 +445,6 @@ const faqs: { q: string; answerHtml: string }[] = [
         {items.map((s, i) => {
           const meta = editorialLedes[s.id];
           const topBen = (s.data.benefits ?? []).slice(0, 2);
-          const waSvc = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`Hola CLIBEL, me interesa el tratamiento ${s.data.title}.`)}`;
           return (
             <li class="spot reveal">
               <div class="spot-num-wrap" aria-hidden="true">
@@ -511,9 +509,8 @@ const faqs: { q: string; answerHtml: string }[] = [
                       <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                     </svg>
                   </a>
-                  <a href={waSvc} target="_blank" rel="noopener" class="spot-cta spot-cta--wa">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-                    Pregunta por WhatsApp
+                  <a href="/contacto/" class="spot-cta spot-cta--wa">
+                    Agenda tu valoración
                   </a>
                 </div>
               </div>
@@ -756,7 +753,7 @@ const faqs: { q: string; answerHtml: string }[] = [
         kicker="Preguntas frecuentes y contacto"
         title="Resuelve dudas o pide <em>diagnóstico tricológico</em>."
         paragraphs={[
-          'Las preguntas más recurrentes en consulta capilar de <strong>CLIBEL</strong>, resueltas con criterio clínico real. A la derecha puedes enviar tu información — el mensaje llega al WhatsApp clínico de CLIBEL pre-armado con tu caso.',
+          'Las preguntas más recurrentes en consulta capilar de <strong>CLIBEL</strong>, resueltas con criterio clínico real. Si la tuya no aparece, envíanos tu caso desde el formulario de contacto.',
           'En <strong>CLIBEL</strong> la primera consulta incluye <strong>diagnóstico tricoscópico</strong> con dermatoscopio digital y plan personalizado por escrito. Sin costo, sin compromiso, sin venta forzada.',
         ]}
       />
@@ -783,107 +780,26 @@ const faqs: { q: string; answerHtml: string }[] = [
         </div>
 
         <aside class="faq-form-wrap">
-          <form id="capWaForm" class="faq-form" novalidate>
+          <div class="faq-form">
             <span class="faq-form-kicker">Diagnóstico tricológico sin costo</span>
-            <h3 class="faq-form-title">Agenda por <em>WhatsApp</em></h3>
+            <h3 class="faq-form-title">Agenda tu <em>valoración</em></h3>
             <p class="faq-form-sub">
-              Llena el formulario y abre tu mensaje pre-armado en WhatsApp.
-              Respuesta de <strong>CLIBEL</strong> en menos de 2 horas en horario clínica.
+              Cuéntanos tu caso capilar desde el formulario de contacto y
+              <strong>CLIBEL</strong> te responde a la brevedad en horario clínica.
             </p>
 
-            <div class="faq-form-row">
-              <label for="cap-nombre">Nombre completo <span aria-hidden="true">*</span></label>
-              <input id="cap-nombre" name="nombre" type="text" required autocomplete="name" />
-            </div>
-
-            <div class="faq-form-grid-2">
-              <div class="faq-form-row">
-                <label for="cap-tel">Teléfono <span aria-hidden="true">*</span></label>
-                <input id="cap-tel" name="telefono" type="tel" required autocomplete="tel" placeholder="55 1234 5678" />
-              </div>
-              <div class="faq-form-row">
-                <label for="cap-email">Email</label>
-                <input id="cap-email" name="email" type="email" autocomplete="email" />
-              </div>
-            </div>
-
-            <div class="faq-form-grid-2">
-              <div class="faq-form-row">
-                <label for="cap-tipo">Tipo de caída que percibes</label>
-                <select id="cap-tipo" name="tipo">
-                  <option value="">Selecciona (opcional)</option>
-                  <option value="Caída reciente difusa (toda la cabeza)">Caída reciente difusa</option>
-                  <option value="Pérdida en línea / coronilla">Pérdida en línea o coronilla</option>
-                  <option value="Placas circulares">Placas circulares</option>
-                  <option value="Posparto / efluvio">Posparto / efluvio</option>
-                  <option value="Cabello frágil / quebradizo">Cabello frágil / quebradizo</option>
-                  <option value="No estoy segura — quiero diagnóstico">No estoy segura — quiero diagnóstico</option>
-                </select>
-              </div>
-              <div class="faq-form-row">
-                <label for="cap-tiempo">Tiempo del problema</label>
-                <select id="cap-tiempo" name="tiempo">
-                  <option value="">Selecciona (opcional)</option>
-                  <option value="Menos de 3 meses">Menos de 3 meses</option>
-                  <option value="3–6 meses">3–6 meses</option>
-                  <option value="6–12 meses">6–12 meses</option>
-                  <option value="Más de 1 año">Más de 1 año</option>
-                  <option value="Hace varios años">Hace varios años</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="faq-form-row">
-              <label for="cap-msg">Cuéntanos contexto (opcional)</label>
-              <textarea id="cap-msg" name="mensaje" rows="3" placeholder="Ej: tomo medicamento X, tuve parto reciente, hay antecedentes familiares, etc."></textarea>
-            </div>
-
-            <label class="faq-form-check">
-              <input type="checkbox" name="privacidad" required />
-              <span>Acepto el <a href="/aviso-de-privacidad">Aviso de Privacidad</a> y autorizo el contacto por WhatsApp.</span>
-            </label>
-
-            <button type="submit" class="faq-form-submit">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-              Enviar por WhatsApp
-            </button>
+            <a href="/contacto/" class="faq-form-submit">
+              Agenda tu valoración
+            </a>
 
             <p class="faq-form-foot">
-              Respuesta &lt; 2h · Diagnóstico tricoscópico sin costo
+              Diagnóstico tricoscópico sin costo
             </p>
-          </form>
+          </div>
         </aside>
       </div>
     </div>
   </section>
-
-  <script is:inline define:vars={{ waBase: `https://wa.me/${CONTACT.whatsapp}` }}>
-    (function () {
-      const form = document.getElementById('capWaForm');
-      if (!form) return;
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const d = new FormData(form);
-        const g = (k) => (d.get(k) || '').toString().trim();
-        const nombre = g('nombre'), tel = g('telefono'), email = g('email');
-        const tipo = g('tipo'), tiempo = g('tiempo'), msg = g('mensaje');
-        const acepto = form.querySelector('[name="privacidad"]').checked;
-        if (!nombre || !tel || !acepto) { form.classList.add('is-invalid'); return; }
-        form.classList.remove('is-invalid');
-        const lines = [
-          'Hola CLIBEL, vengo desde la página de Tratamientos Capilares.',
-          '',
-          'Nombre: ' + nombre,
-          'Teléfono: ' + tel,
-        ];
-        if (email)  lines.push('Email: ' + email);
-        if (tipo)   lines.push('Tipo de caída: ' + tipo);
-        if (tiempo) lines.push('Tiempo del problema: ' + tiempo);
-        if (msg)    lines.push('', 'Contexto: ' + msg);
-        window.open(waBase + '?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
-      });
-    })();
-  </script>
 
   <!-- ============================ RELATED L3 ============================ -->
   <RelatedCategories current="capilar" variant="cream" />
