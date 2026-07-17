@@ -1,0 +1,40 @@
+# CLINICADEBELLEZA.COM.MX — clínica de belleza y medicina estética en CDMX (CLIBEL)
+
+> CLIBEL es una clínica de belleza con enfoque médico en Ciudad de México.
+> Ofrece medicina estética, depilación láser y tratamientos faciales, corporales
+> y capilares, con valoración previa y plan de tratamiento personalizado.
+
+Idioma: español (es-MX). País: México.
+
+## Acerca de
+- Marca: CLIBEL — "Belleza con criterio médico".
+- Ubicación: Ciudad de México (CDMX).
+- Modelo de atención: diagnóstico personalizado, plan de tratamiento a medida, procedimiento y seguimiento.
+- Las citas se agendan por el formulario de la página de contacto.
+
+## Servicios (5 categorías)
+- Tratamientos faciales: limpieza facial profunda, rejuvenecimiento facial, peelings químicos, tratamiento antiacné.
+- Tratamientos corporales: radiofrecuencia corporal, reducción de grasa localizada, drenaje linfático, masaje reductivo y anticelulitis.
+- Depilación láser: rostro completo, axilas e ingle, piernas completas, entre otras zonas.
+- Medicina estética: ácido hialurónico, toxina botulínica, plasma rico en plaquetas, hilos tensores.
+- Tratamientos capilares: PRP capilar, mesoterapia capilar, tricología clínica.
+
+## Páginas clave
+- [Inicio](https://clinicadebelleza.com.mx/): presentación de la clínica y sus categorías de tratamiento.
+- [Servicios](https://clinicadebelleza.com.mx/servicios): catálogo completo de tratamientos.
+- [Tratamientos faciales](https://clinicadebelleza.com.mx/servicios/tratamientos-faciales): renovación y salud de la piel.
+- [Tratamientos corporales](https://clinicadebelleza.com.mx/servicios/tratamientos-corporales): remodelación y reafirmación.
+- [Depilación láser](https://clinicadebelleza.com.mx/servicios/depilacion-laser): eliminación duradera del vello.
+- [Medicina estética avanzada](https://clinicadebelleza.com.mx/servicios/medicina-estetica-avanzada): rejuvenecimiento y armonización facial.
+- [Tratamientos capilares](https://clinicadebelleza.com.mx/servicios/tratamientos-capilares): salud y densidad del cabello.
+- [Ácido hialurónico](https://clinicadebelleza.com.mx/servicios/acido-hialuronico): relleno y armonización facial.
+- [Toxina botulínica](https://clinicadebelleza.com.mx/servicios/toxina-botulinica): neuromodulación de líneas de expresión.
+- [Equipo](https://clinicadebelleza.com.mx/equipo): el equipo de la clínica.
+- [Tecnología](https://clinicadebelleza.com.mx/tecnologia): aparatología y plataformas que utiliza la clínica.
+- [Nosotros](https://clinicadebelleza.com.mx/nosotros): historia y filosofía de la clínica.
+- [Blog](https://clinicadebelleza.com.mx/blog): guías de cuidado de la piel, depilación láser y medicina estética.
+- [Contacto](https://clinicadebelleza.com.mx/contacto): formulario para agendar valoración.
+
+## Contacto
+- Sitio: https://clinicadebelleza.com.mx/
+- Contacto vía formulario: https://clinicadebelleza.com.mx/contacto (el sitio no publica teléfono ni correo directo).
